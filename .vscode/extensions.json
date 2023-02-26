@@ -1,0 +1,12 @@
+{
+    "recommendations": [
+        "obsilab.nebular",
+        "aaron-bond.better-comments",
+        "bierner.github-markdown-preview",
+        "ms-vscode.vscode-serial-monitor",
+        "wayou.vscode-todo-highlight",
+        "ya-technologies.vslabx-extension",
+        "ms-vscode.cpptools",
+        "formulahendry.code-runner"
+    ]
+}
