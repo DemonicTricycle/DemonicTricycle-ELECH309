@@ -22,6 +22,9 @@ Testing Just The Docs theme
 
 > Test docs
 
+{: .important }
+Test important
+
 ## Frame State Machine
 See the docs about the [frame state machine](/frameFSM)
 
