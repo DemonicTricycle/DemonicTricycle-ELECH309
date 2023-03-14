@@ -1,3 +1,8 @@
+---
+title: Demonic Tricycle - ELECH309 Project - Docs
+layout: home
+---
+
 # Docs - Demonic Tricycle - ELECH309 Project
 
 ## Test docs
