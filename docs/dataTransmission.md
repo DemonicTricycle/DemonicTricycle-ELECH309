@@ -1,3 +1,9 @@
+---
+layout: default
+title: Data Transmission
+nav_order: 2
+---
+
 # Data transmission
 
 Data is transmitted via sound, from the sender (computer) to the receiver (robot).

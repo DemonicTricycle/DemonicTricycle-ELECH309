@@ -1,6 +1,13 @@
+---
+layout: default
+title: Frame State Machine
+nav_order: 3
+---
+
+
 # Frame State Machine
 
-The frame analysis goes through a finite state machine, at [frameFSM.c](/frameFSM.c).
+The frame analysis goes through a finite state machine, at [frameFSM.c](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/blob/main/frameFSM.c).
 
 ## States
 
