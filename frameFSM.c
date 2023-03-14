@@ -71,10 +71,11 @@ command cmd;
 unsigned int params;
 ////int success = 0; // motors should do nothing if success == 0
 
+//* Frame Finite State Machine
 int FrameFSM(frame)
 { /// an event (sound freq demodulation) should call the Frame FSM with the 13 bit frame as arg
 
-    frame = frame;             //? test
+    frame = frame;             //? really needed ? haha
     state currentState = IDLE; //? test
 
     int finished = 0;
@@ -154,11 +155,11 @@ int FrameFSM(frame)
                 finished = 1;
             }
             break;
-        default: // needed?
-            // TODO
-            currentState = IDLE;
-            finished = 1;
-            break;
+        //default: // needed?
+        //    // TODO
+        //    currentState = IDLE;
+        //    finished = 1;
+        //    break;
         }
     }
     if (success == 1)
@@ -175,6 +176,7 @@ int IdleHandler(frame)
 //? needed ?
 {
     // TODO
+    // if (frame == 0b0000000000000) // more efficient than the following ?
     if (frame >> 12 == 0b0)
     { // need to test
         return 0;
@@ -188,6 +190,7 @@ int IdleHandler(frame)
 int StartHandler(frame)
 {
     // TODO
+    // if (!frame & 0b1000000000000) // more efficient than the following ?
     if (frame >> 12 == 0b0)
     { // need to test
         return 0;
@@ -202,6 +205,7 @@ int DataHandler(frame)
 {
     // TODO
     // -- cmd --
+    // more efficient way than the following ? ike just comparing the whole 13bit frame to the 4 possible commands
     switch (frame >> 10)
     {
     case 0b00:
@@ -220,13 +224,13 @@ int DataHandler(frame)
         // TODO
         cmd = TURN_LEFT;
         break;
-    default: //? needed ?
-        // TODO
-        break;
+    //default: //? needed ?
+    //    // TODO
+    //    break;
     }
     // -- params --
-    params = (unsigned int)frame >> 2 & 0b00011111111; // need to test
-    // or simply:
+    params = (unsigned int)frame >> 2 & 0b00011111111; // need to test //? uint16_t
+    // or simply (might be 1 instruction faster? or maybe x16's gcc has -O3 ?):
     // params = (unsigned int) frame & 0b0001111111100; // need to test
     return 0;
 }
@@ -235,7 +239,7 @@ int ParityHandler(frame)
 {
     // TODO
     // EVEN PARITY => if even number of 1's in frame, parity bit should be 0
-    unsigned int x = frame >> 2; // get the frame without the parity and stop bits => 11 bits
+    unsigned int x = frame >> 2; // get the frame without the parity and stop bits => 11 bits //? uint16_t
     // start bit is always 0 (or else the FSM would be in IDLE state and never get here)
 
     // Hamming weight algorithm:
