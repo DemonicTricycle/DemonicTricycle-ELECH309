@@ -1,3 +1,10 @@
+---
+layout: default
+title: Frame State Machine
+nav_order: 2
+---
+
+
 # Frame State Machine
 
 The frame analysis goes through a finite state machine, at [frameFSM.c](/frameFSM.c).
