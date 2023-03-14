@@ -3,7 +3,7 @@ layout: default
 title: Tests
 nav_order: 4
 has_children: true
-permalink: docs/tests
+permalink: tests
 has_toc: true
 ---
 
