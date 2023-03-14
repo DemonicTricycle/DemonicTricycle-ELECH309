@@ -6,3 +6,24 @@ url: https://dev.demonictricycle-dev.pages.dev
 
 aux_links:
   Github Repository: https://github.com/DemonicTricycle/DemonicTricycle-ELECH309
+aux_links_new_tab: true
+
+logo: "/assets/images/demonic_tricycle.png"
+
+favicon_ico: "/assets/images/favicon.ico"
+
+# Supports true (default) or false
+search_enabled: true
+
+footer_content: "Copyright &copy; 2023 Martin Fonteyn, Lucas Placentino and Sylvain Powis de Tenbossche - <a href="https://polytech.ulb.be/en">EPB ULB</a>"
+gh_edit_link: false
+
+# Color scheme supports "light" (default) and "dark"
+color_scheme: light
+
+callouts:
+  warning:
+    title: Warning
+    color: red
+
+
