@@ -15,16 +15,21 @@ nav_order: 2
 
 # Data transmission
 
-Data is transmitted via sound, from the sender (computer) to the receiver (robot).
+Data is transmitted via sound, from the sender (computer) to the receiver (robot).  
+See [Communication Frame](/communicationFrame) for details about the data frame.
 
 ## Sender
-
+TODO
 
 ## Receiver
-
+TODO
 
 ## Acoustic transmission
+Data is transmitted via frequency modulated sound. A 13bit word is sent, each bit is a 200ms sound note:
+- **900** Hz - Represents a **0** bit
+- **1100** Hz - Represents a **1** bit
 
+See [Communication Frame](/communicationFrame) for details about the data frame.
 
 ## Diagram
 
