@@ -4,18 +4,8 @@ title: Sound Filters
 nav_order: 4
 has_children: true
 permalink: soundFilters
-has_toc: false
+has_toc: true
 ---
-
-<details open markdown="block">
-  <summary>
-    Table of contents
-  </summary>
-  {: .text-delta }
-1. TOC
-{:toc}
-</details>
-
 
 Sound filters: analog and digital filters.
 {: .fs-6 .fw-300 }
