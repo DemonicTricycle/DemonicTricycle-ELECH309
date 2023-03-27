@@ -17,7 +17,7 @@ toc: true
 
 Data is transmitted via sound, from the sender (computer) to the receiver (robot). This data is contained in a custom 13bit frame.
 
-[insert frame desc image]
+![frame](https://user-images.githubusercontent.com/23436953/227920720-20620f49-efc8-4dc7-a9f1-b80beb2395eb.svg)
 
 ## Start bit
 A correct frame always starts with a **0** as the first bit.
