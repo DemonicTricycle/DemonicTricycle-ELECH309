@@ -6,9 +6,6 @@ permalink: motorization
 has_toc: true
 ---
 
-# Tests
-{: .no_toc }
-
 <details open markdown="block">
   <summary>
     Table of contents
