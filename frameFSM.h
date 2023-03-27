@@ -8,7 +8,7 @@
 #include <stdint.h>
 
 typedef enum
-{
+{ /// Commands:
     FORWARD,
     BACKWARD,
     TURN_RIGHT,
@@ -17,7 +17,7 @@ typedef enum
 
 // State Machine states:
 typedef enum
-{
+{ /// States:
     IDLE,
     START,
     DATA,
@@ -26,13 +26,15 @@ typedef enum
 } state;
 
 typedef struct
-{
+{ /// Movement:
     command cmd;
     uint16_t params;
 } movement;
 
+// Movement instance
 extern movement order;
 
+// Frame State Machine function
 int FrameFSM(uint16_t frame);
 
 //#endif // FRAMEFSM_H_

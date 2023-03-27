@@ -20,5 +20,5 @@ has_toc: true
 </details>
 
 
-Tests.
+Tests for the project. C unit tests, robot cinematic tests, etc.
 {: .fs-6 .fw-300 }

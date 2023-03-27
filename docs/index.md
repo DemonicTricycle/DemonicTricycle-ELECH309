@@ -6,7 +6,7 @@ description: "Demonic Tricycle - ELECH309 Project 2023 - Docs"
 permalink: /
 ---
 
-# Docs - Demonic Tricycle - ELECH309 Project
+# Docs - Demonic Tricycle
 {: .fs-9 }
 
 ELEC-H309 Integrated Project **Docs**. Project by **Martin Fonteyn**, **Lucas Placentino** and **Sylvain Powis de Tenbossche**.
@@ -21,9 +21,19 @@ ELEC-H309 Integrated Project **Docs**. Project by **Martin Fonteyn**, **Lucas Pl
 Testing Just The Docs theme
 
 > Test docs
+Test
 
 {: .important }
 Test important
+
+<details open markdown="block">
+  <summary>
+    Table of contents
+  </summary>
+  {: .text-delta }
+1. TOC
+{:toc}
+</details>
 
 ## Frame State Machine
 See the docs about the [frame state machine](/frameFSM)

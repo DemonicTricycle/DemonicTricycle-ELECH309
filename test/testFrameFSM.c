@@ -1,3 +1,5 @@
+#define DEBUG 1
+
 #include <stdio.h>
 #include <stdint.h>
 #include <assert.h>
@@ -5,8 +7,6 @@
 //#include "frameFSM.h"
 
 //! use assert() etc
-
-#define DEBUG 1
 
 int errors = 0;
 int test_errors = 0;
