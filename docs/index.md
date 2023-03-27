@@ -18,13 +18,7 @@ ELEC-H309 Integrated Project **Docs**. Project by **Martin Fonteyn**, **Lucas Pl
 ---
 
 {: .note }
-Testing Just The Docs theme
-
-> Test docs
-Test
-
-{: .important }
-Test important
+Work In Progress
 
 <details open markdown="block">
   <summary>
@@ -40,3 +34,6 @@ See the docs about the [frame state machine](/frameFSM)
 
 ## Data Transmission
 See the docs about the [data transmission](/dataTransmission)
+
+{: .important }
+Test
