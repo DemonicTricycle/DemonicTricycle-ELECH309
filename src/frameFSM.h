@@ -25,6 +25,14 @@ typedef enum
     STOP
 } state;
 
+typedef enum
+{ /// Signals:
+    NO_SIGNAL,
+    NOISE,
+    BIT_0,
+    BIT_1
+} signal;
+
 typedef struct
 { /// Movement:
     command cmd;

@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <assert.h>
-#include "../frameFSM.h"
+#include "../src/frameFSM.h"
 //#include "frameFSM.h"
 
 //! use assert() etc
@@ -27,7 +27,12 @@ void printTest(uint16_t frame)
     printf("Frame: ");
     printBinary(frame);
     printf("\n");
-    int res = FrameFSM(frame);
+
+    for (int i = 0; i < 16; i++)
+    {
+        printf("%d", (frame >> i) & 1);
+    }
+    //int res = FrameFSM(frame);
     printf("Result: %d\n", res);
     if (res == 0)
     {
