@@ -46,6 +46,6 @@ A correct frame always ends with a **1** as the last (13th) bit.
 
 Here are some examples of frames:
 
-- 0000100101101 - Start bit correct, _Forward_ command, 75cm to travel, even parity, stop bot correct.  
+- 0000100101101 - Start bit correct, _Forward_ command, 75cm to travel, even parity, stop bit correct.  
   Here are the different parts of the frame: 0.00.01001011.0.1
 - ...
