@@ -1,7 +1,7 @@
 ---
 layout: default
-title: Unit Tests
-parent: Tests
+title: Analog Filter
+parent: Sound Filters
 nav_order: 1
 ---
 
@@ -14,5 +14,5 @@ nav_order: 1
 {:toc}
 </details>
 
-# Unit Tests
+# Analog filter
 > ...

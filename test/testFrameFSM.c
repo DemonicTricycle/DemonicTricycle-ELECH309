@@ -1,29 +1,44 @@
+#define DEBUG 1
+
 #include <stdio.h>
-#include "../frameFSM.h"
+#include <stdint.h>
+#include <assert.h>
+#include "../src/frameFSM.h"
+//#include "frameFSM.h"
+
+//! use assert() etc
 
 int errors = 0;
 int test_errors = 0;
+//uint16_t params;
+//command cmd;
 
-void printBinary(unsigned int number)
+void printBinary(uint16_t number)
 {
     if (number >> 1)
     {
-        print_binary(number >> 1);
+        printBinary(number >> 1);
     }
     putc((number & 1) ? '1' : '0', stdout);
 }
 
-void printTest(unsigned int frame) {
+void printTest(uint16_t frame) 
+{
     printf("Frame: ");
     printBinary(frame);
     printf("\n");
-    int res = FrameFSM(frame);
+
+    for (int i = 0; i < 16; i++)
+    {
+        printf("%d", (frame >> i) & 1);
+    }
+    //int res = FrameFSM(frame);
     printf("Result: %d\n", res);
     if (res == 0)
     {
         printf("Frame is valid\n");
         printf("Command: ");
-        switch (cmd)
+        switch (order.cmd)
         {
         case FORWARD:
             printf("FORWARD\n");
@@ -38,14 +53,14 @@ void printTest(unsigned int frame) {
             printf("TURN_LEFT\n");
             break;
         }
-        printf("Params: %u\n", params);
+        printf("Params: %u\n", order.params);
     }
     else
     {
         printf("Frame is invalid\n");
         test_errors++;
         printf("Command: ");
-        switch (cmd)
+        switch (order.cmd)
         {
         case FORWARD:
             printf("FORWARD\n");
@@ -60,27 +75,31 @@ void printTest(unsigned int frame) {
             printf("TURN_LEFT\n");
             break;
         }
-        printf("Params: %u\n", params);
+        printf("Params: %u\n", order.params);
     }
 }
 
-int main()
+int main(void)
 {
     errors = 0;
+    uint16_t frame;
 
     printf("Test 1: start, BACKWARD, xx cm, even parity bit, parity error, stop\n"); // error
-    unsigned int frame = 0b0011111111001;
+    frame = 0b0011101111001;
+    errors++;
     printTest(frame);
 
     printf("Test 2: start, FORWARD, xx cm, even parity bit, parity correct, stop\n"); // success
-    unsigned int frame = 0b0001111111001;
+    frame = 0b0001101111001;
     printTest(frame);
 
     printf("Test 3: start, TURN_RIGHT, xx degrees, even parity bit, parity error, stop error\n"); // error
-    unsigned int frame = 0b0101111111000;
+    frame = 0b0101101111000;
+    errors++;
     printTest(frame);
 
-    return errors==test_errors;
+    assert(errors == test_errors);
 
+    return 0;
 }
 
