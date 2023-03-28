@@ -3,6 +3,9 @@
 #include "xc.h"
 #define FCY 3685000   // cycle frequency. Needed for __delay_ms
 #include "libpic30.h" // Contains __delay_ms definition
+
+#include "frameFSM.h"
+
 #define NUM_TICKS_PER_TURN 1423
 #define PI 3.1415926535897932
 #define INT_MAX 65535
@@ -256,6 +259,17 @@ void Move(float final_dist1, float final_dist2)
     SetMotor2(0);
 }
 
+void Turn(float degrees)
+{
+    // track width =   m
+    // WHEEL_RADIUS = 0.037 m
+    // wheel speed for rotation is set constant at 0.1 m/s
+
+    ResetPos(); //?
+    //TODO: turn
+
+}
+
 // <editor-fold defaultstate="collapsed" desc="Debug">
 void sendChars(char *chars)
 {
@@ -369,6 +383,31 @@ void StartupMessage()
 }
 // </editor-fold>
 
+void MotorOrder(movement order)
+{
+    //TODO:
+    switch (order.cmd)
+    {
+    case FORWARD:
+        float distance = (float) order.params;
+        Move(distance);
+        break;
+    
+    case BACKWARD:
+        float distance = (float) order.params;
+        Move(-distance);
+        break;
+    case TURN_RIGHT:
+        //float angle = (float) order.params;
+        Turn(order.params);
+        break;
+    case TURN_LEFT:
+        //float angle = (float) order.params;
+        Turn(-order.params); //TODO:
+        break;
+    }
+}
+
 int main(void)
 {
     // PR1 = 36849;
@@ -394,6 +433,10 @@ int main(void)
         Move(0.5, 0.5);
         __delay_ms(2000);
         // TODO: Turn(RIGHT, 90); or Turn(-45); ?
+        Turn(90);
+        __delay_ms(2000);
+        Turn(-45);
+        __delay_ms(2000);
     }
 
     return 0;
