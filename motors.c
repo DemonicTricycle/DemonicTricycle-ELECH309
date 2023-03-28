@@ -118,7 +118,7 @@ void ResetPos(void)
     POS2CNT = 0;
 }
 
-int Sign(float value)
+int Sign(float value) //TODO: needed?
 {
     if (value < 0)
     {
@@ -259,15 +259,60 @@ void Move(float final_dist1, float final_dist2)
     SetMotor2(0);
 }
 
-void Turn(float degrees)
+void Turn(float degrees) //TODO: Turn()
 {
     // track width =   m
     // WHEEL_RADIUS = 0.037 m
     // wheel speed for rotation is set constant at 0.1 m/s
 
     ResetPos(); //?
-    //TODO: turn
 
+    float acceptable_error = 0.002;
+    float error1 = acceptable_error + 1;
+    float error2 = acceptable_error + 1;
+    float k = 3.69;
+    // TODO: use timers and GetTarget
+    float time = 0;
+
+    if (degrees > 0)
+    { // turn right
+        //TODO
+        float target_1 = GetTarget(time, distance_traveled);
+        float target_2 = -target_1;
+    }
+    else
+    { // turn left
+        //TODO
+        float target_2 = GetTarget(time, distance_traveled);
+        float target_1 = -target_2;
+    }
+    float target_1 = GetTarget(time, distance_traveled);
+    float target_2 = -target_1;
+
+    //? Abs(error) ?< acceptable_error
+    while ((Abs(error1) > acceptable_error || Abs(error2) > acceptable_error) || (target_1 < final_dist1 || target_2 < final_dist2)) //TODO:
+    {
+        // if (IFS0bits.T1IF)
+        // {
+        //     IFS0bits.T1IF = 0;
+        // TODO: timer
+        time += 0.050;
+
+        if (degrees > 0)
+        { // turn right
+            //TODO
+            target_1 = GetTarget(time, distance_traveled);
+            target_2 = -target_1;
+        }
+        else
+        { // turn left
+            //TODO
+            target_2 = GetTarget(time, distance_traveled);
+            target_1 = -target_2;
+        }
+    }
+    SetMotor1(0);
+    SetMotor2(0);
 }
 
 // <editor-fold defaultstate="collapsed" desc="Debug">
@@ -398,12 +443,12 @@ void MotorOrder(movement order)
         Move(-distance);
         break;
     case TURN_RIGHT:
-        //float angle = (float) order.params;
-        Turn(order.params);
+        float angle = (float) order.params;
+        Turn(angle);
         break;
     case TURN_LEFT:
-        //float angle = (float) order.params;
-        Turn(-order.params); //TODO:
+        float angle = (float) order.params;
+        Turn(-angle); //TODO:
         break;
     }
 }
@@ -431,6 +476,8 @@ int main(void)
         Move(1.5, 1.5);
         __delay_ms(2000);
         Move(0.5, 0.5);
+        __delay_ms(2000);
+        Move(-1, -1);
         __delay_ms(2000);
         // TODO: Turn(RIGHT, 90); or Turn(-45); ?
         Turn(90);
