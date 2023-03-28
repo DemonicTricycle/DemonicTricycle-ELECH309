@@ -50,7 +50,6 @@
 #include "frameFSM.h"
 #include <stdint.h>
 
-
 /*
  ! defined in header file
 // State Machine states:
@@ -72,20 +71,56 @@ typedef enum
 } command;
 */
 
-//command cmd;
-//uint16_t params;
+// command cmd;
+// uint16_t params;
 ////int success = 0; // motors should do nothing if success == 0
 
-movement order;
+movement order; // TODO:
 state current_state = IDLE;
+uint8_t bit_count = 0;
+int8_t ones = 0;
+int8_t zeroes = 0;
+uint8_t params = 0;
+uint8_t bit_params = 0;
+uint8_t cmd_bits = 0;
+command cmd;
+
+void resetFSM()
+{
+    current_state = IDLE;
+    bit_count = 0;
+    ones = 0;
+    zeroes = 0;
+    params = 0;
+    bit_params = 0;
+}
 
 int IdleHandler(signal signal_state) //? needed?
 {
-    // TODO
-    #ifdef DEBUG
-        printf("IdleHandler\n");
-    #endif
-    
+// TODO
+#ifdef DEBUG
+    printf("IdleHandler\n");
+#endif
+
+    if (signal_state == BIT_0)
+    {
+#ifdef DEBUG
+        printf("StartHandler success\n");
+#endif
+        current_state = START;
+        zeroes++;
+        return 0;
+    }
+    else
+    {
+#ifdef DEBUG
+        printf("StartHandler fail\n");
+#endif
+        current_state = IDLE;
+        resetFSM();
+        return 1;
+    }
+
     ////    // if (frame == 0b0000000000000) // more efficient than the following ?
     ////    if (frame >> 12 == 0b0)
     ////{ // need to test
@@ -104,24 +139,28 @@ int StartHandler(signal signal_state)
 //? useful?
 {
     // TODO
-    #ifdef DEBUG
-        printf("StartHandler\n");
-    #endif
+#ifdef DEBUG
+    printf("StartHandler\n");
+#endif
 
-    if (signal_state == BIT_0)
-    {
-        #ifdef DEBUG
-            printf("StartHandler success\n");
-        #endif
-        return 0;
-    }
-    else
-    {
-        #ifdef DEBUG
-            printf("StartHandler fail\n");
-        #endif
-        return 1;
-    }
+    // if (signal_state == BIT_0)
+    //{
+    // #ifdef DEBUG
+    //     printf("StartHandler success\n");
+    // #endif
+    //     current_state = START;
+    //     zeroes++;
+    //     return 0;
+    // }
+    // else
+    //{
+    // #ifdef DEBUG
+    //     printf("StartHandler fail\n");
+    // #endif
+    //     current_state = IDLE;
+    //     resetFSM();
+    //     return 1;
+    // }
 
     ////
     ////// if (!frame & 0b1000000000000) // more efficient than the following ?
@@ -138,14 +177,82 @@ int StartHandler(signal signal_state)
     ////}
 }
 
-int DataHandler(uint8_t bit)
+int DataHandler(signal signal_state)
 {
-    // TODO
-    #ifdef DEBUG
-        printf("DataHandler\n");
-    #endif
+// TODO
+#ifdef DEBUG
+    printf("DataHandler\n");
+#endif
 
+    if (signal_state == BIT_0)
+    {
+        if (bit_count <= 2) // cmd bits
+        {
+            cmd_bits |= 0 << (2 - bit_count);
+            zeroes++;
+            bit_count++;
+        }
+        else // params bits
+        {
+            // params = params | (0 << (7-bit_params));
+            params |= 0 << (10 - bit_count);
+            zeroes++;
+            bit_count++;
+            bit_params++;
+        }
+    }
+    else // signal_state == BIT_1
+    {
+        if (bit_count <= 2) // cmd bits
+        {
+            cmd_bits |= 0 << (2 - bit_count);
+            ones++;
+            bit_count++;
+        }
+        else // params bits
+        {
+            // params = params | (1 << (7-bit_params)); // or just |=
+            params |= 1 << (10 - bit_count);
+            ones++;
+            bit_count++;
+            bit_params++;
+        }
+    }
 
+    if (bit_count == 2)
+    {
+        switch (cmd_bits)
+        {
+        case 0b00:
+            cmd = FORWARD;
+            break;
+        case 0b01:
+            cmd = BACKWARD;
+            break;
+        case 0b10:
+            cmd = TURN_RIGHT;
+            break;
+        case 0b11:
+            cmd = TURN_LEFT;
+            break;
+        }
+    }
+
+    if (bit_count == 10)
+    {
+        current_state = PARITY;
+#ifdef DEBUG
+        printf("DataHandler success\n");
+#endif
+        return 0;
+    }
+    else
+    {
+#ifdef DEBUG
+        printf("Data bit added\n");
+#endif
+        return 1;
+    }
 
     ////// -- cmd --
     ////// more efficient way than the following ? ike just comparing the whole 13bit frame to the 4 possible commands
@@ -196,95 +303,161 @@ int DataHandler(uint8_t bit)
     ////return 0;
 }
 
-int ParityHandler(uint16_t frame)
+int ParityHandler(signal signal_state)
 {
-    // TODO
-    #ifdef DEBUG
-        printf("ParityHandler\n");
-    #endif
-    // EVEN PARITY => if even number of 1's in frame, parity bit should be 0
-    uint16_t x = frame >> 2; // get the frame without the parity and stop bits => 11 bits //? uint16_t
-    // start bit is always 0 (or else the FSM would be in IDLE state and never get here)
+// TODO
+#ifdef DEBUG
+    printf("ParityHandler\n");
+#endif
 
-    // Hamming weight algorithm:
-    x ^= x >> 1;
-    x ^= x >> 2;
-    x ^= x >> 4;
-    x ^= x >> 6;
-    uint16_t parity = x & 1;
+    if (zeroes - ones == 0)
+    {
+        // even parity
+        if (signal_state == BIT_0)
+        {
+#ifdef DEBUG
+            printf("ParityHandler success\n");
+#endif
+            current_state = STOP;
+            return 0;
+        }
+        else
+        {
+#ifdef DEBUG
+            printf("ParityHandler fail\n");
+#endif
+            resetFSM();
+            return 1;
+        }
+    }
+    else
+    {
+        // odd parity
+        if (signal_state == BIT_1)
+        {
+#ifdef DEBUG
+            printf("ParityHandler success\n");
+#endif
+            current_state = STOP;
+            return 0;
+        }
+        else
+        {
+#ifdef DEBUG
+            printf("ParityHandler fail\n");
+#endif
+            resetFSM();
+            return 1;
+        }
+    }
+
+    /*
+        // EVEN PARITY => if even number of 1's in frame, parity bit should be 0
+        uint16_t x = frame >> 2; // get the frame without the parity and stop bits => 11 bits //? uint16_t
+        // start bit is always 0 (or else the FSM would be in IDLE state and never get here)
+
+        // Hamming weight algorithm:
+        x ^= x >> 1;
+        x ^= x >> 2;
+        x ^= x >> 4;
+        x ^= x >> 6;
+        uint16_t parity = x & 1;
 
     #ifdef DEBUG
         printf("parity: %d\n", parity);
     #endif
 
-    if (parity == 0 && frame >> 1 == 0b000000000000)
-    { // EVEN
-        // TODO
-        #ifdef DEBUG
-            printf("ParityHandler success\n");
-        #endif
-        return 0;
-    }
-    else if (parity == 1 && frame >> 1 == 0b000000000001)
-    { // ODD
-        // TODO
-        #ifdef DEBUG
-            printf("ParityHandler success\n");
-        #endif
-        return 0;
-    }
-    else
-    {
-        // PARITY ERROR
-        // TODO
-        return 1;
-    }
-}
-
-int StopHandler(uint16_t frame)
-{
+        if (parity == 0 && frame >> 1 == 0b000000000000)
+        { // EVEN
     // TODO
     #ifdef DEBUG
-        printf("StopHandler\n");
+            printf("ParityHandler success\n");
     #endif
-    if (frame & 0b0000000000001 == 1)
+            return 0;
+        }
+        else if (parity == 1 && frame >> 1 == 0b000000000001)
+        { // ODD
+    // TODO
+    #ifdef DEBUG
+            printf("ParityHandler success\n");
+    #endif
+            return 0;
+        }
+        else
+        {
+            // PARITY ERROR
+            // TODO
+            return 1;
+        }
+        */
+}
+
+int StopHandler(signal signal_state)
+{
+#ifdef DEBUG
+    printf("StopHandler\n");
+#endif
+
+    if (signal_state == BIT_1)
     {
-        // TODO
-        #ifdef DEBUG
-            printf("StopHandler success\n");
-        #endif
+#ifdef DEBUG
+        printf("StopHandler success\n");
+#endif
+        //TODO: send order to robot
+        order.cmd = cmd;
+        order.params = params;
+        sendToMotors(order); // TODO
+
+        resetFSM();
         return 0;
     }
     else
     {
-        // TODO
-        // STOP ERROR
+#ifdef DEBUG
+        printf("StopHandler fail\n");
+#endif
+        resetFSM();
         return 1;
     }
+
+    // if (frame & 0b0000000000001 == 1)
+    //{
+    //    #ifdef DEBUG
+    //        printf("StopHandler success\n");
+    //    #endif
+    //    return 0;
+    //}
+    // else
+    //{
+    //    // TODO
+    //    // STOP ERROR
+    //    return 1;
+    //}
 }
 
 //* Frame Finite State Machine
 int FrameFSM(uint8_t low, uint8_t high) //?
-{ /// TODO:
+{                                       /// TODO:
 
-    #ifdef DEBUG
-        printf("FrameFSM received bit: %u\n", bit);
-    #endif
+#ifdef DEBUG
+    printf("FrameFSM received bit: %u\n", bit);
+#endif
 
-    //uint8_t bit;
+    // uint8_t bit;
+
     signal signal_state;
 
     if (low)
     {
         if (high)
         {
-            //noise
+            // noise
             signal_state = NOISE;
         }
         else
         {
             // BIT 0
-            //bit = 0;
+            // bit = 0;
             signal_state = BIT_0;
         }
     }
@@ -293,7 +466,7 @@ int FrameFSM(uint8_t low, uint8_t high) //?
         if (high)
         {
             // BIT 1
-            //bit = 1;
+            // bit = 1;
             signal_state = BIT_1;
         }
         else
@@ -303,129 +476,155 @@ int FrameFSM(uint8_t low, uint8_t high) //?
         }
     }
 
-    //int finished = 0;
+    // int finished = 0;
     int success = 0; // motors should do nothing if success == 0
 
     switch (current_state)
     {
     case IDLE:
-        // TODO
-        #ifdef DEBUG
-            printf("IDLE state");
-        #endif
+// TODO
+#ifdef DEBUG
+        printf("IDLE state");
+#endif
 
-        int idle;
+        int idle; //? needed?
         idle = IdleHandler(signal_state);
+        break;
 
-        if (idle == 0)
-        {
-            current_state = START;
-        }
-        else
-        {
-            current_state = IDLE;
-            //finished = 1;
-        }
-        break;
+        // if (idle == 0)
+        //{
+        //     current_state = START;
+        //     bit_count++;
+        //     zeroes++;
+        // }
+        // else
+        //{
+        //     current_state = IDLE;
+        //     bit_count = 0;
+        //     zeroes = 0;
+        //     ones = 0;
+        //     //finished = 1;
+        // }
+        //break;
     case START:
-        // TODO
-        #ifdef DEBUG
-            printf("START state");
-        #endif
+// TODO
+#ifdef DEBUG
+        printf("START state");
+#endif
         int start;
-        start = StartHandler(frame);
-        if (start == 0)
-        {
-            current_state = DATA;
-        }
-        else
-        {
-            current_state = IDLE;
-            finished = 1;
-        }
+        start = StartHandler(signal_state);
         break;
+
+        // if (start == 0)
+        //{
+        //     current_state = DATA;
+        // }
+        // else
+        //{
+        //     current_state = IDLE;
+        //     finished = 1;
+        // }
+        //break;
     case DATA:
-        // TODO
-        #ifdef DEBUG
-            printf("DATA state");
-        #endif
+// TODO
+#ifdef DEBUG
+        printf("DATA state");
+#endif
         int data;
-        data = DataHandler(frame);
-        if (data == 0)
-        {
-            current_state = PARITY;
-        }
-        else
-        {
-            //* souldn't really happen
-            current_state = IDLE;
-            finished = 1;
-        }
+        data = DataHandler(signal_state);
         break;
+
+        //if (data == 0)
+        //{
+        //    current_state = PARITY;
+        //}
+        //else
+        //{
+        //    //* souldn't really happen
+        //    current_state = IDLE;
+        //    finished = 1;
+        //}
+        //break;
     case PARITY:
-        // TODO
-        #ifdef DEBUG
-            printf("PARITY state");
-        #endif
+// TODO
+#ifdef DEBUG
+        printf("PARITY state");
+#endif
         int parity;
-        parity = ParityHandler(frame);
-        if (parity == 0)
-        {
-            current_state = STOP;
-        }
-        else
-        {
-            // should throw error
-            current_state = IDLE;
-            finished = 1;
-        }
+        parity = ParityHandler(signal_state);
         break;
+
+        //if (parity == 0)
+        //{
+        //    current_state = STOP;
+        //}
+        //else
+        //{
+        //    // should throw error
+        //    current_state = IDLE;
+        //    finished = 1;
+        //}
+        //break;
     case STOP:
-        // TODO
-        #ifdef DEBUG
-            printf("STOP state");
-        #endif
+// TODO
+#ifdef DEBUG
+        printf("STOP state");
+#endif
         int stop;
-        stop = StopHandler(frame);
+        stop = StopHandler(signal_state);
         if (stop == 0)
         {
-            current_state = IDLE;
-            finished = 1;
             success = 1;
-            #ifdef DEBUG
-                printf("FSM finished and succeeded\n");
-            #endif
         }
         else
         {
             // should throw error
-            current_state = IDLE;
-            finished = 1;
-            #ifdef DEBUG
-                printf("FSM finished and failed\n");
-            #endif
+            success = 0;
         }
         break;
-    //default: // needed?
-    //    // TODO
-    //    currentState = IDLE;
-    //    finished = 1;
-    //    break;
+
+        //if (stop == 0)
+        //{
+        //    current_state = IDLE;
+        //    finished = 1;
+        //    success = 1;
+        //#ifdef DEBUG
+        //    printf("FSM finished and succeeded\n");
+        //#endif
+        //}
+        //else
+        //{
+        //    // should throw error
+        //    current_state = IDLE;
+        //    finished = 1;
+        //#ifdef DEBUG
+        //    printf("FSM finished and failed\n");
+        //#endif
+        //}
+        //break;
+        // default: // needed?
+        //     // TODO
+        //     currentState = IDLE;
+        //     finished = 1;
+        //     break;
     }
 
     if (success == 1)
     {
-        #ifdef DEBUG
-            printf("FSM success\n");
-        #endif
+#ifdef DEBUG
+        printf("FSM success\n");
+#endif
+        //! here or in StopHandler?
+        order.cmd = cmd;
+        order.params = params;
+        MotorsOrder(order); // TODO:
         return 0; // the motors can get the command and data to run
     }
     else
     {
-        return 1; // the motors should do nothing
+        return 1; // the motors should do nothing, frame is either invalid or being processed
     }
 }
-
 
 /*
 typedef enum {
