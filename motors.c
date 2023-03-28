@@ -10,6 +10,7 @@
 #define PI 3.1415926535897932
 #define INT_MAX 65535
 #define WHEEL_RADIUS 0.037 // in m
+#define TRACK_WIDTH 0.134 // in m
 
 // PWM parameters and macro
 #define PWM_TIME_PERIOD 0.001 // In s, one period is one up AND one down,
@@ -28,8 +29,9 @@
 #define QE2_CHANNEL_B RPINR16bits.QEB2R
 #define maybeMOTOR_1_PWM LATBbits.LATB2
 #define maybeMOTOR_2_PWM LATBbits.LATB3
-#define whatisthis TRISBbits.TRISB2
+#define whatisthis TRISBbits.TRISB2 // set pin as output?
 #define whatisthis2 TRISBbits.TRISB3
+//TODO
 
 //#define delay __delay_ms //? maybe
 
@@ -38,6 +40,7 @@ void PWMInit(void)
     // If more details are required, check the following link :
     // https://ww1.microchip.com/downloads/en/DeviceDoc/70187E.pdf
 
+    // TODO: set #defines to make this clearer
     PTCONbits.PTEN = 0; // Start by disabling PWM pulse generation
 
     PTCONbits.PTOPS = 0;                       // PWM time base output postscale
@@ -215,7 +218,7 @@ void Move(float final_dist1, float final_dist2)
     float acceptable_error = 0.002;
     float error1 = acceptable_error + 1;
     float error2 = acceptable_error + 1;
-    float k = 3.69;
+    float trans_k = 3.69;
     // TODO: use timers and GetTarget
     float time = 0;
     float target_1 = GetTarget(time, final_dist1);
@@ -244,11 +247,11 @@ void Move(float final_dist1, float final_dist2)
         sendInt((int)((final_dist1)*1000));
         sendMessage("Target");
         sendInt((int)((target_1)*1000));
-        float v1 = error1 * k;
+        float v1 = error1 * trans_k;
         CapMotorVoltage(&v1);
         SetMotor1(v1);
         // sendInt((int)(1000*v1));
-        float v2 = error2 * k;
+        float v2 = error2 * trans_k;
         CapMotorVoltage(&v2);
         // sendInt((int)(1000*v2));
         SetMotor2(v2);
@@ -261,36 +264,39 @@ void Move(float final_dist1, float final_dist2)
 
 void Turn(float degrees) //TODO: Turn()
 {
-    // track width =   m
-    // WHEEL_RADIUS = 0.037 m
+    // track width = 134 mm
+    // WHEEL_RADIUS = 0.037 m not 41 mm ?
     // wheel speed for rotation is set constant at 0.1 m/s
+    // alpha = R/E * (PHI_r - PHI_l)
 
-    ResetPos(); //?
-
-    float acceptable_error = 0.002;
-    float error1 = acceptable_error + 1;
-    float error2 = acceptable_error + 1;
-    float k = 3.69;
+    ResetPos();
+    int8_t acceptable_error = 2;
+    int8_t error1 = acceptable_error + 1;
+    int8_t error2 = acceptable_error + 1;
+    float rot_k = 3.69; // TODO
     // TODO: use timers and GetTarget
     float time = 0;
+
+    float target_1;
+    float target_2;
+
+    float rot_dist = (degrees/360) * (0.134*PI);
 
     if (degrees > 0)
     { // turn right
         //TODO
-        float target_1 = GetTarget(time, distance_traveled);
-        float target_2 = -target_1;
+        target_1 = GetTarget(time, rot_dist);
+        target_2 = -target_1;
     }
     else
     { // turn left
         //TODO
-        float target_2 = GetTarget(time, distance_traveled);
-        float target_1 = -target_2;
+        target_2 = GetTarget(time, rot_dist);
+        target_1 = -target_2;
     }
-    float target_1 = GetTarget(time, distance_traveled);
-    float target_2 = -target_1;
 
     //? Abs(error) ?< acceptable_error
-    while ((Abs(error1) > acceptable_error || Abs(error2) > acceptable_error) || (target_1 < final_dist1 || target_2 < final_dist2)) //TODO:
+    while ((Abs(error1) > acceptable_error || Abs(error2) > acceptable_error) || (target_1 < rot_dist || target_2 < rot_dist)) //TODO:
     {
         // if (IFS0bits.T1IF)
         // {
@@ -301,16 +307,41 @@ void Turn(float degrees) //TODO: Turn()
         if (degrees > 0)
         { // turn right
             //TODO
-            target_1 = GetTarget(time, distance_traveled);
+            target_1 = GetTarget(time, rot_dist);
             target_2 = -target_1;
+
+            error1 = target_1 - GetDistMotor1();
+            error2 = target_2 - GetDistMotor2(); //? + ?
         }
         else
         { // turn left
             //TODO
-            target_2 = GetTarget(time, distance_traveled);
+            target_2 = GetTarget(time, rot_dist);
             target_1 = -target_2;
+
+            error1 = target_1 - GetDistMotor1(); //? + ?
+            error2 = target_2 - GetDistMotor2();
         }
-    }
+        sendMessage("Erreurs : ");
+        sendInt((int)(error1 * 1000));
+        sendInt((int)(error2 * 1000));
+        sendMessage("Finaldist - target ");
+        sendInt((int)((rot_dist - target_1) * 1000));
+        sendMessage("Finaldist");
+        sendInt((int)((rot_dist)*1000));
+        sendMessage("Target");
+        sendInt((int)((target_1)*1000));
+        float v1 = error1 * rot_k;
+        CapMotorVoltage(&v1);
+        SetMotor1(v1);
+        // sendInt((int)(1000*v1));
+        float v2 = error2 * rot_k;
+        CapMotorVoltage(&v2);
+        // sendInt((int)(1000*v2));
+        SetMotor2(v2);
+        __delay_ms(50);
+        // }
+        }
     SetMotor1(0);
     SetMotor2(0);
 }
@@ -430,7 +461,7 @@ void StartupMessage()
 
 void MotorOrder(movement order)
 {
-    //TODO:
+    //TODO: do with uint ?
     switch (order.cmd)
     {
     case FORWARD:
