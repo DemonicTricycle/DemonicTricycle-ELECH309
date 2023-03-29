@@ -53,6 +53,7 @@ See the docs about the **[Frame State Machine](/frameFSM)**.
 ## Testing
 See the docs about **[Testing](/testing)**:
 - **[Unit Tests](/unitTests)**
+- **[Kinematics Tests](/kinematicsTests)**
 - ...?
 
 
