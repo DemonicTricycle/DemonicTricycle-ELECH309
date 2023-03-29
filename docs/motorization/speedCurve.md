@@ -1,7 +1,7 @@
 ---
 layout: default
-title: Digital Filter
-parent: Sound Filters
+title: Speed Curve
+parent: Motorization
 nav_order: 2
 ---
 
@@ -14,5 +14,4 @@ nav_order: 2
 {:toc}
 </details>
 
-# Digital filter
-> ...
+# Speed Curve

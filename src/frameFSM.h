@@ -7,6 +7,11 @@
 
 #include <stdint.h>
 
+// TODO: use ?
+#define FRAME_LENGTH 13 // Frame length in bits
+#define FRAME_DATA_LENGTH 10 // Frame data length in bits
+#define FRAME_PARAMS_LENGTH FRAME_DATA_LENGTH-2 // Frame parameters length in bits
+
 typedef enum
 { /// Commands:
     FORWARD,
