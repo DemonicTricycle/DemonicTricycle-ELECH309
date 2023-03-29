@@ -20,6 +20,8 @@ favicon_ico: "/assets/images/favicon.ico"
 back_to_top: true
 back_to_top_text: "Back to top"
 
+enable_copy_code_button: true
+
 gh_edit_link: false
 
 # Color scheme supports "light" (default) and "dark"
