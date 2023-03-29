@@ -29,20 +29,20 @@ Each state has its handler.
 
 ## Handlers
 
-- _**IdleHandler** : not necessary? checks if a frame has come. Goes to **START** state if successful._
+- **IdleHandler** : gets called when a frame has come, then goes to **START** state.
 - **StartHandler** : checks if start bit is correct, starts the translation of the rest of the frame. Goes to **DATA** state if successful.
-- **DataHandler** : gets the command and params from the frame. Goes to **PARITY** state if successful.
-- **ParityHandler** : checks if the parity of the frame against its parity bit. Goes to **STOP** state if successful.
+- **DataHandler** : gets the command and parameterss from the frame by getting each data bit and stores it, then goes to **PARITY** state.
+- **ParityHandler** : checks if the parity of the previous processed bits against its parity bit. Goes to **STOP** state if successful.
 - **StopHandler** : checks if stop bit is correct. Goes back to **IDLE** state.
 
 If any of the handlers fails, reset back to **IDLE** state.
 
-When the **StopHandler** has succeeded, it sets the finished var to _true_, exits the loop and returns _0_ (_no error_) from the stateFSM function, allowing the motors to get the data received as it is correct.
+When the **StopHandler** has succeeded, it sends the movement order to the Motors, as the data is correct.
 
 ## Diagram
 
 The diagram below explains it.
 
-![frameFSM](https://user-images.githubusercontent.com/23436953/224987794-8ba17d3b-a5c1-47aa-841a-10f06f3636d8.svg)
+![frameFSM](https://user-images.githubusercontent.com/23436953/228499998-c585aa1c-0b6d-4191-b98c-7868d508650c.svg)
 
 
