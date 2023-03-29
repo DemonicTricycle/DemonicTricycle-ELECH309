@@ -50,6 +50,10 @@
 #include "frameFSM.h"
 #include <stdint.h>
 
+#ifdef DEBUG
+#include <stdio.h>
+#endif
+
 /*
  ! defined in header file
 // State Machine states:
@@ -102,24 +106,24 @@ int IdleHandler(signal signal_state) //? needed?
     printf("IdleHandler\n");
 #endif
 
-    if (signal_state == BIT_0)
-    {
-#ifdef DEBUG
-        printf("StartHandler success\n");
-#endif
-        current_state = START;
-        zeroes++;
-        return 0;
-    }
-    else
-    {
-#ifdef DEBUG
-        printf("StartHandler fail\n");
-#endif
-        current_state = IDLE;
-        resetFSM();
-        return 1;
-    }
+    //if (signal_state == BIT_0)
+    //{
+    //#ifdef DEBUG
+    //    printf("StartHandler success\n");
+    //#endif
+    //    current_state = START;
+    //    zeroes++;
+    //    return 0;
+    //}
+    //else
+    //{
+    //#ifdef DEBUG
+    //    printf("StartHandler fail\n");
+    //#endif
+    //    current_state = IDLE;
+    //    resetFSM();
+    //    return 1;
+    //}
 
     ////    // if (frame == 0b0000000000000) // more efficient than the following ?
     ////    if (frame >> 12 == 0b0)
@@ -143,24 +147,26 @@ int StartHandler(signal signal_state)
     printf("StartHandler\n");
 #endif
 
-    // if (signal_state == BIT_0)
-    //{
-    // #ifdef DEBUG
-    //     printf("StartHandler success\n");
-    // #endif
-    //     current_state = START;
-    //     zeroes++;
-    //     return 0;
-    // }
-    // else
-    //{
-    // #ifdef DEBUG
-    //     printf("StartHandler fail\n");
-    // #endif
-    //     current_state = IDLE;
-    //     resetFSM();
-    //     return 1;
-    // }
+    //current_state = DATA;
+
+     if (signal_state == BIT_0)
+    {
+     #ifdef DEBUG
+         printf("StartHandler success\n");
+     #endif
+         current_state = DATA;
+         zeroes++;
+         return 0;
+     }
+     else
+    {
+     #ifdef DEBUG
+         printf("StartHandler fail\n");
+     #endif
+         current_state = IDLE;
+         resetFSM();
+         return 1;
+     }
 
     ////
     ////// if (!frame & 0b1000000000000) // more efficient than the following ?
@@ -406,7 +412,7 @@ int StopHandler(signal signal_state)
         //TODO: send order to robot
         order.cmd = cmd;
         order.params = params;
-        sendToMotors(order); // TODO
+        //sendToMotors(order); //TODO:
 
         resetFSM();
         return 0;
@@ -486,6 +492,11 @@ int FrameFSM(uint8_t low, uint8_t high) //?
 
     // int finished = 0;
     int success = 0; // motors should do nothing if success == 0
+
+    if ( current_state == IDLE & (signal_state == BIT_0 || signal_state == BIT_1))
+    {
+        current_state = START;
+    }
 
     switch (current_state)
     {
@@ -587,6 +598,7 @@ int FrameFSM(uint8_t low, uint8_t high) //?
         else
         {
             // should throw error
+
             success = 0;
         }
         break;
@@ -625,7 +637,7 @@ int FrameFSM(uint8_t low, uint8_t high) //?
         //! here or in StopHandler?
         order.cmd = cmd;
         order.params = params;
-        MotorsOrder(order); // TODO:
+        //MotorsOrder(order); // TODO:
         return 0; // the motors can get the command and data to run
     }
     else

@@ -48,6 +48,8 @@ typedef struct
 extern movement order;
 
 // Frame State Machine function
-int FrameFSM(uint16_t frame);
+int FrameFSM(uint8_t low, uint8_t high);
+
+void resetFSM(void);
 
 //#endif // FRAMEFSM_H_
