@@ -8,3 +8,5 @@ has_toc: true
 
 Motorization: motor regulation and feedback.
 {: .fs-6 .fw-300 }
+
+# Motorization

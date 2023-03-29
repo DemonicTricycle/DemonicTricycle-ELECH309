@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Analog Filter
-parent: Sound Filters
+parent: Sound Filtering
 nav_order: 1
 ---
 
@@ -15,4 +15,10 @@ nav_order: 1
 </details>
 
 # Analog filter
-> ...
+...
+
+## Design
+...
+
+## Processing
+...
