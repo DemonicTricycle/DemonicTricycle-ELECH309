@@ -17,7 +17,8 @@ nav_order: 2
 ...
 
 ## In `configuration.c`
-```C
+{% highlight markdown %}
+```c
 // DSPIC33FJ128MC802 Configuration Bit Settings
 // 'C' source line config statements
 // FBS
@@ -66,9 +67,11 @@ nav_order: 2
 
 #include <xc.h>
 ```
+{% endhighlight %}
 
 ## In other files
-
-```C
+{% highlight markdown %}
+```c
 #define FCY 3685000   // cycle frequency. Needed for __delay_ms
 ```
+{% endhighlight %}
