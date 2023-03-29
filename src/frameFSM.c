@@ -437,10 +437,18 @@ int StopHandler(signal signal_state)
 
 //* Frame Finite State Machine
 int FrameFSM(uint8_t low, uint8_t high) //?
-{                                       /// TODO:
-
+{
+// TODO:
 #ifdef DEBUG
-    printf("FrameFSM received bit: %u\n", bit);
+    printf("FrameFSM bit received:\n");
+    if (low)
+    {
+        printf("low\n");
+    }
+    else
+    {
+        printf("high\n");
+    }
 #endif
 
     // uint8_t bit;
