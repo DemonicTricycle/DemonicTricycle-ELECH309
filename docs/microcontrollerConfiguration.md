@@ -70,10 +70,6 @@ nav_order: 2
 
 ## In other files
 
-{% highlight c %}
-#define FCY 3685000   // cycle frequency. Needed for __delay_ms
-{% endhighlight %}
-
 ```c
 #define FCY 3685000   // cycle frequency. Needed for __delay_ms
 ```
