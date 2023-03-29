@@ -262,12 +262,16 @@ void Move(float final_dist1, float final_dist2)
     SetMotor2(0);
 }
 
-void Turn(float degrees) //TODO: Turn()
+void TurnDist(float degrees) //TODO: Turn()
 {
     // track width = 134 mm
-    // WHEEL_RADIUS = 0.037 m not 41 mm ?
-    // wheel speed for rotation is set constant at 0.1 m/s
+    // WHEEL_RADIUS = 0.037 m
+    //? not 41 mm ?
+    // wheel speed for rotation is set constant at 0.5 m/s ?
     // alpha = R/E * (PHI_r - PHI_l)
+
+    // rot_circumference = TRACK_WIDTH * PI
+    // traveled_arc_length = alpha/360 * rot_circumference
 
     ResetPos();
     int8_t acceptable_error = 2;
