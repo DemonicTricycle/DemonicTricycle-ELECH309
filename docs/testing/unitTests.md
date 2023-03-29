@@ -20,7 +20,7 @@ nav_order: 1
 ## Digital Filter
 ...
 
-## Frame State Machine
+## Frame State Machine Handlers
 ...
 
 ## Speed Curve
