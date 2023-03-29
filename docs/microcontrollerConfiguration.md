@@ -70,8 +70,8 @@ nav_order: 2
 {% endhighlight %}
 
 ## In other files
-{% highlight markdown %}
+<div class="code-example" markdown="1">
 ```c
 #define FCY 3685000   // cycle frequency. Needed for __delay_ms
 ```
-{% endhighlight %}
+</div>
