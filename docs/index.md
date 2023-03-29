@@ -36,6 +36,9 @@ See the docs about the **[Data Transmission](/dataTransmission)**.
 ## Transmission Frame
 See the docs about the **[Communication Frame](/communicationFrame)**.
 
+## Microcontroller Configuration
+See the docs about the **[Microcontroller Configuration](/microcontrollerConfiguration)**.
+
 ## Motorization
 See the docs about the **[Motorization](/motorization)**:
 - **[Motor Regulation](/motorRegulation)**
