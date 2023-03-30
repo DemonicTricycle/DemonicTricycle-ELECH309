@@ -29,12 +29,13 @@ void printBinary(uint16_t number)
     putc((number & 1) ? '1' : '0', stdout);
 }
 
-void printTest(uint16_t frame) 
+int printTest(uint16_t frame) 
 {
     printf(" > Frame: ");
     printBinary(frame);
     printf("\n");
     int res;
+    int test;
 
     ////for (int i = 0; i < 16; i++)
     ////{
@@ -63,6 +64,7 @@ void printTest(uint16_t frame)
     if (res == 0)
     {
         printf("____Frame is valid____\n");
+        test = 1;
         printf("-Command: ");
         switch (order.cmd)
         {
@@ -84,6 +86,7 @@ void printTest(uint16_t frame)
     else
     {
         printf("_____Frame is invalid_____\n");
+        test = 0;
         test_errors++;
         printf("-Command: ");
         switch (order.cmd)
@@ -109,19 +112,22 @@ int main(void)
 {
     errors = 0;
     uint16_t frame;
+    int test;
 
     resetFSM();
     printf("[Test 1]: start, BACKWARD, xx cm, even parity bit, parity error, stop\n"); // error
     frame = 0b0011101111001;
     errors++;
-    printTest(frame);
+    test = printTest(frame);
+    assert(!test);
 
     printf("--------------------------------------------------------------------\n");
 
     resetFSM();
     printf("[Test 2]: start, FORWARD, xx cm, even parity bit, parity correct, stop\n"); // success
     frame = 0b0001101111001;
-    printTest(frame);
+    test = printTest(frame);
+    assert(test);
 
     printf("--------------------------------------------------------------------\n");
 
@@ -129,7 +135,8 @@ int main(void)
     printf("[Test 3]: start, TURN_RIGHT, xx degrees, even parity bit, parity error, stop error\n"); // error
     frame = 0b0101101111000;
     errors++;
-    printTest(frame);
+    test = printTest(frame);
+    assert(!test);
 
     printf("--------------------------------------------------------------------\n");
 
