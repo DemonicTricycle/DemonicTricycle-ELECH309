@@ -4,15 +4,16 @@ Implementation test of FrameFSM function
 
 */
 
+#define DEBUG 1
+
 #include <stdio.h>
 #include <stdint.h>
 #include <assert.h>
 #include "../../src/frameFSM.h"
+#include "../test.h"
 //#include "frameFSM.h"
 
 //#define DEBUG 1
-
-//! use assert() etc
 
 int errors = 0;
 int test_errors = 0;
@@ -20,16 +21,7 @@ int test_errors = 0;
 //command cmd;
 //movement order;
 
-void printBinary(uint16_t number)
-{
-    if (number >> 1)
-    {
-        printBinary(number >> 1);
-    }
-    putc((number & 1) ? '1' : '0', stdout);
-}
-
-int printTest(uint16_t frame) 
+int Test(uint16_t frame) 
 {
     printf(" > Frame: ");
     printBinary(frame);
@@ -118,7 +110,7 @@ int main(void)
     printf("[Test 1]: start, BACKWARD, xx cm, even parity bit, parity error, stop\n"); // error
     frame = 0b0011101111001;
     errors++;
-    test = printTest(frame);
+    test = Test(frame);
     assert(!test);
 
     printf("--------------------------------------------------------------------\n");
@@ -126,7 +118,7 @@ int main(void)
     resetFSM();
     printf("[Test 2]: start, FORWARD, xx cm, even parity bit, parity correct, stop\n"); // success
     frame = 0b0001101111001;
-    test = printTest(frame);
+    test = Test(frame);
     assert(test);
 
     printf("--------------------------------------------------------------------\n");
@@ -135,12 +127,12 @@ int main(void)
     printf("[Test 3]: start, TURN_RIGHT, xx degrees, even parity bit, parity error, stop error\n"); // error
     frame = 0b0101101111000;
     errors++;
-    test = printTest(frame);
+    test = Test(frame);
     assert(!test);
 
-    printf("--------------------------------------------------------------------\n");
-
     assert(errors == test_errors);
+    printf("--------------------------------------------------------------------\n");
+    printf(" - Test ended - \n");
 
     return 0;
 }
