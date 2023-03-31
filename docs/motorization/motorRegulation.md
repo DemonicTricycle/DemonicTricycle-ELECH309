@@ -43,6 +43,7 @@ encoders...
 ...
 
 ### K Constant
+test
 ### Designing the regulator
 
 The transfer function of the open-loop system is : BO(p) =
