@@ -7,6 +7,11 @@
 
 #include <stdint.h>
 
+// TODO: use ?
+#define FRAME_LENGTH 13 // Frame length in bits
+#define FRAME_DATA_LENGTH 10 // Frame data length in bits
+#define FRAME_PARAMS_LENGTH FRAME_DATA_LENGTH-2 // Frame parameters length in bits
+
 typedef enum
 { /// Commands:
     FORWARD,
@@ -36,13 +41,29 @@ typedef enum
 typedef struct
 { /// Movement:
     command cmd;
-    uint16_t params;
+    uint8_t params; // ? uint16_t
 } movement;
 
 // Movement instance
 extern movement order;
 
 // Frame State Machine function
-int FrameFSM(uint16_t frame);
+int FrameFSM(uint8_t low, uint8_t high);
+
+// Debug/test access to functions and variables
+#ifdef DEBUG || TEST // correct?
+void resetFSM(void);
+int IdleHandler(signal signal_state); //? needed?
+int StartHandler(signal signal_state);
+int DataHandler(signal signal_state);
+int ParityHandler(signal signal_state);
+int StopHandler(signal signal_state);
+extern state current_state;
+extern uint8_t bit_count;
+extern int8_t ones;
+extern int8_t zeroes;
+extern uint8_t bit_params;
+extern uint8_t cmd_bits;
+#endif
 
 //#endif // FRAMEFSM_H_
