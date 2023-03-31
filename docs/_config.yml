@@ -22,6 +22,8 @@ back_to_top_text: "Back to top"
 
 enable_copy_code_button: true
 
+math: mathjax
+
 gh_edit_link: false
 
 # Color scheme supports "light" (default) and "dark"
