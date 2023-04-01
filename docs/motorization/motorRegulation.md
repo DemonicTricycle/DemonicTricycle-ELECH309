@@ -41,7 +41,7 @@ $$w_2 =  9.761$$\
 As $$||Bo(jw_2)|| = 1$$ :\
 $$\frac{k_{p_2} k_v}{w_2 \sqrt{1 + (w_2 \tau)^2}} = 1$$\
 $$k_{p_2} = \frac{w_2 \sqrt{1 + (w_2 \tau)^2}}{k_v} = 1. 0298 rad^{-1}$$\
-As we take the lowest value, our gain is $$1. 0298 rad^{-1}$$.\
+As we take the lowest value, our gain is $$1. 0298 rad^{-1}$$.
 
 
 ## Speed Curve
