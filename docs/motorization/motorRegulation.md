@@ -21,8 +21,8 @@ math: mathjax
 
 ## Designing the regulator
 The transfer function of the open-loop system is : \
-BO(p) = $$\frac{L_e(p)}{E(p)} = \frac{k_p k_v e^{-p T_s / 2}}{(1 + p \tau)p}$$\
-With $$T_s = \frac{1}{100} s$$, $$k_v = 17.5 rad / s$$, $$\tau = 0.159 s$$\
+$$BO(p) = \frac{L_e(p)}{E(p)} = \frac{k_p k_v e^{-p T_s / 2}}{(1 + p \tau)p}$$\
+With $$T_s = \frac{1}{100} s, k_v = 17.5 rad / s, \tau = 0.159 s$$\
 Using the gain margin criteria :\
 $$\phi (BO(jw_1)) = - \pi$$\
 $$-w_1 \frac{T_s}{2} - arctan(w_1 \tau) - \frac{\pi}{2} = - \pi$$\
