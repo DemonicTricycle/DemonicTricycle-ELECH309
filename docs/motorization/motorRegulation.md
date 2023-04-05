@@ -28,10 +28,10 @@ $$\phi (BO(jw_1)) = - \pi$$\
 $$-w_1 \frac{T_s}{2} - arctan(w_1 \tau) - \frac{\pi}{2} = - \pi$$\
 $$-w_1  \frac{T_s}{2}  - arctan(w_1 \tau)  = -\frac{\pi}{2}$$\
 $$w_1  \frac{T_s}{2}  + arctan(w_1 \tau)  = \frac{\pi}{2}$$\
-$$w_1 = 31.282 rad / s$$\
+$$w_1 = 35.282 rad / s$$\
 Using -6 dB as target value : $$|| BO(jw_1)|| = -6 dB \simeq 0.5$$\
 $$\frac{k_{pi1} k_v}{w_1 \sqrt{1 + (w_1 \tau)^2}} = 0.5$$\
-$$k_{p1} = \frac{w_1 \sqrt{1 + (w_1 \tau)^2}}{2 k_v} = 4.535 rad^{-1}$$\
+$$k_{p1} = \frac{w_1 \sqrt{1 + (w_1 \tau)^2}}{2 k_v} = 5.74 rad^{-1}$$\
 Using the phase margin criteria :\
 $$M\phi(BO(jw_2)) = \frac{-5\pi}{6}$$\
 $$-w_2 \frac{T_s}{2} - arctan(w_2 \tau) - \frac{\pi}{2} = \frac{-5\pi}{6}$$\
