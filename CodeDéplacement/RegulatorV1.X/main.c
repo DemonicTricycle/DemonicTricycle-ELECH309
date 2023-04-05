@@ -1,10 +1,14 @@
+
+// <editor-fold defaultstate="collapsed" desc="Include and imports">
 #include "xc.h"
+#include <math.h>
+
 #define FCY 3685000     // cycle frequency. Needed for __delay_ms
 #include "libpic30.h"   // Contains __delay_ms definition
 #define NUM_TICKS_PER_TURN 1423
 #define PI 3.1415926535897932
 #define INT_MAX 65535
-#define WHEEL_RADIUS 0.037 //in m
+#define WHEEL_RADIUS 0.04 //in m
 
 //PWM parameters and macro
 #define PWM_TIME_PERIOD 0.001 //In s, one period is one up AND one down,
@@ -13,15 +17,23 @@
 #define CLOCK_PRESCALER 1 //0b00 corresponds to a scale of 1
 //Adaptation of the formula in the datasheet
 #define GET_PTPER() (int)(((float)FCY *  PWM_TIME_PERIOD/ CLOCK_PRESCALER) - 1) 
-//TODO : check this acutally works with a picoscope
+#define WHEELBASE 0.135
+#define MAX_PWM 0.8
 
+typedef enum {
+    forward,
+    backward
+} direction;
+
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="PWM">
 void PWMInit(void)
 {
     //If more details are required, check the following link :
     //https://ww1.microchip.com/downloads/en/DeviceDoc/70187E.pdf
     
     PTCONbits.PTEN = 0; //Start by disabling PWM pulse generation
-    
     PTCONbits.PTOPS = 0; // PWM time base output postscale
     PTCONbits.PTCKPS = CLOCK_PRESCALER_BINARY; // PWM time base input clock Prescale
     PTPER = GET_PTPER(); // PWM Timebase period
@@ -45,6 +57,9 @@ void setPWM2(float param) //1 = full power, 0 = turned off
 
 
 
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Encoders">
 void InitialiseEncoders(void)
 {
     QEI1CONbits.QEIM = 0b011;//Disables the module
@@ -70,7 +85,13 @@ int Uint16ToInt(uint16_t x) {
     return result;
 }
 
-float GetPosMotor1(void)
+void ResetPos(void)
+{
+    POS1CNT = 0;
+    POS2CNT = 0;    
+}
+
+float GetPosMotor1(void) //Get the position in radian
 { 
     return ((float)Uint16ToInt(POS1CNT)*(2*PI))/1423.0;
 }
@@ -78,7 +99,7 @@ float GetPosMotor2(void)
 {        
     return ((float)Uint16ToInt(POS2CNT)*(2*PI))/1423.0;
 }
-float GetDistMotor1(void)
+float GetDistMotor1(void) //Get the distance in m
 {
     return GetPosMotor1() * WHEEL_RADIUS;
 }
@@ -86,6 +107,9 @@ float GetDistMotor2(void)
 {
     return GetPosMotor2() * WHEEL_RADIUS;
 }
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Math function">
 float Abs(float value)
 {
     if (value < 0)
@@ -94,12 +118,6 @@ float Abs(float value)
     }
     return value;
 }
-void ResetPos(void)
-{
-    POS1CNT = 0;
-    POS2CNT = 0;    
-}
-
 int Sign(float value)
 {
     if (value < 0)
@@ -108,120 +126,220 @@ int Sign(float value)
     }
     return 1;
 }
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Movement">
 
 void CapMotorVoltage(float *value)
 {
-    float max_value = 0.9;
-    if (Abs(*value) > max_value)
+    if (Abs(*value) > MAX_PWM)
     {
-       *value = max_value *  Sign(*value);
-    }
-    
+       *value = MAX_PWM *  Sign(*value);
+    }    
 }
-void SetMotor1(float value)
+
+
+void SetMotor1Dir(direction dir)
 {
-    setPWM1(Abs(value));
-    if (value < 0)
+    if (dir == forward)
     {
         LATBbits.LATB2 = 1;
-    }
-    else
+    }    
+    if (dir == backward)
     {
         LATBbits.LATB2 = 0;
     }
 }
 
-void SetMotor2(float value)
+void SetMotor2Dir(direction dir)
 {
-    setPWM2(Abs(value));
-    if (value < 0)
+    if (dir == forward)
     {
         LATBbits.LATB3 = 1;
-    }
-    else
+    }    
+    if (dir == backward)
     {
         LATBbits.LATB3 = 0;
     }
 }
-float GetTarget(float time, float end) //time in s, end in m = final distance
+
+void SetMotor1(float value)
 {
+    setPWM1(Abs(value));
+    direction dir = forward;
+    if (value < 0)
+    {
+        dir = backward;
+    }
+    SetMotor1Dir(dir);
+}
+
+void SetMotor2(float value)
+{
+    setPWM2(Abs(value));
+    direction dir = forward;
+    if (value < 0)
+    {
+        dir = backward;
+    }
+    SetMotor2Dir(dir);
+}
+
+float GetTarget(float time, float final_target) //time in s, end in m = final distance
+{
+    int sign = Sign(final_target);
+    float end = Abs(final_target);
+    float acceleration = 0.5;
+    if (end < 0.5)
+    {
+        float half_time = sqrt(end / 0.5); 
+        if (time > half_time * 2)
+        {
+            return end * sign;
+        }
+        if (time < half_time)
+        {
+            return (time * time * acceleration / 2) * sign;
+        }
+        else
+        {
+            float distAldreadyMade = half_time * half_time * acceleration / 2;
+            float time_since_slowing = time - half_time;
+            return (distAldreadyMade  + 0.5 * half_time * time_since_slowing - time_since_slowing * time_since_slowing * 0.25) * sign;
+        }
+    }
     if (time < 1)
     {
-        //printf("Cas 1");
-        return time * time * 0.25;
-    } //Acceleration at the start
+        return (time * time * 0.25) * sign;
+    } 
 
     float time_at_cruise = (end - 0.5)/0.5;
-    //printf("Time at cruise : %f", time_at_cruise);
+    
     if (time >= time_at_cruise + 1)//Slowing down
     {
         float time_remaining = time_at_cruise + 2 - time;
         float time_since_slowing = time - time_at_cruise - 1;
-        //printf("Time time_remaining : %f \n", time_remaining);
+        
         if (time_remaining < 0)
         {
-            return 0.5 *  time_at_cruise + 0.5;
+            return (0.5 *  time_at_cruise + 0.5) * sign;
         }
-        //printf("Cas 2");
-        return 0.5 * time_at_cruise + 0.25 + 0.5 * time_since_slowing - time_since_slowing * time_since_slowing * 0.25;
+        
+        return (0.5 * time_at_cruise + 0.25 + 0.5 * time_since_slowing - time_since_slowing * time_since_slowing * 0.25) * sign;
     }
-    return (time - 1 ) * 0.5 + 0.25; 
+    return ((time - 1 ) * 0.5 + 0.25) * sign; 
 }
 
-void Move(float final_dist1, float final_dist2)
-{
-    //a_max = 0.5 m / s²
-    //v_max = 0.5 m/s
-    //-> 1s pour accélèrer
-    //2s min
-    //-> 0.5 m min for now
+float getTargetAngle(float given_angle, float time_since_start) 
+{//Not very optimised but at least somewhat readable
+    #define CRUISE_ROTATION_SPEED 4  // rad / second
+    #define MAX_ACCELERATION_TIME 1.2  // seconds
+
+    int sign = Sign(given_angle);
+    float target_angle = Abs(given_angle);
+    // Calculate the maximum angle that can be reached before reaching the cruise speed
+    float MAX_ANGLE = (float)CRUISE_ROTATION_SPEED * 0.5 * (MAX_ACCELERATION_TIME * 2);
+
+    float angle_to_return = 0;
     
-    ResetPos();
-    float acceptable_error = 0.02;
-    float error1 = acceptable_error + 1;
-    float error2 = acceptable_error + 1;
-    float k = 3.69;
-    //TODO : use timers and GetTarget
-    float time = 0;
-    float target_1 = GetTarget(time, final_dist1);
-    float target_2 = GetTarget(time, final_dist2);
-    
-    while ((Abs(error1) > acceptable_error || Abs(error2) > acceptable_error) 
-            || (target_1 < final_dist1 || target_2 < final_dist2))
+    if (target_angle > MAX_ANGLE)
     {
-        //if (IFS0bits.T1IF)
-       // {
-       //     IFS0bits.T1IF = 0;
-        time += 0.050;
-        target_1 = GetTarget(time, final_dist1);
-        target_2 = GetTarget(time, final_dist2);
+        return 0; //Such an angle is not sendable in 8 bits
+    }
+    float acceleration = (float)CRUISE_ROTATION_SPEED / MAX_ACCELERATION_TIME; //The acceleration rate
+    float half_time = sqrt(target_angle / acceleration); // The time at wich we start decelerating
+
+    if (time_since_start < half_time)
+    {
+        //Simple acceleration
+       angle_to_return =  time_since_start * time_since_start * acceleration / 2;
+    }
+    else
+    {
+        float time_since_slowing = time_since_start - half_time;
+        //Distance aldready made when accelerating
+        angle_to_return = half_time * half_time * acceleration / 2;
+        //Distance since deceleration
+        angle_to_return += acceleration * (half_time * time_since_slowing - time_since_slowing * time_since_slowing / 2);
+    }
+    if (time_since_start >= half_time * 2)
+    {
+        angle_to_return = target_angle;
+    }
+    
+    return angle_to_return* sign;
+}
+
+float getAngle()
+{
+    return (GetDistMotor2() - GetDistMotor1()) / WHEELBASE; 
+}
+
+void Move(float translation, float angle)
+{    
+    ResetPos(); //Sets the encoders to 0
+    #define acceptable_error_transla 0.04
+    #define acceptable_error_rota 0.06981  //(float)4 / 360 * 2 * PI
+    float error_translation = acceptable_error_transla + 1;
+    float error_rotation = acceptable_error_rota + 1;
+    
+    #define k_transla 3.69
+    #define k_rota 1.03 * 3
+
+    float time = 0;
+    float target_transla = GetTarget(time, translation);
+    float target_rota = getTargetAngle(angle, time); 
+    int time_interval = 3; //ms
+    PR1 = (FCY/1000 -1) * time_interval;//10 ms
+    T1CONbits.TON = 1;
+    //int cnt = 0;
+    while (
+            (Abs(error_translation) > acceptable_error_transla)
+            || (Abs(error_rotation) > acceptable_error_rota)
+            || (Abs(target_transla) < Abs(translation)) || (Abs(target_rota) < Abs(angle))
+            )
+    {
+        if (_T1IF == 1)
+        {
+            _T1IF = 0;
+           /*  cnt++;
+            if (cnt >= 10)
+            {
+                 sendMessage("Position V2 : ");
+                 cnt = 0;
+                   int a = (int)(GetPosMotor1()*1000);
+            sendInt(a);
+            a = (int)(GetPosMotor2()*1000);
+                 sendMessage("Position en cm : ");
+                 cnt = 0;
+                   a = (int)(GetDistMotor1()*100);
+            sendInt(a);
+            a = (int)(GetDistMotor2()*100);
+        sendInt(a);
+                 sendMessage("Target pos en cm : ");
         
-        error1 = target_1 - GetDistMotor1();
-        
-        error2 = target_2 - GetDistMotor2();
-        sendMessage("Erreurs : ");
-        sendInt((int)(error1*1000));
-        sendInt((int)(error2*1000));
-        sendMessage("Finaldist - target ");
-        sendInt((int)((final_dist1-target_1)*1000));
-        sendMessage("Finaldist");
-        sendInt((int)((final_dist1)*1000));
-        sendMessage("Target");
-        sendInt((int)((target_1)*1000));
-        float v1 = error1 * k;
-        CapMotorVoltage(&v1);
-        SetMotor1(v1);
-        //sendInt((int)(1000*v1));
-        float v2 = error2 * k;
-        CapMotorVoltage(&v2);
-        //sendInt((int)(1000*v2));
-        SetMotor2(v2);
-        __delay_ms(50); 
-       // }  
+            a = (int)(target_transla*100);
+        sendInt(a);
+            }*/
+            time += (float)time_interval / 1000;
+           
+            target_transla = GetTarget(time, translation);
+
+            error_translation = target_transla - (GetDistMotor1() + GetDistMotor2()) / 2;     
+            target_rota = getTargetAngle(angle, time);
+            error_rotation = getAngle() - getTargetAngle(angle, time);        
+            float v1 = error_translation * k_transla + error_rotation * k_rota;
+            CapMotorVoltage(&v1);
+            SetMotor1(v1);
+            float v2 = error_translation * k_transla - error_rotation * k_rota;
+            CapMotorVoltage(&v2);
+            SetMotor2(v2);
+        }
     } 
     SetMotor1(0);
     SetMotor2(0);
 }
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Debug">
 void sendChars(char *chars)
@@ -324,32 +442,38 @@ void StartupMessage()
     sendMessage("Booting : "); 
     __delay_ms(10);     
 }
+
 // </editor-fold>
 
-int main(void) {   
-  //PR1 = 36849;
-   // stars timer1
-  //T1CONbits.TON = 1;
-  
-  TRISBbits.TRISB2 = 0; //dir 1
-  TRISBbits.TRISB3 = 0;
-  LATBbits.LATB2 = 0;
-  LATBbits.LATB3 = 0; 
+void initialiseMotors(void)
+{ 
+  direction dir = forward;
+  TRISBbits.TRISB2 = 0; 
+  TRISBbits.TRISB3 = 0;//Declares dir pins as output
+  SetMotor2Dir(dir);
+  SetMotor2Dir(dir);
+}
+void initialise (void)
+{
+  initialiseMotors();  
   InitialiseEncoders(); 
   PWMInit();
   initUart();    
   StartupMessage(); 
   __delay_ms(1000);    
-  //SetMotor1(1);
-  //SetMotor2(0);
+}
 
+int main(void) 
+{     
+  initialise();
   
-	while(1) {        
-  Move(1.5, 1.5);
-        __delay_ms(2000);    
-  Move(0.5, 0.5);    
-        __delay_ms(2000); 
-	}
+  while(1) 
+  {        
+    Move(1, 0);
+   __delay_ms(1000);    
+    Move(0, -PI);    
+    __delay_ms(1000); 
+  }
     
-    return 0;
+  return 0;
 }
