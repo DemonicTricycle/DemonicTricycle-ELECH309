@@ -319,7 +319,7 @@ int FrameFSM(uint8_t low, uint8_t high) //?
     // int finished = 0;
     int success = 0; // motors should do nothing if success == 0
 
-    if ( current_state == IDLE & (signal_state == BIT_0 || signal_state == BIT_1))
+    if ( current_state == IDLE && (signal_state == BIT_0 || signal_state == BIT_1))
     {
         current_state = START;
         // int idle; //? needed?
