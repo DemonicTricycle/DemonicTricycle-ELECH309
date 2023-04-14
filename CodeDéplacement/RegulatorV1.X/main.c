@@ -422,7 +422,7 @@ void initUart(void)
     U1MODEbits.BRGH = 0;
     U1BRG = 3;
     
-    U1MODEbits.UARTEN = 1;      // on active l'UART
+    U1MODEbits.UARTEN = 1;      // on active l'UART //TODO: enable UART with switch, and only execute sendChars etc if enabled
     U1STAbits.UTXEN = 1;        // on active l'?mission
 }
 
