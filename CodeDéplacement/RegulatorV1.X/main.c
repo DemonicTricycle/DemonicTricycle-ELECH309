@@ -3,12 +3,23 @@
 #include "xc.h"
 #include <math.h>
 
-#define FCY 3685000     // cycle frequency. Needed for __delay_ms
+// cycle frequency. Needed for __delay_ms
+#ifndef FCY
+#define FCY 3685000
+#endif
+
 #include "libpic30.h"   // Contains __delay_ms definition
 #define NUM_TICKS_PER_TURN 1423
+
+#ifndef PI
 #define PI 3.1415926535897932
+#endif
+
 #define INT_MAX 65535
-#define WHEEL_RADIUS 0.04 //in m
+// Wheel radius, in m
+#ifndef WHEEL_RADIUS
+#define WHEEL_RADIUS 0.04
+#endif
 
 //PWM parameters and macro
 #define PWM_TIME_PERIOD 0.001 //In s, one period is one up AND one down,
@@ -16,8 +27,13 @@
 #define CLOCK_PRESCALER_BINARY 0b00 //In ms
 #define CLOCK_PRESCALER 1 //0b00 corresponds to a scale of 1
 //Adaptation of the formula in the datasheet
-#define GET_PTPER() (int)(((float)FCY *  PWM_TIME_PERIOD/ CLOCK_PRESCALER) - 1) 
+#define GET_PTPER() (int)(((float)FCY *  PWM_TIME_PERIOD/ CLOCK_PRESCALER) - 1)
+
+// Wheelbase, in m
+#ifndef WHEELBASE
 #define WHEELBASE 0.135
+#endif
+
 #define MAX_PWM 0.8
 
 typedef enum {
@@ -458,22 +474,24 @@ void initialise (void)
   initialiseMotors();  
   InitialiseEncoders(); 
   PWMInit();
-  initUart();    
+  initUart();    //TODO: only enable UART if debugging ?
   StartupMessage(); 
   __delay_ms(1000);    
 }
 
 int main(void) 
-{     
-  initialise();
-  
-  while(1) 
-  {        
+{
+    initialise();
+
+    #ifdef DEBUG
+    while(1) 
+    {        
     Move(1, 0);
-   __delay_ms(1000);    
+    __delay_ms(1000);    
     Move(0, -PI);    
     __delay_ms(1000); 
-  }
-    
-  return 0;
+    }
+    #endif
+
+    return 0;
 }
