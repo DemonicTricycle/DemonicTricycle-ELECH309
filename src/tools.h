@@ -17,7 +17,7 @@ int floatSign(float value);
 void sendUartChars(char *chars);
 void breakUartLine(void);
 void sendUartMessage(char *chars);
-void sendUartInt(int toSend);
+void sendUartInt16(int toSend);
 int strlen(const char *s);
 void itoa(int num, char *data, int ba);
 void initUart(void);

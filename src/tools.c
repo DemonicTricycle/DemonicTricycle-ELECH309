@@ -1,8 +1,15 @@
 // <editor-fold defaultstate="collapsed" desc="Include and imports">
+#ifndef TEST
 #include "xc.h"
+#endif
 #include <stdint.h>
 #include <math.h>
+#ifndef TEST
 #include "libpic30.h" // Contains __delay_ms definition
+#endif
+#ifdef TEST
+#include <stdio.h>
+#endif
 
 // </editor-fold>
 
@@ -35,45 +42,6 @@ int floatSign(float value)
 }
 
 // <editor-fold defaultstate="collapsed" desc="Debug">
-void sendUartChars(char *chars)
-{
-    int length = strlen(chars);
-    for (int i = 0; i < length; i++)
-    {
-        while (U1STAbits.UTXBF)
-        {
-        }
-        U1TXREG = chars[i];
-    }
-}
-void breakUartLine(void)
-{
-    char *data2 = "\n";
-    sendUartChars(data2);
-}
-void sendUartMessage(char *chars)
-{
-    sendUartChars(chars);
-    breakUartLine();
-}
-void sendUartInt(int toSend)
-{
-    char data[8];
-    itoa(toSend, data, 10);
-    sendUartChars(&data);
-    breakUartLine();
-}
-int strlen(const char *s)
-{
-
-    int len = 0;
-    while (*s++)
-    {
-        len++;
-    }
-
-    return len;
-}
 void itoa(int num, char *data, int ba)
 {
     int i = 0;
@@ -112,8 +80,55 @@ void itoa(int num, char *data, int ba)
         data[j] = temp;
     }
 }
+
+void sendUartChars(char *chars)
+{
+    #ifndef TEST
+    int length = strlen(chars);
+    for (int i = 0; i < length; i++)
+    {
+        while (U1STAbits.UTXBF)
+        {
+        }
+        U1TXREG = chars[i];
+    }
+    #endif
+    #ifdef TEST
+    printf(chars);
+    #endif
+}
+void breakUartLine(void)
+{
+    char *data2 = "\n";
+    sendUartChars(data2);
+}
+void sendUartMessage(char *chars)
+{
+    sendUartChars(chars);
+    breakUartLine();
+}
+void sendUartInt16(int toSend)
+{
+    char data[8];
+    itoa(toSend, data, 10);
+    sendUartChars(&data);
+    breakUartLine();
+}
+int strlen(const char *s)
+{
+
+    int len = 0;
+    while (*s++)
+    {
+        len++;
+    }
+
+    return len;
+}
+
 void initUart(void)
 {
+    #ifndef TEST
     _U1RXR = 6; // U1RX -> RP6
     _RP7R = 3;  // RP7 -> U1Tx
 
@@ -126,6 +141,7 @@ void initUart(void)
 
     U1MODEbits.UARTEN = 1; // on active l'UART //TODO: enable UART with switch, and only execute sendChars etc if enabled
     U1STAbits.UTXEN = 1;   // on active l'?mission
+    #endif
 }
 
 void uint16_t_to_char_array(uint16_t val, char *arr, size_t arr_size)
@@ -142,9 +158,11 @@ void uint16_t_to_char_array(uint16_t val, char *arr, size_t arr_size)
 }
 void StartupMessage()
 {
+    #ifndef TEST
     __delay_ms(10);
-    sendMessage("Booting : ");
+    sendUartMessage("Booting : ");
     __delay_ms(10);
+    #endif
 }
 
 // </editor-fold>
