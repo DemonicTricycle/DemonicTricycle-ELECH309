@@ -34,9 +34,9 @@ int Test(uint16_t frame)
     ////    printf("%d", (frame >> i) & 1);
     ////}
 
-    for (int p = 13; p >= 1; p--)
+    for (int p = 12; p >= 0; p--)
     {
-        uint16_t bit = (frame >> p) & 0b01;
+        uint16_t bit = (frame >> p) & 0b1;
         uint8_t low;
         uint8_t high;
         if (bit)
@@ -57,6 +57,7 @@ int Test(uint16_t frame)
     {
         printf("____Frame is valid____\n");
         test = 1;
+        /*
         printf("-Command: ");
         switch (order.cmd)
         {
@@ -74,12 +75,14 @@ int Test(uint16_t frame)
             break;
         }
         printf("-Params: %u\n", order.params);
+        */
     }
     else
     {
         printf("_____Frame is invalid_____\n");
         test = 0;
         test_errors++;
+        /*
         printf("-Command: ");
         switch (order.cmd)
         {
@@ -97,7 +100,9 @@ int Test(uint16_t frame)
             break;
         }
         printf("-Params: %u\n", order.params);
+        */
     }
+    return !res;
 }
 
 int main(void)
@@ -131,8 +136,9 @@ int main(void)
     assert(!test);
 
     assert(errors == test_errors);
-    printf("--------------------------------------------------------------------\n");
-    printf(" - Test ended - \n");
+    printf("\n----------------------------\n");
+    printf("|      - Test ended -      |\n");
+    printf("----------------------------\n\n");
 
     return 0;
 }
