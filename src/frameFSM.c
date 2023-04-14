@@ -75,13 +75,14 @@ void resetFSM()
     bit_params = 0;
 }
 
-int IdleHandler(signal signal_state) //? needed?
+int IdleHandler(signal signal_state)
 {
 // TODO
 #ifdef DEBUG
     printf("IdleHandler\n");
 #endif
 
+    sendChars("Idling\n");
     return 0;
 }
 
@@ -205,12 +206,7 @@ int ParityHandler(signal signal_state)
     printf("ParityHandler\n");
 #endif
 
-    //zeroes - ones == 0 ?
-
-    uint8_t parity_check = 0;
-    //TODO: parity check
-
-    if (parity_check)
+    if (!(ones & 0b01)) // bitwise operation that checks if the number of ones is not odd
     {
         sendChars("even parity\n");
         // even parity
@@ -220,6 +216,7 @@ int ParityHandler(signal signal_state)
             printf("ParityHandler success\n");
 #endif
             sendChars("parity success\n");
+            bit_count_fsm++;
             current_state = STOP;
             return 0;
         }
@@ -243,6 +240,7 @@ int ParityHandler(signal signal_state)
             printf("ParityHandler success\n");
 #endif
             sendChars("parity success\n");
+            bit_count_fsm++;
             current_state = STOP;
             return 0;
         }
@@ -273,6 +271,8 @@ int StopHandler(signal signal_state)
         //order.cmd = cmd;
         //order.params = params;
         //sendToMotors(order); //TODO:
+
+        //bit_count_fsm++;
 
         resetFSM();
         return 0;
@@ -350,50 +350,42 @@ int FrameFSM(uint8_t low, uint8_t high)
     if ( current_state == IDLE && (signal_state == BIT_0 || signal_state == BIT_1))
     {
         current_state = START;
-        // int idle; //? needed?
-        // idle = IdleHandler(signal_state);
     }
 
     switch (current_state)
     {
     case IDLE:
-// TODO
 #ifdef DEBUG
         printf("IDLE state");
 #endif
 
-        //* int idle; //? needed?
-        //* idle = IdleHandler(signal_state);
+        IdleHandler(signal_state);
         break;
     case START:
-// TODO
 #ifdef DEBUG
         printf("START state");
 #endif
         StartHandler(signal_state);
         break;
     case DATA:
-// TODO
 #ifdef DEBUG
         printf("DATA state");
 #endif
         DataHandler(signal_state);
         break;
     case PARITY:
-// TODO
 #ifdef DEBUG
         printf("PARITY state");
 #endif
         ParityHandler(signal_state);
         break;
-    case STOP: ;
-// TODO
+    case STOP: ; //requires this semicolon for unknown reason
 #ifdef DEBUG
         printf("STOP state");
 #endif
         int stop;
         stop = StopHandler(signal_state);
-        if (stop == 0)
+        if (stop == 0) // no error
         {
             sendChars("FSM stop\n");
             success = 1;
@@ -407,7 +399,7 @@ int FrameFSM(uint8_t low, uint8_t high)
         break;
     }
 
-    if (success == 1)
+    if (success)
     {
 #ifdef DEBUG
         printf("FSM success\n");
@@ -426,12 +418,13 @@ int FrameFSM(uint8_t low, uint8_t high)
                 Move(-((float)params), 0.0);
                 break;
             case TURN_RIGHT:
-                Move(0.0, (-(float)params) * 3.14 / 180.0);
+                Move(0.0, (-(float)params) * 3.14 / 180.0); //TODO: use PI define
                 break;
-            case TURN_LEFT:
+            case TURN_LEFT: ;
                 Move(0.0, ((float)params) * 3.14 / 180.0);
                 break;
         }
+        resetFSM(); //? needed?
         return 0; // the motors can get the command and data to run
     }
     else
