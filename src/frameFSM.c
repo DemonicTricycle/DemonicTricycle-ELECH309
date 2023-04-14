@@ -48,10 +48,12 @@
 // ------------------------
 
 #include "frameFSM.h"
-#include "main.h"
+//#include "main.h"
+#include "tools.h"
+#include "parameters.h"
 #include <stdint.h>
 
-#ifdef DEBUG
+#ifdef TEST
 #include <stdio.h>
 #endif
 
@@ -78,27 +80,27 @@ void resetFSM()
 int IdleHandler(signal signal_state)
 {
 // TODO
-#ifdef DEBUG
+#ifdef TEST
     printf("IdleHandler\n");
 #endif
 
-    sendChars("Idling\n");
+    sendUartChars("Idling\n");
     return 0;
 }
 
 int StartHandler(signal signal_state)
 {
     // TODO
-#ifdef DEBUG
+#ifdef TEST
     printf("StartHandler\n");
 #endif
 
      if (signal_state == BIT_0)
     {
-     #ifdef DEBUG
+     #ifdef TEST
          printf("StartHandler success\n");
      #endif
-        sendChars("Started\n");
+        sendUartChars("Started\n");
         current_state = DATA;
         zeroes++;
         bit_count_fsm++;
@@ -106,7 +108,7 @@ int StartHandler(signal signal_state)
      }
      else
     {
-     #ifdef DEBUG
+     #ifdef TEST
          printf("StartHandler fail\n");
      #endif
          current_state = IDLE;
@@ -118,7 +120,7 @@ int StartHandler(signal signal_state)
 int DataHandler(signal signal_state)
 {
 // TODO
-#ifdef DEBUG
+#ifdef TEST
     printf("DataHandler\n");
 #endif
 
@@ -157,42 +159,42 @@ int DataHandler(signal signal_state)
         }
     }
 
-    if (bit_count_fsm == 2)
+    if (bit_count_fsm == 3)
     {
         switch (cmd_bits)
         {
         case 0b00:
             cmd = FORWARD;
-            sendChars("forward\n");
+            sendUartChars("=> FORWARD\n");
             break;
         case 0b01:
             cmd = BACKWARD;
-            sendChars("backward\n");
+            sendUartChars("=> BACKWARD\n");
             break;
         case 0b10:
             cmd = TURN_RIGHT;
-            sendChars("turn right\n");
+            sendUartChars("=> TURN RIGHT\n");
             break;
         case 0b11:
             cmd = TURN_LEFT;
-            sendChars("turn left\n");
+            sendUartChars("=> TURN LEFT\n");
             break;
         }
     }
 
-    if (bit_count_fsm == 10)
+    if (bit_count_fsm > 10)
     {
         current_state = PARITY;
-#ifdef DEBUG
+#ifdef TEST
         printf("DataHandler success\n");
 #endif
-        sendChars("data success, data:\n");
-        sendInt16(params);
+        sendUartChars("data success, data:\n");
+        sendUartInt16(params);
         return 0;
     }
     else
     {
-#ifdef DEBUG
+#ifdef TEST
         printf("Data bit added\n");
 #endif
         return 1;
@@ -202,54 +204,54 @@ int DataHandler(signal signal_state)
 int ParityHandler(signal signal_state)
 {
 // TODO
-#ifdef DEBUG
+#ifdef TEST
     printf("ParityHandler\n");
 #endif
 
     if (!(ones & 0b01)) // bitwise operation that checks if the number of ones is not odd
     {
-        sendChars("even parity\n");
+        sendUartChars("even parity\n");
         // even parity
         if (signal_state == BIT_0)
         {
-#ifdef DEBUG
+#ifdef TEST
             printf("ParityHandler success\n");
 #endif
-            sendChars("parity success\n");
+            sendUartChars("parity success\n");
             bit_count_fsm++;
             current_state = STOP;
             return 0;
         }
         else
         {
-#ifdef DEBUG
+#ifdef TEST
             printf("ParityHandler fail\n");
 #endif
-            sendChars("parity fail\n");
+            sendUartChars("parity fail\n");
             resetFSM();
             return 1;
         }
     }
     else
     {
-        sendChars("odd parity\n");
+        sendUartChars("odd parity\n");
         // odd parity
         if (signal_state == BIT_1)
         {
-#ifdef DEBUG
+#ifdef TEST
             printf("ParityHandler success\n");
 #endif
-            sendChars("parity success\n");
+            sendUartChars("parity success\n");
             bit_count_fsm++;
             current_state = STOP;
             return 0;
         }
         else
         {
-#ifdef DEBUG
+#ifdef TEST
             printf("ParityHandler fail\n");
 #endif
-            sendChars("parity fail\n");
+            sendUartChars("parity fail\n");
             resetFSM();
             return 1;
         }
@@ -258,13 +260,13 @@ int ParityHandler(signal signal_state)
 
 int StopHandler(signal signal_state)
 {
-#ifdef DEBUG
+#ifdef TEST
     printf("StopHandler\n");
 #endif
 
     if (signal_state == BIT_1)
     {
-#ifdef DEBUG
+#ifdef TEST
         printf("StopHandler success\n");
 #endif
         //TODO: send order to robot
@@ -272,14 +274,14 @@ int StopHandler(signal signal_state)
         //order.params = params;
         //sendToMotors(order); //TODO:
 
-        //bit_count_fsm++;
+        bit_count_fsm++;
 
-        resetFSM();
+        //resetFSM();
         return 0;
     }
     else
     {
-#ifdef DEBUG
+#ifdef TEST
         printf("StopHandler fail\n");
 #endif
         resetFSM();
@@ -290,16 +292,16 @@ int StopHandler(signal signal_state)
 //* Frame Finite State Machine
 int FrameFSM(uint8_t low, uint8_t high)
 {
-    sendChars("Received :");
-    if (low > 0)
+    sendUartChars("Received: ");
+    if (low)
     {
-        sendChars("Low\n");
+        sendUartChars("LOW\n");
     }
-    if (high > 0)
+    if (high)
     {
-        sendChars("High\n");
+        sendUartChars("HIGH\n");
     }
-#ifdef DEBUG
+#ifdef TEST
     printf("FrameFSM bit received:\n");
     if (low)
     {
@@ -355,39 +357,39 @@ int FrameFSM(uint8_t low, uint8_t high)
     switch (current_state)
     {
     case IDLE:
-#ifdef DEBUG
-        printf("IDLE state");
+#ifdef TEST
+        printf("IDLE state\n");
 #endif
 
         IdleHandler(signal_state);
         break;
     case START:
-#ifdef DEBUG
-        printf("START state");
+#ifdef TEST
+        printf("START state\n");
 #endif
         StartHandler(signal_state);
         break;
     case DATA:
-#ifdef DEBUG
-        printf("DATA state");
+#ifdef TEST
+        printf("DATA state\n");
 #endif
         DataHandler(signal_state);
         break;
     case PARITY:
-#ifdef DEBUG
-        printf("PARITY state");
+#ifdef TEST
+        printf("PARITY state\n");
 #endif
         ParityHandler(signal_state);
         break;
     case STOP: ; //requires this semicolon for unknown reason
-#ifdef DEBUG
-        printf("STOP state");
+#ifdef TEST
+        printf("STOP state\n");
 #endif
         int stop;
         stop = StopHandler(signal_state);
         if (stop == 0) // no error
         {
-            sendChars("FSM stop\n");
+            sendUartChars("FSM stop\n");
             success = 1;
         }
         else
@@ -401,10 +403,10 @@ int FrameFSM(uint8_t low, uint8_t high)
 
     if (success)
     {
-#ifdef DEBUG
+#ifdef TEST
         printf("FSM success\n");
 #endif
-        sendChars("FSM success\n");
+        sendUartChars("FSM success\n");
         //! here or in StopHandler?
         //order.cmd = cmd;
         //order.params = params;
@@ -412,19 +414,37 @@ int FrameFSM(uint8_t low, uint8_t high)
         switch (cmd)
         {
             case FORWARD:
+                sendUartChars("Forward:\n");
+                sendUartInt16((int16_t) params);
+                #ifndef TEST
                 Move((float)params, 0.0);
+                #endif
                 break;
             case BACKWARD:
+                sendUartChars("Backward:\n");
+                sendUartInt16((int16_t) params);
+                #ifndef TEST
                 Move(-((float)params), 0.0);
+                #endif
                 break;
             case TURN_RIGHT:
+                sendUartChars("Right:\n");
+                sendUartInt16((int16_t) params);
+                #ifndef TEST
                 Move(0.0, (-(float)params) * 3.14 / 180.0); //TODO: use PI define
+                #endif
                 break;
             case TURN_LEFT: ;
+                sendUartChars("Left:\n");
+                sendUartInt16((int16_t) params);
+                #ifndef TEST
                 Move(0.0, ((float)params) * 3.14 / 180.0);
+                #endif
                 break;
         }
-        resetFSM(); //? needed?
+
+        resetFSM();
+
         return 0; // the motors can get the command and data to run
     }
     else
