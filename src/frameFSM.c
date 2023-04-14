@@ -48,6 +48,7 @@
 // ------------------------
 
 #include "frameFSM.h"
+#include "main.h"
 #include <stdint.h>
 
 #ifdef DEBUG
@@ -85,7 +86,6 @@ int IdleHandler(signal signal_state) //? needed?
 }
 
 int StartHandler(signal signal_state)
-//? useful?
 {
     // TODO
 #ifdef DEBUG
@@ -97,9 +97,11 @@ int StartHandler(signal signal_state)
      #ifdef DEBUG
          printf("StartHandler success\n");
      #endif
-         current_state = DATA;
-         zeroes++;
-         return 0;
+        sendChars("Started\n");
+        current_state = DATA;
+        zeroes++;
+        bit_count_fsm++;
+        return 0;
      }
      else
     {
@@ -160,15 +162,19 @@ int DataHandler(signal signal_state)
         {
         case 0b00:
             cmd = FORWARD;
+            sendChars("forward\n");
             break;
         case 0b01:
             cmd = BACKWARD;
+            sendChars("backward\n");
             break;
         case 0b10:
             cmd = TURN_RIGHT;
+            sendChars("turn right\n");
             break;
         case 0b11:
             cmd = TURN_LEFT;
+            sendChars("turn left\n");
             break;
         }
     }
@@ -179,6 +185,8 @@ int DataHandler(signal signal_state)
 #ifdef DEBUG
         printf("DataHandler success\n");
 #endif
+        sendChars("data success, data:\n");
+        sendInt16(params);
         return 0;
     }
     else
@@ -197,14 +205,21 @@ int ParityHandler(signal signal_state)
     printf("ParityHandler\n");
 #endif
 
-    if (zeroes - ones == 0)
+    //zeroes - ones == 0 ?
+
+    uint8_t parity_check = 0;
+    //TODO: parity check
+
+    if (parity_check)
     {
+        sendChars("even parity\n");
         // even parity
         if (signal_state == BIT_0)
         {
 #ifdef DEBUG
             printf("ParityHandler success\n");
 #endif
+            sendChars("parity success\n");
             current_state = STOP;
             return 0;
         }
@@ -213,18 +228,21 @@ int ParityHandler(signal signal_state)
 #ifdef DEBUG
             printf("ParityHandler fail\n");
 #endif
+            sendChars("parity fail\n");
             resetFSM();
             return 1;
         }
     }
     else
     {
+        sendChars("odd parity\n");
         // odd parity
         if (signal_state == BIT_1)
         {
 #ifdef DEBUG
             printf("ParityHandler success\n");
 #endif
+            sendChars("parity success\n");
             current_state = STOP;
             return 0;
         }
@@ -233,6 +251,7 @@ int ParityHandler(signal signal_state)
 #ifdef DEBUG
             printf("ParityHandler fail\n");
 #endif
+            sendChars("parity fail\n");
             resetFSM();
             return 1;
         }
@@ -251,8 +270,8 @@ int StopHandler(signal signal_state)
         printf("StopHandler success\n");
 #endif
         //TODO: send order to robot
-        order.cmd = cmd;
-        order.params = params;
+        //order.cmd = cmd;
+        //order.params = params;
         //sendToMotors(order); //TODO:
 
         resetFSM();
@@ -269,8 +288,17 @@ int StopHandler(signal signal_state)
 }
 
 //* Frame Finite State Machine
-int FrameFSM(uint8_t low, uint8_t high) //?
+int FrameFSM(uint8_t low, uint8_t high)
 {
+    sendChars("Received :");
+    if (low > 0)
+    {
+        sendChars("Low\n");
+    }
+    if (high > 0)
+    {
+        sendChars("High\n");
+    }
 #ifdef DEBUG
     printf("FrameFSM bit received:\n");
     if (low)
@@ -367,6 +395,7 @@ int FrameFSM(uint8_t low, uint8_t high) //?
         stop = StopHandler(signal_state);
         if (stop == 0)
         {
+            sendChars("FSM stop\n");
             success = 1;
         }
         else
@@ -383,10 +412,26 @@ int FrameFSM(uint8_t low, uint8_t high) //?
 #ifdef DEBUG
         printf("FSM success\n");
 #endif
+        sendChars("FSM success\n");
         //! here or in StopHandler?
-        order.cmd = cmd;
-        order.params = params;
+        //order.cmd = cmd;
+        //order.params = params;
         //MotorsOrder(order); // TODO:
+        switch (cmd)
+        {
+            case FORWARD:
+                Move((float)params, 0.0);
+                break;
+            case BACKWARD:
+                Move(-((float)params), 0.0);
+                break;
+            case TURN_RIGHT:
+                Move(0.0, (-(float)params) * 3.14 / 180.0);
+                break;
+            case TURN_LEFT:
+                Move(0.0, ((float)params) * 3.14 / 180.0);
+                break;
+        }
         return 0; // the motors can get the command and data to run
     }
     else
