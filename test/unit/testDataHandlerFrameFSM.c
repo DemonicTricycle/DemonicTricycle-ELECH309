@@ -6,11 +6,11 @@ Unit test of FrameFSM's DataHandler function
 
 #define DEBUG 1
 
+#include "../test.h"
 #include <stdio.h>
 #include <stdint.h>
 #include <assert.h>
 #include "../../src/frameFSM.h"
-#include "../test.h"
 // #include "frameFSM.h"
 
 int errors = 0;

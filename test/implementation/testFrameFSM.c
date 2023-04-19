@@ -6,11 +6,11 @@ Implementation test of FrameFSM function
 
 #define DEBUG 1
 
+#include "../test.h"
 #include <stdio.h>
 #include <stdint.h>
 #include <assert.h>
 #include "../../src/frameFSM.h"
-#include "../test.h"
 //#include "frameFSM.h"
 
 //#define DEBUG 1

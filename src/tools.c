@@ -24,7 +24,7 @@ int Uint16ToInt(uint16_t x)
     return result;
 }
 
-float floatAbs(float value)
+float FloatAbs(float value)
 {
     if (value < 0)
     {
@@ -32,7 +32,7 @@ float floatAbs(float value)
     }
     return value;
 }
-int floatSign(float value)
+int FloatSign(float value)
 {
     if (value < 0)
     {

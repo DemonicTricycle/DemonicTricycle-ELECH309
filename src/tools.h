@@ -11,8 +11,8 @@
 
 
 int Uint16ToInt(uint16_t x);
-float floatAbs(float value);
-int floatSign(float value);
+float FloatAbs(float value);
+int FloatSign(float value);
 
 void sendUartChars(char *chars);
 void breakUartLine(void);
