@@ -5,7 +5,9 @@
 //#ifndef FRAMEFSM_H_ /* Include guard */
 //#define FRAMEFSM_H_
 
+#ifdef TEST
 #include <stdint.h>
+#endif
 
 // TODO: use ?
 #define FRAME_LENGTH 13 // Frame length in bits

@@ -1,11 +1,13 @@
+#ifdef TEST
 #include <stdint.h>
+#endif
 
 #ifndef PI
 #define PI 3.1415926535897932
 #endif
 
-#ifndef INT_MAX
-#define INT_MAX 65535
+#ifndef UINT16_MAX
+#define UINT16_MAX 65535
 #endif
 
 
