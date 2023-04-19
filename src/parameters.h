@@ -1,11 +1,29 @@
 // parameters defines
 
-//! TODO: remove #ifndef ? :
+/*
+! SHOULD PUT ALL THIS HERE IN user.h ??? and system.h for FCY ???
+*/
+
+//? TODO: remove #ifndef ? :
 #ifndef FCY
 #define FCY 3685000
 #endif
 
-/*    for motors.c :    */
+// for filter.c :
+// <editor-fold defaultstate="collapsed" desc="motors.c parameters">
+
+#define FLOORS 4
+const short FLOOR_ORDER = 2;
+
+// filter constants
+#define M_FILTER 18 // Q18.14
+#define FACTOR_FILTER 262144 // 1 << M
+//#define ff (float) (factor) // sans les parenth�ses �a marche pas � cause de la priorit� de << aled j'ai perdu 10 min sur �a
+#define FS_FILTER 15000 //? used ?
+
+// </editor-fold>
+
+// for motors.c :
 // <editor-fold defaultstate="collapsed" desc="motors.c parameters">
 
 #ifndef WHEELBASE
