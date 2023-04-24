@@ -28,6 +28,23 @@
         <itemPath>src/tools.c</itemPath>
       </logicalFolder>
     </logicalFolder>
+    <logicalFolder name="f1" displayName="Test" projectFiles="true">
+      <logicalFolder name="test" displayName="test" projectFiles="true">
+        <logicalFolder name="implementation"
+                       displayName="implementation"
+                       projectFiles="true">
+          <itemPath>test/implementation/testFilter.c</itemPath>
+          <itemPath>test/implementation/testFrameFSM.c</itemPath>
+          <itemPath>test/implementation/testMotors.c</itemPath>
+        </logicalFolder>
+        <logicalFolder name="unit" displayName="unit" projectFiles="true">
+          <itemPath>test/unit/testDataHandlerFrameFSM.c</itemPath>
+          <itemPath>test/unit/testParityHandlerFrameFSM.c</itemPath>
+        </logicalFolder>
+        <itemPath>test/test.c</itemPath>
+        <itemPath>test/test.h</itemPath>
+      </logicalFolder>
+    </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
                    projectFiles="false">
@@ -36,6 +53,7 @@
   </logicalFolder>
   <sourceRootList>
     <Elem>src</Elem>
+    <Elem>test</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
