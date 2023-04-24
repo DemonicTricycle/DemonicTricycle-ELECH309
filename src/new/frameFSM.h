@@ -40,21 +40,21 @@ typedef enum
     BIT_1
 } signal;
 
-typedef struct
+typedef struct 
 { /// Movement:
     command cmd;
-    uint8_t params; // ? uint16_t
+    int params; // ? uint16_t
 } movement;
 
 // Movement instance
 extern movement order;
 
 // Frame State Machine function
-int FrameFSM(uint8_t received_bit);
+int FrameFSM(int);
 void resetFSM(void);
 
 // Debug/test access to functions and variables
-#ifdef DEBUG
+#ifdef DEBUG // correct?
 int IdleHandler(signal signal_state); //? needed?
 int StartHandler(signal signal_state);
 int DataHandler(signal signal_state);

@@ -5,9 +5,8 @@
 */
 
 //? TODO: remove #ifndef ? :
-#define CLOCK 80000000L
 #ifndef FCY
-#define FCY CLOCK/2
+#define FCY 3685000
 #endif
 
 // for filter.c :

@@ -11,6 +11,7 @@
             <sourceRootList>
                 <sourceRootElem>src</sourceRootElem>
                 <sourceRootElem>test</sourceRootElem>
+                <sourceRootElem>comms_sender</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
