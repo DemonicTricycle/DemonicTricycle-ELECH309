@@ -74,12 +74,13 @@ void resetFSM()
     ones = 0;
     zeroes = 0;
     params = 0;
+    cmd_bits = 0;
     bit_params = 0;
 }
 
 int IdleHandler(signal signal_state)
 {
-// TODO
+//TODO:
 #ifdef TEST
     printf("IdleHandler\n");
 #endif
@@ -90,7 +91,6 @@ int IdleHandler(signal signal_state)
 
 int StartHandler(signal signal_state)
 {
-    // TODO
 #ifdef TEST
     printf("StartHandler\n");
 #endif
@@ -119,7 +119,6 @@ int StartHandler(signal signal_state)
 
 int DataHandler(signal signal_state)
 {
-// TODO
 #ifdef TEST
     printf("DataHandler\n");
 #endif
@@ -203,7 +202,6 @@ int DataHandler(signal signal_state)
 
 int ParityHandler(signal signal_state)
 {
-// TODO
 #ifdef TEST
     printf("ParityHandler\n");
 #endif

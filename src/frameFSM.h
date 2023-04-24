@@ -51,10 +51,10 @@ extern movement order;
 
 // Frame State Machine function
 int FrameFSM(uint8_t low, uint8_t high);
+void resetFSM(void);
 
 // Debug/test access to functions and variables
 #ifdef DEBUG // correct?
-void resetFSM(void);
 int IdleHandler(signal signal_state); //? needed?
 int StartHandler(signal signal_state);
 int DataHandler(signal signal_state);
