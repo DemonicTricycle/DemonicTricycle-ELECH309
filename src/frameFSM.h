@@ -5,7 +5,9 @@
 //#ifndef FRAMEFSM_H_ /* Include guard */
 //#define FRAMEFSM_H_
 
+#ifdef TEST
 #include <stdint.h>
+#endif
 
 // TODO: use ?
 #define FRAME_LENGTH 13 // Frame length in bits
@@ -49,10 +51,10 @@ extern movement order;
 
 // Frame State Machine function
 int FrameFSM(uint8_t low, uint8_t high);
+void resetFSM(void);
 
 // Debug/test access to functions and variables
-#ifdef DEBUG || TEST // correct?
-void resetFSM(void);
+#ifdef DEBUG // correct?
 int IdleHandler(signal signal_state); //? needed?
 int StartHandler(signal signal_state);
 int DataHandler(signal signal_state);

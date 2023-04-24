@@ -31,7 +31,7 @@
 #define maybeMOTOR_2_PWM LATBbits.LATB3
 #define whatisthis TRISBbits.TRISB2 // set pin as output?
 #define whatisthis2 TRISBbits.TRISB3
-//TODO
+//TODO: name these defines
 
 //#define delay __delay_ms //? maybe
 
