@@ -17,7 +17,6 @@ math: mathjax
 </details>
 
 # Motor Regulation
-<<<<<<< HEAD
 
 ## Designing the regulator
 The regulation loop is made using a simple proportional regulator. The position of the robot is obtained using the quadrature encoders, the error is calculated, and the motor’s voltage is regulated accordingly using the PWN of the dspic.
