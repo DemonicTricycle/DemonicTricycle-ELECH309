@@ -17,6 +17,7 @@ math: mathjax
 </details>
 
 # Motor Regulation
+<<<<<<< HEAD
 
 ## Designing the regulator
 The regulation loop is made using a simple proportional regulator. The position of the robot is obtained using the quadrature encoders, the error is calculated, and the motor’s voltage is regulated accordingly using the PWN of the dspic.
@@ -28,6 +29,14 @@ The regulation loop is made using a simple proportional regulator. The position 
 See the **[Speed Curve](/motorization/speedCurve)** page.
 
 
+=======
+## Designing the regulator
+The regulation loop is made using a simple proportional regulator. The position of the robot is obtained using the quadrature encoders, the error is calculated, and the motor’s voltage is regulated accordingly using the PWN of the dspic.
+
+## Speed Curve
+See the **[Speed Curve](/motorization/speedCurve)** page.
+
+>>>>>>> 07c3aaf942bdb20aa4e8d469bfce22e8ca7071a9
 ## Translation
 For a translation, the speed must follow this trapezoidal curve: 
 ![image](https://user-images.githubusercontent.com/23436953/228483207-f1e11347-ffc9-4086-a2b3-49d63ada9217.png)
