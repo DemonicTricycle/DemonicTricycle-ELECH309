@@ -51,8 +51,8 @@ But if the distance is less than or equal to 0.5m, there is not enough time to r
 The same principle can be used for the rotation, but the motors turn in opposite directions:
 
 But, taking into account that the maximum angle that can be transmitted is 255 degrees (equivalent to 4.451 rad), and that the maximum rotation speed we chose is 4 radians / s (chosen using the same method used to find the maximum translation speed, as explained in the given documents), an that the acceleration chosen is 3.33 rad / s², we can calculate the largest rotation that can be done without reaching the cruising rotation speed : 
-α ̇=t*3.33  m/S^2     →t_max⁡   4/3.33 s, where t_max⁡〖  〗 represents the time at which the cruising speed is reached.
-α=t^2*3.33/2→α_tmax=t_max⁡〖  〗^2*3.33/2=4^2/〖3.33〗^2 *  3.33/2=2.4 
+α ̇=t*3.33  m/S^2     represents the time at which the cruising speed is reached.
+α=t^2*3.33/2→α_tmax=t_ma^2*3.33/2=4^2/^2 *  3.33/2=2.4 
 As the same rotation will be made when decelerating, α_max=2*2.4=4.8 rad
 Therefore, there is no need to implement a trapezoidal-style curve in the code as the cruising rotation speed will never be reached.
 
