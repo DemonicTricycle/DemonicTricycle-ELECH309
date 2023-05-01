@@ -11,7 +11,7 @@
 
 #define M 18 // Q18.14
 #define factor 262144 // 1 << M
-#define ff (float) (factor) // sans les parenthèses ça marche pas à cause de la priorité de << aled j'ai perdu 10 min sur ça
+#define ff (float) (factor) // sans les parenthï¿½ses ï¿½a marche pas ï¿½ cause de la prioritï¿½ de << aled j'ai perdu 10 min sur ï¿½a
 #define fs 15000
 
 #define k_transla 3.69
@@ -506,7 +506,8 @@ void initialiseMotors(void)
   SetMotor2Dir(dir);
   SetMotor2Dir(dir);
 }
-void initialise (void)
+
+void initialise(void)
 {
   initialiseMotors();  
   InitialiseEncoders(); 
@@ -604,7 +605,8 @@ void init_uart() {
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Init from filter">
-void init_tables() {
+void init_tables()
+{
     for (int i = 0; i < FLOORS + 1; i++) {
         for (int zz = 0; zz < 12; zz ++) {
             ys_1[i][zz] = 0;
@@ -613,7 +615,8 @@ void init_tables() {
     }    
 }
 
-void print_values() {
+void print_values()
+{
     to_send = "M : "; sendString();
     sendIntConverted(M);
     to_send = "Factor : "; sendString();
@@ -638,7 +641,8 @@ void print_values() {
     }
 }
 
-void reset_tables() {
+void reset_tables()
+{
     for (int i = 0; i < 5; i++) {
         for (int j = 0; j < 12; j++) {
             ys_1[i][j] = 0;
@@ -685,8 +689,8 @@ int main(void) {
     adcInit(ADC_TIMER3_SAMPLING);
     
     // PR3 = 40 MHz / 15 kHz - 1 = 2665.5
-    PR3 = 2755; // ça donne 15017 Hz mesuré au picoscope
-    PR1 = 41800; // ça donne 994 Hz
+    PR3 = 2755; // ï¿½a donne 15017 Hz mesurï¿½ au picoscope
+    PR1 = 41800; // ï¿½a donne 994 Hz
     // starts timer1
     T1CONbits.TON = 1;
     // Enable timer1 interrupt, so that its ISR will be called on overflow
@@ -741,7 +745,8 @@ int main(void) {
 }
 // </editor-fold>
 // <editor-fold defaultstate="collapsed" desc="Interrupts">
-void __attribute__((interrupt, no_auto_psv))_T1Interrupt(void) {
+void __attribute__((interrupt, no_auto_psv))_T1Interrupt(void)
+{
     // ISR code does the same things that the main loop did in polling
     _T1IF = 0;
     
@@ -798,7 +803,7 @@ void __attribute__((interrupt, no_auto_psv))_T1Interrupt(void) {
         _LATB5 = (average_sample < 0);
              
         
-        // envoi Ã  la fsm
+        // envoi ï¿½  la fsm
         FrameFSM(average_sample > 0);
         reset_tables();
         average_sample = 0;

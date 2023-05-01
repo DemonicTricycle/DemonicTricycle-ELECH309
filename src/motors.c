@@ -1,57 +1,17 @@
 // <editor-fold defaultstate="collapsed" desc="Include and imports">
 #include "xc.h"
 #include <math.h>
-#include <stdint.h>
 
-// cycle frequency. Needed for __delay_ms
-#ifndef FCY
-#define FCY 3685000
+#ifdef TEST
+#include <stdint.h>
 #endif
 
 #include "libpic30.h" // Contains __delay_ms definition
 #include "tools.h"
 #include "parameters.h"
 
-#ifndef NUM_TICKS_PER_TURN
-#define NUM_TICKS_PER_TURN 1423
-#endif
-
-#ifndef PI
-#define PI 3.1415926535897932
-#endif
-
-#define INT_MAX 65535 // rename UINT16_MAX ?
-// Wheel radius, in m
-#ifndef WHEEL_RADIUS
-#define WHEEL_RADIUS 0.04
-#endif
-
-// PWM parameters and macro
-#ifndef PWM_TIME_PERIOD
-#define PWM_TIME_PERIOD 0.001
-#endif
-// In s, one period is one up AND one down,
-// not just one 'hill' up
-#ifndef CLOCK_PRESCALER_BINARY
-#define CLOCK_PRESCALER_BINARY 0b00
-#endif
-// In ms
-#ifndef CLOCK_PRESCALER
-#define CLOCK_PRESCALER 1
-#endif
-// 0b00 corresponds to a scale of 1
-
 // Adaptation of the formula in the datasheet
 #define GET_PTPER() (int)(((float)FCY * PWM_TIME_PERIOD / CLOCK_PRESCALER) - 1)
-
-// Wheelbase, in m
-#ifndef WHEELBASE
-#define WHEELBASE 0.135
-#endif
-
-#ifndef MAX_PWM
-#define MAX_PWM 0.8
-#endif
 
 #define something QEI1CONbits.QEIM     // TODO: ? encoder mode ?
 #define somethingalso QEI2CONbits.QEIM // TODO: ?
@@ -62,26 +22,25 @@
 #define PWM_OUTPUT_2_MODE PWMCON1bits.PMOD2
 #define PWM_OUTPUT_1_PIN_ENABLE PWMCON1bits.PEN1L
 #define PWM_OUTPUT_2_PIN_ENABLE PWMCON1bits.PEN2L
-#define MOTOR_1_FORWARD MOTOR_1_DIR_PIN
-#define MOTOR_2_FORWARD MOTOR_2_DIR_PIN
 #define TIMER_1_ENABLE T1CONbits.TON
 #define TIMER_1_INTERRUPT_FLAG IFS0bits.T1IF //? or just _T1IF
 //#define TIMER_1_INTERRUPT_ENABLE IEC0bits.T1IE
 
-//TODO: put in a .h ?
+// </editor-fold>
+
+// TODO: use the FSM's .h direction/command enum ?
 typedef enum
 {
     forward,
     backward
 } direction;
 
-// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="PWM">
 void PWMInit(void)
 {
-    // If more details are required, check the following link :
-    // https://ww1.microchip.com/downloads/en/DeviceDoc/70187E.pdf
+    //If more details are required, check the following link :
+    //https://ww1.microchip.com/downloads/en/DeviceDoc/70187E.pdf
 
     //PTCONbits.PTEN = 0;                        // Start by disabling PWM pulse generation
     PWM_GEN_ENABLE = 0;                        // Start by disabling PWM pulse generation
@@ -99,8 +58,8 @@ void PWMInit(void)
     PWM_OUTPUT_1_PIN_ENABLE = 1;               // RB15 // Enables pin for PWM output
     //PWMCON1bits.PEN2L = 1;                     // RB13
     PWM_OUTPUT_2_PIN_ENABLE = 1;               // RB13 // Enables pin for PWM output
-    PDC1 = 0;
-    PDC2 = 0;
+    PDC1 = 0; //?
+    PDC2 = 0; //?
 
     //PTCONbits.PTEN = 1;                        // Ends by enabling PWM pulse generation
     PWM_GEN_ENABLE = 1;                        // Ends by enabling PWM pulse generation
@@ -136,32 +95,19 @@ void InitialiseEncoders(void)
     // x4 mode with position counter reset by match
 }
 
-/* //defined in tools.c
-int Uint16ToInt(uint16_t x)
-{
-    int result = 0;
-    result = (int)(x & 0x7FFF); // clear the MSB (most significant bit)
-    if ((x & 0x8000) != 0)
-    { // if the MSB was set, convert to negative
-        result = -((int)(0x7FFF) + 1 - result);
-    }
-    return result;
-}
-*/
-
 void ResetPos(void)
 {
-    POS1CNT = 0;
-    POS2CNT = 0;
+    POS1CNT = 0; //?
+    POS2CNT = 0; //?
 }
 
 float GetPosMotor1(void) // Get the position in radian
 {
-    return ((float)Uint16ToInt(POS1CNT) * (2 * PI)) / 1423.0;
+    return ((float)Uint16ToInt(POS1CNT) * (2 * PI)) / 1423.0; //TODO: use defines for values
 }
 float GetPosMotor2(void)
 {
-    return ((float)Uint16ToInt(POS2CNT) * (2 * PI)) / 1423.0;
+    return ((float)Uint16ToInt(POS2CNT) * (2 * PI)) / 1423.0; // TODO: use defines for values
 }
 float GetDistMotor1(void) // Get the distance in m
 {
@@ -208,11 +154,11 @@ void SetMotor1Dir(direction dir)
 {
     if (dir == forward)
     {
-        MOTOR_1_FORWARD = 1;
+        MOTOR_1_DIR_PIN = 1; // set forward
     }
     if (dir == backward)
     {
-        MOTOR_1_FORWARD = 0;
+        MOTOR_1_DIR_PIN = 0; // set not forward
     }
 }
 
@@ -220,11 +166,11 @@ void SetMotor2Dir(direction dir)
 {
     if (dir == forward)
     {
-        MOTOR_2_FORWARD = 1;
+        MOTOR_2_DIR_PIN = 1; // set forward
     }
     if (dir == backward)
     {
-        MOTOR_2_FORWARD = 0;
+        MOTOR_2_DIR_PIN = 0; // set not forward
     }
 }
 
@@ -255,7 +201,7 @@ float GetTarget(float time, float final_target) // time in s, end in m = final d
     int sign = FloatSign(final_target);
     float end = FloatAbs(final_target);
     //float acceleration = 0.5; //! set in a #define ACCELERATION 0.5 in parameters.h
-    if (end < 0.5) //TODO: set in a #define, ?
+    if (end < 0.5) //TODO: set in a #define ?
     {
         float half_time = sqrt(end / 0.5);
         if (time > half_time * 2)
@@ -268,17 +214,19 @@ float GetTarget(float time, float final_target) // time in s, end in m = final d
         }
         else
         {
-            //TODO: set as #defines, ?
             float distAldreadyMade = half_time * half_time * ACCELERATION / 2;
             float time_since_slowing = time - half_time;
+            // TODO: set as #defines ?
             return (distAldreadyMade + 0.5 * half_time * time_since_slowing - time_since_slowing * time_since_slowing * 0.25) * sign;
         }
     }
     if (time < 1)
     {
+        // TODO: set as #defines ?
         return (time * time * 0.25) * sign;
     }
 
+    // TODO: set as #defines ?
     float time_at_cruise = (end - 0.5) / 0.5;
 
     if (time >= time_at_cruise + 1) // Slowing down
@@ -288,23 +236,23 @@ float GetTarget(float time, float final_target) // time in s, end in m = final d
 
         if (time_remaining < 0)
         {
+            // TODO: set as #defines ?
             return (0.5 * time_at_cruise + 0.5) * sign;
         }
 
+        // TODO: set as #defines ?
         return (0.5 * time_at_cruise + 0.25 + 0.5 * time_since_slowing - time_since_slowing * time_since_slowing * 0.25) * sign;
     }
+    // TODO: set as #defines ?
     return ((time - 1) * 0.5 + 0.25) * sign;
 }
 
 float getTargetAngle(float given_angle, float time_since_start)
-{                                 // Not very optimised but at least somewhat readable
-//#define CRUISE_ROTATION_SPEED 4   // rad / second //set in parameters.h
-//#define MAX_ACCELERATION_TIME_ROTATION 1.2 // seconds // set in parameters.h
+{// Not very optimised but at least somewhat readable
 
     int sign = FloatSign(given_angle);
     float target_angle = FloatAbs(given_angle);
     // Calculate the maximum angle that can be reached before reaching the cruise speed
-    //float MAX_ANGLE = (float)CRUISE_ROTATION_SPEED * 0.5 * (MAX_ACCELERATION_TIME_ROTATION * 2);
 
     float angle_to_return = 0;
 
@@ -312,8 +260,8 @@ float getTargetAngle(float given_angle, float time_since_start)
     {
         return 0; // Such an angle is not sendable in 8 bits
     }
-    //float acceleration_rotation = (float)CRUISE_ROTATION_SPEED / MAX_ACCELERATION_TIME_ROTATION; // The acceleration rate //set in parameters.h
-    float half_time = sqrt(target_angle / ACCELERATION_ROTATION);                       // The time at wich we start decelerating
+
+    float half_time = sqrt(target_angle / ACCELERATION_ROTATION); // The time at wich we start decelerating
 
     if (time_since_start < half_time)
     {
@@ -343,33 +291,34 @@ float getAngle()
 
 void Move(float translation, float angle)
 {
+    T1CONbits.TON = 0; // Disable Timer1 //? TODO: check if needed
     ResetPos(); // Sets the encoders to 0
 //#define acceptable_error_translation 0.04
 //#define acceptable_error_rotation 0.06981 //(float)4 / 360 * 2 * PI
     //float error_translation = acceptable_error_translation + 1.0;
     //float error_rotation = acceptable_error_rotation + 1.0;
-    float error_translation = acceptable_error_translation+1.0;
-    float error_rotation = acceptable_error_rotation+1.0;
-
-//#define k_translation 3.69
-//#define k_rotation 1.03 * 3
+    float error_translation = ACCEPTABLE_ERROR_TRANSLATION+1.0;
+    float error_rotation = ACCEPTABLE_ERROR_ROTATION+1.0;
 
     float time = 0;
     float target_translation = GetTarget(time, translation);
     float target_rotation = getTargetAngle(angle, time);
-    int time_interval = 3;                  // ms
-    PR1 = (FCY / 1000 - 1) * time_interval; // 10 ms
-    //T1CONbits.TON = 1;
-    TIMER_1_ENABLE = 1;
+    int time_interval = 1; // ms 3? //TODO: put as #define in parameters.h
+    //PR2 = (FCY / 1000 - 1) * time_interval; // 10 ms //TODO: check ?
+    PR2 = 41800; //(FCY/1000 -1) * time_interval;//10 ms 41800
+    T2CONbits.TON = 1;
+    //TIMER_1_ENABLE = 1; //TODO: change to timer 2
     // int cnt = 0;
     while (
-        (FloatAbs(error_translation) > acceptable_error_translation) || (FloatAbs(error_rotation) > acceptable_error_rotation) || (FloatAbs(target_translation) < FloatAbs(translation)) || (FloatAbs(target_rotation) < FloatAbs(angle)))
+        (FloatAbs(error_translation) > ACCEPTABLE_ERROR_TRANSLATION) || (FloatAbs(error_rotation) > ACCEPTABLE_ERROR_ROTATION) || (FloatAbs(target_translation) < FloatAbs(translation)) || (FloatAbs(target_rotation) < FloatAbs(angle)))
     {
         //if (_T1IF == 1)
-        (if TIMER_1_INTERRUPT_FLAG == 1)
+        //(if TIMER_1_INTERRUPT_FLAG == 1)
+        if (_21IF == 1) //TODO: write a define for this
         {
             //_T1IF = 0;
-            TIMER_1_INTERRUPT_FLAG = 0;
+            //TIMER_1_INTERRUPT_FLAG = 0;
+            _T2IF = 0; //TODO: write a define for this
 
             /*  cnt++;
              if (cnt >= 10)
@@ -397,23 +346,25 @@ void Move(float translation, float angle)
             error_translation = target_translation - (GetDistMotor1() + GetDistMotor2()) / 2;
             target_rotation = getTargetAngle(angle, time);
             error_rotation = getAngle() - getTargetAngle(angle, time);
-            float v1 = error_translation * k_translation + error_rotation * k_rotation;
+            float v1 = error_translation * K_TRANSLATION + error_rotation * K_ROTATION;
             CapMotorVoltage(&v1);
             SetMotor1(v1);
-            float v2 = error_translation * k_translation - error_rotation * k_rotation;
+            float v2 = error_translation * K_TRANSLATION - error_rotation * K_ROTATION;
             CapMotorVoltage(&v2);
             SetMotor2(v2);
         }
     }
     SetMotor1(0);
     SetMotor2(0);
+    T2CONbits.TON = 0; //TODO: write a define for this
 }
+
 // </editor-fold>
 
 void initialiseMotors(void)
 {
-    direction dir = forward;
-    M1_DIR_PIN_AS_INPUT = 0;
+    direction dir = forward; //TODO: use FSM's enum ?
+    M1_DIR_PIN_AS_INPUT = 0; // Declares dir pins as output
     M2_DIR_PIN_AS_INPUT = 0; // Declares dir pins as output
     SetMotor1Dir(dir);
     SetMotor2Dir(dir);
@@ -423,11 +374,12 @@ void initialise(void)
     initialiseMotors();
     InitialiseEncoders();
     PWMInit();
-    initUart(); // TODO: only enable UART if debugging ?
+    initUart();
     StartupMessage();
     __delay_ms(1000);
 }
 
+/*
 int main(void)
 {
     initialise();
@@ -444,3 +396,4 @@ int main(void)
 
     return 0;
 }
+*/

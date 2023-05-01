@@ -1,6 +1,6 @@
 /* 
  * File:   mcp4821.h
- * Author: M. Osée
+ * Author: M. Osee
  *
  * Created on 11 janvier 2016, 14:10
  */

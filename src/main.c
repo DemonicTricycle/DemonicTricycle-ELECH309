@@ -4,28 +4,19 @@
  *
  */
 
-#define DEBUG 1
-
 #include "xc.h" // for xc16 compiler
-#ifdef DEBUG
+#ifdef TEST
 #include <stdio.h>
 #endif
 
+#include "parameters.h"
+#include "tools.h"
+#include "filter.h"
 
 int main(void) {
-    /// Starting point of the microcontroller program
-    #ifdef DEBUG
-    printf("starting");
-    #endif
+    
+    start();
 
-
-    while(1) {
-        // TODO
-        // check for received sound
-        // get data from sound
-        // send command to motors
-        // wait for next sound
-    }
-
+    while (1) {}
     return 0;
 }

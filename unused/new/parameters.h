@@ -4,10 +4,8 @@
 ! SHOULD PUT ALL THIS HERE IN user.h ??? and system.h for FCY ???
 */
 
-//? TODO: remove #ifndef ? :
-#ifndef FCY
+
 #define FCY 3685000
-#endif
 
 // for filter.c :
 // <editor-fold defaultstate="collapsed" desc="motors.c parameters">
@@ -67,13 +65,19 @@ const short FLOOR_ORDER = 2;
 #define MAX_ACCELERATION_TIME_ROTATION 1.2 // seconds
 #define MAX_ANGLE (CRUISE_ROTATION_SPEED*0.5*(MAX_ACCELERATION_TIME_ROTATION*2))
 #define ACCELERATION_ROTATION (CRUISE_ROTATION_SPEED/MAX_ACCELERATION_TIME_ROTATION)
-// TODO: name these defines in all caps
+// TODO: change to uppercase
 #define acceptable_error_translation 0.04
 #define acceptable_error_rotation 0.06981 // = (float)4 / 360 * 2 * PI
+#define ACCEPTABLE_ERROR_TRANSLATION 0.04
+#define ACCEPTABLE_ERROR_ROTATION 0.06981 // = (float)4 / 360 * 2 * PI
+
 //#define error_translation acceptable_error_transla+1.0
 //#define error_rotation acceptable_error_rota+1.0
+//TODO: change to uppercase
 #define k_translation 3.69
 #define k_rotation (1.03*3)
+#define K_TRANSLATION 3.69
+#define K_ROTATION (1.03 * 3)
 //#define time_interval 3 // ms
 #define M1_DIR_PIN_AS_INPUT TRISBbits.TRISB2 // set to 0 to output
 #define M2_DIR_PIN_AS_INPUT TRISBbits.TRISB3 // set to 0 to output

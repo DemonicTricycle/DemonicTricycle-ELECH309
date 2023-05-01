@@ -42,44 +42,6 @@ int FloatSign(float value)
 }
 
 // <editor-fold defaultstate="collapsed" desc="Debug">
-void itoa(int num, char *data, int ba)
-{
-    int i = 0;
-    int sign = 0;
-
-    /* Handle negative integers */
-    if (num < 0 && ba == 10)
-    {
-        sign = 1;
-        num = -num;
-    }
-
-    /* Process individual digits */
-    while (num != 0)
-    {
-        int rem = num % ba;
-        data[i++] = (rem > 9) ? (rem - 10) + 'a' : rem + '0';
-        num = num / ba;
-    }
-
-    /* If number is negative, append '-' */
-    if (sign)
-    {
-        data[i++] = '-';
-    }
-
-    /* Add null terminator */
-    data[i] = '\0';
-
-    /* Reverse the string */
-    int j, len = strlen(data);
-    for (i = 0, j = len - 1; i < j; i++, j--)
-    {
-        char temp = data[i];
-        data[i] = data[j];
-        data[j] = temp;
-    }
-}
 
 void sendUartChars(char *chars)
 {
@@ -126,22 +88,60 @@ int strlen(const char *s)
 
     return len;
 }
+void itoa(int num, char *data, int ba)
+{
+    int i = 0;
+    int sign = 0;
 
+    /* Handle negative integers */
+    if (num < 0 && ba == 10)
+    {
+        sign = 1;
+        num = -num;
+    }
+
+    /* Process individual digits */
+    while (num != 0)
+    {
+        int rem = num % ba;
+        data[i++] = (rem > 9) ? (rem - 10) + 'a' : rem + '0';
+        num = num / ba;
+    }
+
+    /* If number is negative, append '-' */
+    if (sign)
+    {
+        data[i++] = '-';
+    }
+
+    /* Add null terminator */
+    data[i] = '\0';
+
+    /* Reverse the string */
+    int j, len = strlen(data);
+    for (i = 0, j = len - 1; i < j; i++, j--)
+    {
+        char temp = data[i];
+        data[i] = data[j];
+        data[j] = temp;
+    }
+}
 void initUart(void)
 {
     #ifndef TEST
-    _U1RXR = 6; // U1RX -> RP6
-    _RP7R = 3;  // RP7 -> U1Tx
+    _U1RXR = 6; // U1RX -> RP6 //TODO: put in a define in parameters.h
+    _RP7R = 3;  // RP7 -> U1Tx //TODO: put in a define in parameters.h
 
-    // Configuration de l'UART1 avec un format de trame 8N1, ? 57600 bits/s
-    U1MODEbits.PDSEL = 0; // 8 bits, pas de parit?
+    //TODO: set with a define ?
+    // Configuration of UART1 with 8N1 frame format, ? 57600 bits/s
+    U1MODEbits.PDSEL = 0; // 8 bits, no parity?
     U1MODEbits.STSEL = 0; // 1 stop bit
 
     U1MODEbits.BRGH = 0;
     U1BRG = 3;
 
-    U1MODEbits.UARTEN = 1; // on active l'UART //TODO: enable UART with switch, and only execute sendChars etc if enabled
-    U1STAbits.UTXEN = 1;   // on active l'?mission
+    U1MODEbits.UARTEN = 1; // enable UART
+    U1STAbits.UTXEN = 1;   // enable transmission
     #endif
 }
 
@@ -170,7 +170,7 @@ void StartupMessage()
 
 
 // <editor-fold defaultstate="collapsed" desc="Debug2">
-
+// --- from filter code ---
 /*
 unsigned char c;
 char* to_send;

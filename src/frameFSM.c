@@ -47,10 +47,10 @@
  */
 // ------------------------
 
-#include "frameFSM.h"
-#include "main.h" // TODO: remove ?
-#include "tools.h"
 #include "parameters.h"
+#include "tools.h"
+#include "frameFSM.h"
+#include "motors.h"
 #include <stdint.h>
 
 #ifdef TEST

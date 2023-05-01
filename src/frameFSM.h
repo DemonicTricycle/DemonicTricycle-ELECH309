@@ -9,11 +9,12 @@
 #include <stdint.h>
 #endif
 
+/*
 // TODO: use ?
 #define FRAME_LENGTH 13 // Frame length in bits
 #define FRAME_DATA_LENGTH 10 // Frame data length in bits
-#define FRAME_PARAMS_LENGTH FRAME_DATA_LENGTH-2 // Frame parameters length in bits
-
+//#define FRAME_PARAMS_LENGTH FRAME_DATA_LENGTH-2 // Frame parameters length in bits
+*/
 typedef enum
 { /// Commands:
     FORWARD,
@@ -54,7 +55,7 @@ int FrameFSM(uint8_t received_bit);
 void resetFSM(void);
 
 // Debug/test access to functions and variables
-#ifdef DEBUG
+#ifdef TEST
 int IdleHandler(signal signal_state); //? needed?
 int StartHandler(signal signal_state);
 int DataHandler(signal signal_state);

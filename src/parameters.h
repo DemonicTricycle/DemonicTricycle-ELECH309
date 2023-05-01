@@ -1,25 +1,21 @@
 // parameters defines
 
-/*
-! SHOULD PUT ALL THIS HERE IN user.h ??? and system.h for FCY ???
-*/
-
-//? TODO: remove #ifndef ? :
-#define CLOCK 80000000L
-#ifndef FCY
-#define FCY CLOCK/2
-#endif
+//?  correct ?
+#define SYS_FREQ 80000000L
+#define FCY SYS_FREQ/2
 
 // for filter.c :
 // <editor-fold defaultstate="collapsed" desc="motors.c parameters">
 
 #define FLOORS 4
-const short FLOOR_ORDER = 2;
+// const short FLOOR_ORDER = 2;
+
+#define THRESHOLD 300
 
 // filter constants
 #define M_FILTER 18 // Q18.14
 #define FACTOR_FILTER 262144 // 1 << M
-//#define ff (float) (factor) // sans les parenth�ses �a marche pas � cause de la priorit� de << aled j'ai perdu 10 min sur �a
+//#define FLOAT_FACTOR_FILTER (float) (factor) // doesn't work without parentheses because of <<'s priority, lost 10min just on this
 #define FS_FILTER 15000 //? used ?
 
 // </editor-fold>
@@ -86,4 +82,10 @@ const short FLOOR_ORDER = 2;
 
 #define ACCELERATION 0.5 // seconds //?
 
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="FSM parameters">
+#define FRAME_LENGTH 13 // Frame length in bits
+#define FRAME_DATA_LENGTH 10 // Frame data length in bits
+//#define FRAME_PARAMS_LENGTH FRAME_DATA_LENGTH-2 // Frame parameters length in bits
 // </editor-fold>
