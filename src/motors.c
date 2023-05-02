@@ -4,6 +4,7 @@
 
 #ifdef TEST
 #include <stdint.h>
+//#include <stdio.h>
 #endif
 
 #include "libpic30.h" // Contains __delay_ms definition
@@ -87,11 +88,11 @@ void InitialiseEncoders(void)
 
     RPINR14bits.QEA1R = QE1_CHANNEL_A_PIN; // Assigns channel A of QE1
     RPINR14bits.QEB1R = QE1_CHANNEL_B_PIN; // Assigns channel B of QE1
-    RPINR16bits.QEA2R = QE2_CHANNEL_A_PIN;  // Assigns channel A of QE2
-    RPINR16bits.QEB2R = QE2_CHANNEL_B_PIN;  // Assigns channel B of QE2
+    RPINR16bits.QEA2R = QE2_CHANNEL_A_PIN; // Assigns channel A of QE2
+    RPINR16bits.QEB2R = QE2_CHANNEL_B_PIN; // Assigns channel B of QE2
 
-    QEI1CONbits.QEIM = 0b111;
-    QEI2CONbits.QEIM = 0b111; // Enable the quadrature encoder interface
+    QEI1CONbits.QEIM = 0b111; // Enable the quadrature encoder interface 1
+    QEI2CONbits.QEIM = 0b111; // Enable the quadrature encoder interface 2
     // x4 mode with position counter reset by match
 }
 
@@ -103,7 +104,7 @@ void ResetPos(void)
 
 float GetPosMotor1(void) // Get the position in radian
 {
-    return ((float)Uint16ToInt(POS1CNT) * (2 * PI)) / 1423.0; //TODO: use defines for values
+    return ((float)Uint16ToInt(POS1CNT) * (2 * PI)) / 1423.0; // TODO: use defines for values
 }
 float GetPosMotor2(void)
 {
@@ -119,29 +120,7 @@ float GetDistMotor2(void)
 }
 // </editor-fold>
 
-/* //defined in tools.c
-// <editor-fold defaultstate="collapsed" desc="Math function">
-float FloatAbs(float value)
-{
-    if (value < 0)
-    {
-        return -value;
-    }
-    return value;
-}
-int FloatSign(float value)
-{
-    if (value < 0)
-    {
-        return -1;
-    }
-    return 1;
-}
-// </editor-fold>
-*/
-
 // <editor-fold defaultstate="collapsed" desc="Movement">
-
 void CapMotorVoltage(float *value)
 {
     if (FloatAbs(*value) > MAX_PWM)
@@ -151,24 +130,30 @@ void CapMotorVoltage(float *value)
 }
 
 void SetMotor1Dir(direction dir)
+//void SetMotor1Dir(movement dir)
 {
     if (dir == forward)
+    //if (dir == FORWARD)
     {
         MOTOR_1_DIR_PIN = 1; // set forward
     }
     if (dir == backward)
+    //if (dir == BACKWARD)
     {
         MOTOR_1_DIR_PIN = 0; // set not forward
     }
 }
 
 void SetMotor2Dir(direction dir)
+//void SetMotor2Dir(movement dir)
 {
     if (dir == forward)
+    //if (dir == FORWARD)
     {
         MOTOR_2_DIR_PIN = 1; // set forward
     }
     if (dir == backward)
+    //if (dir == BACKWARD)
     {
         MOTOR_2_DIR_PIN = 0; // set not forward
     }
@@ -200,7 +185,7 @@ float GetTarget(float time, float final_target) // time in s, end in m = final d
 {
     int sign = FloatSign(final_target);
     float end = FloatAbs(final_target);
-    //float acceleration = 0.5; //! set in a #define ACCELERATION 0.5 in parameters.h
+
     if (end < 0.5) //TODO: set in a #define ?
     {
         float half_time = sqrt(end / 0.5);
@@ -364,8 +349,9 @@ void Move(float translation, float angle)
 void initialiseMotors(void)
 {
     direction dir = forward; //TODO: use FSM's enum ?
-    M1_DIR_PIN_AS_INPUT = 0; // Declares dir pins as output
-    M2_DIR_PIN_AS_INPUT = 0; // Declares dir pins as output
+    //movement dir = FORWARD;
+    M1_DIR_PIN_AS_INPUT = 0; // Declares dir pin 1 as output
+    M2_DIR_PIN_AS_INPUT = 0; // Declares dir pin 2 as output
     SetMotor1Dir(dir);
     SetMotor2Dir(dir);
 }
@@ -384,7 +370,6 @@ int main(void)
 {
     initialise();
 
-#ifdef DEBUG
     while (1)
     {
         Move(1, 0);
@@ -392,7 +377,6 @@ int main(void)
         Move(0, -PI);
         __delay_ms(1000);
     }
-#endif
 
     return 0;
 }

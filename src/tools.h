@@ -10,7 +10,8 @@
 #define UINT16_MAX 65535
 #endif
 
-
+extern unsigned char c;
+extern char* to_send;
 
 int Uint16ToInt(uint16_t x);
 float FloatAbs(float value);

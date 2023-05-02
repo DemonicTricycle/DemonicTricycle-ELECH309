@@ -6,7 +6,8 @@
 
 #include "xc.h" // for xc16 compiler
 #ifdef TEST
-#include <stdio.h>
+#include <stdint.h>
+//#include <stdio.h>
 #endif
 
 #include "parameters.h"

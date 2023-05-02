@@ -49,6 +49,7 @@ typedef struct
 
 // Movement instance
 extern movement order;
+//? used externally ?
 
 // Frame State Machine function
 int FrameFSM(uint8_t received_bit);

@@ -2,6 +2,7 @@
 
 #ifdef TEST
 #include <stdint.h>
+//#include <stdio.h>
 #endif
 
 //#include "lib/adc.h"
@@ -9,10 +10,6 @@
 #include "tools.h" // tools: functions and global constants
 #include "parameters.h" // global parameters
 #include "motors.h" // for initalise()
-
-//TODO: put as an extern var in tools.h (and var in tools.c)
-unsigned char c;
-char* to_send;
 
 // rename ff to FLOAT_FACTOR_FILTER ?
 #define ff (float) (FACTOR_FILTER) // sans les parenth�ses �a marche pas � cause de la priorit� de << aled j'ai perdu 10 min sur �a
@@ -131,7 +128,7 @@ int start(void)
     __builtin_write_OSCCONH(0x03); // TODO: put in a #define in parameters.h ?
     __builtin_write_OSCCONL(OSCCON | 0x01); // TODO: put in a #define in parameters.h ?
 
-    init_uart();
+    //init_uart(); UART already initialised in initialise() from motors.c
     reset_tables();
     init_leds();
     resetFSMtest();
@@ -148,6 +145,8 @@ int start(void)
     //TODO: put in a #define in parameters.h
     PR3 = 2755; // this gives 15017 Hz measured on picoscope
     PR1 = 41800; // this gives 994 Hz
+
+    //TODO: write as a #define ?
     // starts timer1
     T1CONbits.TON = 1;
     // Enable timer1 interrupt, so that its ISR will be called on overflow
@@ -188,7 +187,7 @@ int start(void)
             voltage = adcRead();
             if (voltage >= 4096 || voltage < 0)
             {
-                continue; // ! ????????
+                continue; // re-read adc
             }
             
             ys_1[0][pointer_current] = voltage; // updates current value
@@ -273,7 +272,7 @@ void __attribute__((interrupt, no_auto_psv))_T1Interrupt(void)
         
         _LATB14 = (average_sample > 0);
         _LATB5 = (average_sample < 0);
-             
+
         
         // sends to FSM:
         FrameFSM(average_sample > 0);
@@ -300,89 +299,3 @@ void __attribute__((interrupt, no_auto_psv))_T1Interrupt(void)
         sample_count ++;
     }
 }
-
-
-
-/*
-void sendChar () {
-    while (U1STAbits.UTXBF) {}  // wait until the buffer is empty (writing to a register is much faster than the transmission)
-    U1TXREG = c;                // write to the TX register
-}
-
-void sendString () {
-    while(*to_send) {
-        c = *to_send++;
-        sendChar();
-    }
-}
-
-void sendInt16 (int16_t to_send) {
-    for (int i = 15; i >= 0; i--) {
-        c = (char) 48 + ((to_send >> i) & 1);
-        sendChar();
-    }
-    c = '\n';
-    sendChar();
-}
-
-void sendInt32 (int32_t to_send) {
-    for (int i = 31; i >= 0; i--) {
-        c = (char) 48 + ((to_send >> i) & 1);
-        sendChar();
-    }
-    c = '\n';
-    sendChar();
-}
-
-void sendIntConverted (int32_t to_send) {
-    char buffer[10];
-    int i = 0;
-    int negative = 0;
-    if (to_send < 0) {
-        to_send = -to_send;
-        negative = 1;
-    }
-
-    // Convert integer to string in reverse order
-    do {
-        buffer[i++] = (char) (to_send % 10) + '0'; // convert digit to ASCII equivalent
-        to_send /= 10;
-    } while (to_send > 0);
-    
-    if (negative == 1) {
-        c = '-';
-        sendChar();
-    }
-    
-    // Send string over UART in reverse order
-    for (int j = i - 1; j >= 0; j--) {
-        c = buffer[j];
-        sendChar();
-    }
-    c = '\n'; sendChar();
-}
-
-void sendLine() {
-    sendString();
-    c = '\n';
-    sendChar();
-}
-
-void init_uart() {
-    _U1RXR = 6;    // U1RX -> RP6
-	_RP7R = 3;     // RP7 -> U1Tx
-
-    // Configuration de l'UART1 avec un format de trame 8N1
-    U1MODEbits.PDSEL = 0;       // 8 bits, no parity
-    U1MODEbits.STSEL = 0;       // 1 stop bit
-    // baud rate = FCY / (16*(U1BRG+1) 
-    // => U1BRG = (3.685MHz / (16*57.6kHz)) - 1  =  2.998
-    //  20 MHz / (16 * 115.2 kHz)) - 1 = 9.85
-    U1MODEbits.BRGH = 0; // High Baud Rate Select bit
-    // U1BRG = 80; // 30864 de baudrate
-    // U1BRG = 8; // 278 000
-    U1BRG = 1; // 1 250 000
-    U1MODEbits.UARTEN = 1;      // activate UART
-    U1STAbits.UTXEN = 1;        // TX on
-}
-*/
