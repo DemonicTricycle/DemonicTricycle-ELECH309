@@ -166,19 +166,19 @@ int DataHandler(signal signal_state)
         {
         case 0b00:
             cmd = FORWARD;
-            sendChars("=> FORWARD\n");
+            sendUartChars("=> FORWARD\n");
             break;
         case 0b01:
             cmd = BACKWARD;
-            sendChars("=> BACKWARD\n");
+            sendUartChars("=> BACKWARD\n");
             break;
         case 0b10:
             cmd = TURN_RIGHT;
-            sendChars("=> TURN RIGHT\n");
+            sendUartChars("=> TURN RIGHT\n");
             break;
         case 0b11:
             cmd = TURN_LEFT;
-            sendChars("=> TURN LEFT\n");
+            sendUartChars("=> TURN LEFT\n");
             break;
         }
     }
@@ -252,7 +252,7 @@ int ParityHandler(signal signal_state)
             printf("ParityHandler fail\n");
 #endif
          //sendUartChars("parity fail\n");
-            resetFSMtest();
+            resetFSM();
             return 1;
         }
     }
@@ -341,7 +341,7 @@ int FrameFSM(int received_bit)
         //order.cmd = cmd;
         //order.params = params;
         //MotorsOrder(order); // TODO:
-        sendInt16(params);
+        sendUartInt16(params);
         switch (cmd)
         {
             case FORWARD:

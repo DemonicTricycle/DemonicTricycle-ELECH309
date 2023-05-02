@@ -52,7 +52,7 @@ extern movement order;
 //? used externally ?
 
 // Frame State Machine function
-int FrameFSM(uint8_t received_bit);
+int FrameFSM(int received_bit);
 void resetFSM(void);
 
 // Debug/test access to functions and variables

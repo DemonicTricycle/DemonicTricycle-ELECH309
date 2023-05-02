@@ -9,6 +9,7 @@
 #include "../lib/adc.h" // adc library
 #include "tools.h" // tools: functions and global constants
 #include "parameters.h" // global parameters
+#include "frameFSM.h" // FSM
 #include "motors.h" // for initalise()
 
 // rename ff to FLOAT_FACTOR_FILTER ?
@@ -131,7 +132,7 @@ int start(void)
     //init_uart(); UART already initialised in initialise() from motors.c
     reset_tables();
     init_leds();
-    resetFSMtest();
+    resetFSM();
     
     to_send = "Starting chip !";
     sendLine();
@@ -256,7 +257,7 @@ void __attribute__((interrupt, no_auto_psv))_T1Interrupt(void)
             to_send = "Fluke"; sendLine();
             _LATB4 = 1;
             reset_tables();
-            resetFSMtest();
+            resetFSM();
             noise_counter = 0;
         }
     }
@@ -290,7 +291,7 @@ void __attribute__((interrupt, no_auto_psv))_T1Interrupt(void)
         sendChar();
         is_listening = 0; _LATB12 = 0; _LATB14 = 0; _LATB5 = 0;
         reset_tables();
-        resetFSMtest();
+        resetFSM();
         T1CONbits.TON = 1;
     }
     

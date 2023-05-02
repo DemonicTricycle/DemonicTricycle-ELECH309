@@ -10,6 +10,8 @@
         <itemPath>src/motors.h</itemPath>
         <itemPath>src/parameters.h</itemPath>
         <itemPath>src/tools.h</itemPath>
+        <itemPath>src/main.h</itemPath>
+        <itemPath>src/system.h</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
@@ -26,29 +28,15 @@
         <itemPath>src/main.c</itemPath>
         <itemPath>src/motors.c</itemPath>
         <itemPath>src/tools.c</itemPath>
+        <itemPath>src/system.c</itemPath>
+        <itemPath>src/traps.c</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="f1" displayName="Test" projectFiles="true">
-      <logicalFolder name="test" displayName="test" projectFiles="true">
-        <logicalFolder name="implementation"
-                       displayName="implementation"
-                       projectFiles="true">
-          <itemPath>test/implementation/testFilter.c</itemPath>
-          <itemPath>test/implementation/testFrameFSM.c</itemPath>
-          <itemPath>test/implementation/testMotors.c</itemPath>
-        </logicalFolder>
-        <logicalFolder name="unit" displayName="unit" projectFiles="true">
-          <itemPath>test/unit/testDataHandlerFrameFSM.c</itemPath>
-          <itemPath>test/unit/testParityHandlerFrameFSM.c</itemPath>
-        </logicalFolder>
-        <itemPath>test/test.c</itemPath>
-        <itemPath>test/test.h</itemPath>
-      </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
                    projectFiles="false">
-      <itemPath>Makefile</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
@@ -79,8 +67,6 @@
           <linkerLibItems>
             <linkerLibFileItem>lib/adc.c</linkerLibFileItem>
             <linkerLibFileItem>lib/adc.h</linkerLibFileItem>
-            <linkerLibFileItem>lib/mcp4821.c</linkerLibFileItem>
-            <linkerLibFileItem>lib/mcp4821.h</linkerLibFileItem>
           </linkerLibItems>
         </linkerTool>
         <archiverTool>
@@ -292,6 +278,8 @@
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0-157ff"/>
         <property key="poweroptions.powerenable" value="false"/>
+        <property key="programmerToGoFilePath"
+                  value="C:/Users/lucasp/repo/DemonicTricycle-ELECH309/debug/default/default_ptg"/>
         <property key="programmerToGoImageName" value="default_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>

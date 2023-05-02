@@ -1,5 +1,6 @@
 // <editor-fold defaultstate="collapsed" desc="Include and imports">
 #include "xc.h"
+#include "libpic30.h" // Contains __delay_ms definition
 #include <math.h>
 
 #ifdef TEST
@@ -7,9 +8,10 @@
 //#include <stdio.h>
 #endif
 
-#include "libpic30.h" // Contains __delay_ms definition
+//#include "libpic30.h" // Contains __delay_ms definition
 #include "tools.h"
 #include "parameters.h"
+//#include "libpic30.h" // Contains __delay_ms definition
 
 // Adaptation of the formula in the datasheet
 #define GET_PTPER() (int)(((float)FCY * PWM_TIME_PERIOD / CLOCK_PRESCALER) - 1)
@@ -282,8 +284,8 @@ void Move(float translation, float angle)
 //#define acceptable_error_rotation 0.06981 //(float)4 / 360 * 2 * PI
     //float error_translation = acceptable_error_translation + 1.0;
     //float error_rotation = acceptable_error_rotation + 1.0;
-    float error_translation = ACCEPTABLE_ERROR_TRANSLATION+1.0;
-    float error_rotation = ACCEPTABLE_ERROR_ROTATION+1.0;
+    float error_translation = ACCEPTABLE_ERROR_TRANSLATION + 1.0;
+    float error_rotation = ACCEPTABLE_ERROR_ROTATION + 1.0;
 
     float time = 0;
     float target_translation = GetTarget(time, translation);
@@ -299,7 +301,7 @@ void Move(float translation, float angle)
     {
         //if (_T1IF == 1)
         //(if TIMER_1_INTERRUPT_FLAG == 1)
-        if (_21IF == 1) //TODO: write a define for this
+        if (_T2IF == 1) //TODO: write a define for this
         {
             //_T1IF = 0;
             //TIMER_1_INTERRUPT_FLAG = 0;
@@ -362,7 +364,7 @@ void initialise(void)
     PWMInit();
     initUart();
     StartupMessage();
-    __delay_ms(1000);
+    //__delay_ms(1000);
 }
 
 /*

@@ -1,11 +1,12 @@
 // <editor-fold defaultstate="collapsed" desc="Include and imports">
 #ifndef TEST
 #include "xc.h"
+#include "libpic30.h" // Contains __delay_ms definition
 #endif
 #include <stdint.h>
 #include <math.h>
 #ifndef TEST
-#include "libpic30.h" // Contains __delay_ms definition
+//#include "libpic30.h" // Contains __delay_ms definition
 #endif
 #ifdef TEST
 #include <stdio.h>
@@ -19,11 +20,21 @@ char* to_send;
 
 int Uint16ToInt(uint16_t x)
 {
+    if (x > UINT16_MAX)
+    {
+#ifdef TEST
+        printf("Uint16ToInt integer overflow");
+#endif
+        // do something else?
+#ifndef TEST
+        sendUartMessage("Uint16ToInt integer overflow");
+#endif
+    }
     int result = 0;
     result = (int)(x & 0x7FFF); // clear the MSB (most significant bit)
     if ((x & 0x8000) != 0)
     { // if the MSB was set, convert to negative
-        result = -((int)(0x7FFF) + 1 - result);
+        result = -((int)(0x7FFF) + 1 - result); //! susceptible to int overflow !
     }
     return result;
 }
@@ -47,6 +58,51 @@ int FloatSign(float value)
 
 // --- from motors code ---
 // <editor-fold defaultstate="collapsed" desc="Debug (motors)">
+
+int strlen(const char *s) {
+
+    int len = 0;
+    while (*s++) {
+        len++;
+    }
+
+    return len;
+}
+
+void itoa(int num, char *data, int ba) {
+    int i = 0;
+    int sign = 0;
+
+    /* Handle negative integers */
+    if (num < 0 && ba == 10) {
+        sign = 1;
+        num = -num;
+    }
+
+    /* Process individual digits */
+    while (num != 0) {
+        int rem = num % ba;
+        data[i++] = (rem > 9) ? (rem - 10) + 'a' : rem + '0';
+        num = num / ba;
+    }
+
+    /* If number is negative, append '-' */
+    if (sign) {
+        data[i++] = '-';
+    }
+
+    /* Add null terminator */
+    data[i] = '\0';
+
+    /* Reverse the string */
+    int j, len = strlen(data);
+    for (i = 0, j = len - 1; i < j; i++, j--) {
+        char temp = data[i];
+        data[i] = data[j];
+        data[j] = temp;
+    }
+}
+
 void sendUartChars(char *chars)
 {
     #ifndef TEST
@@ -81,55 +137,6 @@ void sendUartInt16(int toSend)
     sendUartChars(&data);
     breakUartLine();
 }
-int strlen(const char *s)
-{
-
-    int len = 0;
-    while (*s++)
-    {
-        len++;
-    }
-
-    return len;
-}
-void itoa(int num, char *data, int ba)
-{
-    int i = 0;
-    int sign = 0;
-
-    /* Handle negative integers */
-    if (num < 0 && ba == 10)
-    {
-        sign = 1;
-        num = -num;
-    }
-
-    /* Process individual digits */
-    while (num != 0)
-    {
-        int rem = num % ba;
-        data[i++] = (rem > 9) ? (rem - 10) + 'a' : rem + '0';
-        num = num / ba;
-    }
-
-    /* If number is negative, append '-' */
-    if (sign)
-    {
-        data[i++] = '-';
-    }
-
-    /* Add null terminator */
-    data[i] = '\0';
-
-    /* Reverse the string */
-    int j, len = strlen(data);
-    for (i = 0, j = len - 1; i < j; i++, j--)
-    {
-        char temp = data[i];
-        data[i] = data[j];
-        data[j] = temp;
-    }
-}
 
 void uint16_t_to_char_array(uint16_t val, char *arr, size_t arr_size)
 {
@@ -146,9 +153,9 @@ void uint16_t_to_char_array(uint16_t val, char *arr, size_t arr_size)
 void StartupMessage()
 {
     #ifndef TEST
-    __delay_ms(10);
+    //__delay_ms(10);
     sendUartMessage("Booting : ");
-    __delay_ms(10);
+    //__delay_ms(10);
     #endif
 }
 
