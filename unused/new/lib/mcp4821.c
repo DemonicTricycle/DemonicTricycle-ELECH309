@@ -12,16 +12,16 @@ void mcp4821Init(int16_t gain) {
     dataMask = gain;
     MCP4821_CS_TRIS = 0;
     MCP4821_CS_LAT = 1;
-    MCP4821_SCK = SPI1_SCK_OUT;      // Sélection de la patte pour SCK
-	MCP4821_SDI = SPI1_SDO;          // Sélection de la patte pour SDO
-    SPI1CON1bits.MODE16 = 1;    // mots de 16 bits
+    MCP4821_SCK = SPI1_SCK_OUT;      // Pin choice for SCK
+	MCP4821_SDI = SPI1_SDO;          // Pin choice for SDO
+    SPI1CON1bits.MODE16 = 1;    // 16-bit word
     SPI1CON1bits.PPRE = 3;      // primary prescaler = 16:1
     SPI1CON1bits.SPRE = 6;      // secondary prescaler = 1:1
-    SPI1CON1bits.CKP = 1;       // on veut le mode (1,1), ...
-    SPI1CON1bits.CKE = 0;       // mais (CKE est l'inverse de CPHA)
-    SPI1CON1bits.MSTEN = 1;     // mode master
+    SPI1CON1bits.CKP = 1;       // We want mode (1,1), ...
+    SPI1CON1bits.CKE = 0;       // but (CKE is the opposite of CPHA)
+    SPI1CON1bits.MSTEN = 1;     // master mode
     SPI1STATbits.SPIROV = 0;
-    SPI1STATbits.SPIEN = 1;     // active le périphérique
+    SPI1STATbits.SPIEN = 1;     // enable peripheral
 }
 
 

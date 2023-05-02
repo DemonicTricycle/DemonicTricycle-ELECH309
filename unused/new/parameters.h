@@ -1,21 +1,22 @@
 // parameters defines
 
-//?  correct ?
-#define SYS_FREQ 80000000L
-#define FCY SYS_FREQ/2
+/*
+! SHOULD PUT ALL THIS HERE IN user.h ??? and system.h for FCY ???
+*/
+
+
+#define FCY 3685000
 
 // for filter.c :
 // <editor-fold defaultstate="collapsed" desc="motors.c parameters">
 
 #define FLOORS 4
-// const short FLOOR_ORDER = 2;
-
-#define THRESHOLD 300
+const short FLOOR_ORDER = 2;
 
 // filter constants
 #define M_FILTER 18 // Q18.14
 #define FACTOR_FILTER 262144 // 1 << M
-//#define FLOAT_FACTOR_FILTER (float) (factor) // doesn't work without parentheses because of <<'s priority, lost 10min just on this
+//#define ff (float) (factor) // sans les parenth�ses �a marche pas � cause de la priorit� de << aled j'ai perdu 10 min sur �a
 #define FS_FILTER 15000 //? used ?
 
 // </editor-fold>
@@ -64,16 +65,17 @@
 #define MAX_ACCELERATION_TIME_ROTATION 1.2 // seconds
 #define MAX_ANGLE (CRUISE_ROTATION_SPEED*0.5*(MAX_ACCELERATION_TIME_ROTATION*2))
 #define ACCELERATION_ROTATION (CRUISE_ROTATION_SPEED/MAX_ACCELERATION_TIME_ROTATION)
-// name these defines in all caps
-//#define acceptable_error_translation 0.04
-//#define acceptable_error_rotation 0.06981 // = (float)4 / 360 * 2 * PI
+// TODO: change to uppercase
+#define acceptable_error_translation 0.04
+#define acceptable_error_rotation 0.06981 // = (float)4 / 360 * 2 * PI
 #define ACCEPTABLE_ERROR_TRANSLATION 0.04
 #define ACCEPTABLE_ERROR_ROTATION 0.06981 // = (float)4 / 360 * 2 * PI
+
 //#define error_translation acceptable_error_transla+1.0
 //#define error_rotation acceptable_error_rota+1.0
-// change these to uppercase
-//#define k_translation 3.69
-//#define k_rotation (1.03*3)
+//TODO: change to uppercase
+#define k_translation 3.69
+#define k_rotation (1.03*3)
 #define K_TRANSLATION 3.69
 #define K_ROTATION (1.03 * 3)
 //#define time_interval 3 // ms
@@ -87,10 +89,4 @@
 
 #define ACCELERATION 0.5 // seconds //?
 
-// </editor-fold>
-
-// <editor-fold defaultstate="collapsed" desc="FSM parameters">
-#define FRAME_LENGTH 13 // Frame length in bits
-#define FRAME_DATA_LENGTH 10 // Frame data length in bits
-//#define FRAME_PARAMS_LENGTH FRAME_DATA_LENGTH-2 // Frame parameters length in bits
 // </editor-fold>

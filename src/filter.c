@@ -1,101 +1,16 @@
 #include "xc.h"
-#include <stdint.h>
-//#include "lib/adc.h"
-#include "../lib/adc.h"
-#include "tools.h"
-#include "parameters.h"
 
-#ifndef FCY
-#define FCY 1
-//TODO: ?
+#ifdef TEST
+#include <stdint.h>
+//#include <stdio.h>
 #endif
 
-unsigned char c;
-char* to_send;
-
-/*
-void sendChar () {
-    while (U1STAbits.UTXBF) {}  // wait until the buffer is empty (writing to a register is much faster than the transmission)
-    U1TXREG = c;                // write to the TX register
-}
-
-void sendString () {
-    while(*to_send) {
-        c = *to_send++;
-        sendChar();
-    }
-}
-
-void sendInt16 (int16_t to_send) {
-    for (int i = 15; i >= 0; i--) {
-        c = (char) 48 + ((to_send >> i) & 1);
-        sendChar();
-    }
-    c = '\n';
-    sendChar();
-}
-
-void sendInt32 (int32_t to_send) {
-    for (int i = 31; i >= 0; i--) {
-        c = (char) 48 + ((to_send >> i) & 1);
-        sendChar();
-    }
-    c = '\n';
-    sendChar();
-}
-
-void sendIntConverted (int32_t to_send) {
-    char buffer[10];
-    int i = 0;
-    int negative = 0;
-    if (to_send < 0) {
-        to_send = -to_send;
-        negative = 1;
-    }
-
-    // Convert integer to string in reverse order
-    do {
-        buffer[i++] = (char) (to_send % 10) + '0'; // convert digit to ASCII equivalent
-        to_send /= 10;
-    } while (to_send > 0);
-    
-    if (negative == 1) {
-        c = '-';
-        sendChar();
-    }
-    
-    // Send string over UART in reverse order
-    for (int j = i - 1; j >= 0; j--) {
-        c = buffer[j];
-        sendChar();
-    }
-    c = '\n'; sendChar();
-}
-
-void sendLine() {
-    sendString();
-    c = '\n';
-    sendChar();
-}
-
-void init_uart() {
-    _U1RXR = 6;    // U1RX -> RP6
-	_RP7R = 3;     // RP7 -> U1Tx
-
-    // Configuration de l'UART1 avec un format de trame 8N1
-    U1MODEbits.PDSEL = 0;       // 8 bits, no parity
-    U1MODEbits.STSEL = 0;       // 1 stop bit
-    // baud rate = FCY / (16*(U1BRG+1) 
-    // => U1BRG = (3.685MHz / (16*57.6kHz)) - 1  =  2.998
-    //  20 MHz / (16 * 115.2 kHz)) - 1 = 9.85
-    U1MODEbits.BRGH = 0; // High Baud Rate Select bit
-    // U1BRG = 80; // 30864 de baudrate
-    // U1BRG = 8; // 278 000
-    U1BRG = 1; // 1 250 000
-    U1MODEbits.UARTEN = 1;      // activate UART
-    U1STAbits.UTXEN = 1;        // TX on
-}
-*/
+//#include "lib/adc.h"
+#include "../lib/adc.h" // adc library
+#include "tools.h" // tools: functions and global constants
+#include "parameters.h" // global parameters
+#include "frameFSM.h" // FSM
+#include "motors.h" // for initalise()
 
 // rename ff to FLOAT_FACTOR_FILTER ?
 #define ff (float) (FACTOR_FILTER) // sans les parenth�ses �a marche pas � cause de la priorit� de << aled j'ai perdu 10 min sur �a
@@ -124,8 +39,6 @@ int32_t ys_2[5][12]; // dynamic table for filter 1
 int32_t last_values_1[17];
 int32_t last_values_2[17];
 
-int16_t seuil = 500;
-
 short pointer_last = 10;
 short pointer_before = 11;
 short pointer_current = 0;
@@ -133,8 +46,8 @@ short pointer_last_values = 0;
 
 short sample_count = 0;
 short bit_count = 0;
-short filtre_0 = 0;
-short filtre_1 = 0;
+short filter_0 = 0;
+short filter_1 = 0;
 short is_listening = 0;
 int32_t max_1 = 0;
 int32_t max_2 = 0;
@@ -142,7 +55,8 @@ int16_t average_sample = 0;
 
 short noise_counter = 0;
 
-void init_tables() {
+void init_tables()
+{
     for (int i = 0; i < FLOORS + 1; i++) {
         for (int zz = 0; zz < 12; zz ++) {
             ys_1[i][zz] = 0;
@@ -151,7 +65,8 @@ void init_tables() {
     }    
 }
 
-void print_values() {
+void print_values()
+{
     to_send = "M : "; sendString();
     sendIntConverted(M_FILTER);
     to_send = "Factor : "; sendString();
@@ -176,7 +91,8 @@ void print_values() {
     }
 }
 
-void reset_tables() {
+void reset_tables()
+{
     for (int i = 0; i < 5; i++) {
         for (int j = 0; j < 12; j++) {
             ys_1[i][j] = 0;
@@ -189,27 +105,36 @@ void reset_tables() {
     }
 }
 
-void init_leds() {
+void init_leds()
+{
+    //TODO: put in a #define in parameters.h ?
     _TRISB12 = 0; // green = listening
     _TRISB4 = 0; // red = fluke
     _TRISB14 = 0; // blue = bit 0
     _TRISB5 = 0; // yellow = bit 1
 }
 
-int main(void) {
-    // Configure PLL prescaler, PLL postscaler, PLL divisor
-    PLLFBD = 43; // found using trial and error
-    CLKDIVbits.PLLPOST=0; // N2 = 2
-    CLKDIVbits.PLLPRE=0; // N1 = 2
-    // Initiate Clock Switch to Primary Oscillator with PLL (NOSC = 0b011)
-    __builtin_write_OSCCONH(0x03);
-    __builtin_write_OSCCONL(OSCCON | 0x01);
+int start(void)
+{
 
-	init_uart();
+    // Configure PLL prescaler, PLL postscaler, PLL divisor
+    PLLFBD= 43; // par essai erreur //TODO: put in a #define in parameters.h
+    CLKDIVbits.PLLPOST = 0; // N2 = 2 //TODO: put in a #define in parameters.h ?
+    CLKDIVbits.PLLPRE = 0;  // N1 = 2 //TODO: put in a #define in parameters.h ?
+
+    // initalization (from motors.c)
+    initialise();
+    
+    // Initiate Clock Switch to Primary Oscillator with PLL (NOSC = 0b011)
+    __builtin_write_OSCCONH(0x03); // TODO: put in a #define in parameters.h ?
+    __builtin_write_OSCCONL(OSCCON | 0x01); // TODO: put in a #define in parameters.h ?
+
+    //init_uart(); UART already initialised in initialise() from motors.c
     reset_tables();
     init_leds();
+    resetFSM();
     
-    to_send = "Chip strating !";
+    to_send = "Starting chip !";
     sendLine();
     
     print_values();
@@ -218,8 +143,11 @@ int main(void) {
     adcInit(ADC_TIMER3_SAMPLING);
     
     // PR3 = 40 MHz / 15 kHz - 1 = 2665.5
-    PR3 = 2755; // �a donne 15017 Hz mesur� au picoscope
-    PR1 = 41800; // �a donne 994 Hz
+    //TODO: put in a #define in parameters.h
+    PR3 = 2755; // this gives 15017 Hz measured on picoscope
+    PR1 = 41800; // this gives 994 Hz
+
+    //TODO: write as a #define ?
     // starts timer1
     T1CONbits.TON = 1;
     // Enable timer1 interrupt, so that its ISR will be called on overflow
@@ -227,18 +155,49 @@ int main(void) {
 
 	T3CONbits.TON = 1;
     
-	while(1) {
-        if (adcConversionDone()) {
+    
+    /*
+    // Tests
+    int vars[13] = {0,0,0,0,0,1,1,0,0,1,0,1,1};
+    for (int i = 0; i < 13; i++)
+    {
+        FrameFSM(vars[i] > 0);
+        sendLine();
+        
+    }
+    
+    while (1)
+    {}
+    */
+    
+    
+    /*
+    // Tests
+    while (1)
+    {
+        Move(20,0);
+        Move(0,PI);
+    }
+    */
+
+    
+	while(1) 
+    {
+        if (adcConversionDone()) 
+        {
             voltage = adcRead();
             if (voltage >= 4096 || voltage < 0)
-                continue;
+            {
+                continue; // re-read adc
+            }
             
             ys_1[0][pointer_current] = voltage; // updates current value
             ys_2[0][pointer_current] = voltage;
 
-            for (int k = 0; k < FLOORS; k++) { // filter id
-                ys_1[k+1][pointer_current] =((gs_1[k] * ( (bs_1[k][0]*ys_1[k][pointer_current] + bs_1[k][1]*ys_1[k][pointer_before] + bs_1[k][2]*ys_1[k][pointer_last]) >> M_FILTER)) - as_1[k][1]*ys_1[k+1][pointer_before] - as_1[k][2]*ys_1[k+1][pointer_last] ) >> (M_FILTER);
-                ys_2[k+1][pointer_current] =((gs_2[k] * ( (bs_2[k][0]*ys_2[k][pointer_current] + bs_2[k][1]*ys_2[k][pointer_before] + bs_2[k][2]*ys_2[k][pointer_last]) >> M_FILTER)) - as_2[k][1]*ys_2[k+1][pointer_before] - as_2[k][2]*ys_2[k+1][pointer_last] ) >> (M_FILTER);
+            for (int k = 0; k < FLOORS; k++) // filter id
+            {
+                ys_1[k + 1][pointer_current] = ((gs_1[k] * ((bs_1[k][0] * ys_1[k][pointer_current] + bs_1[k][1] * ys_1[k][pointer_before] + bs_1[k][2] * ys_1[k][pointer_last]) >> M_FILTER)) - as_1[k][1] * ys_1[k + 1][pointer_before] - as_1[k][2] * ys_1[k + 1][pointer_last]) >> (M_FILTER);
+                ys_2[k + 1][pointer_current] = ((gs_2[k] * ((bs_2[k][0] * ys_2[k][pointer_current] + bs_2[k][1] * ys_2[k][pointer_before] + bs_2[k][2] * ys_2[k][pointer_last]) >> M_FILTER)) - as_2[k][1] * ys_2[k + 1][pointer_before] - as_2[k][2] * ys_2[k + 1][pointer_last]) >> (M_FILTER);
             } 
             
             last_values_1[pointer_last_values] = ys_1[4][pointer_current];
@@ -249,28 +208,30 @@ int main(void) {
             pointer_last_values = (pointer_last_values + 1) % 18;
         }
 	}
-    while(1) {}
+    return 0;
 }
 
-void __attribute__((interrupt, no_auto_psv))_T1Interrupt(void) {
+void __attribute__((interrupt, no_auto_psv))_T1Interrupt(void)
+{
     // ISR code does the same things that the main loop did in polling
     _T1IF = 0;
     
     max_1 = 0;
     max_2 = 0;
-    for (int ii = 0; ii < 18; ii++) {
+    for (int ii = 0; ii < 18; ii++)
+    {
         if (max_1 < last_values_1[ii]) max_1 = last_values_1[ii];
         if (max_2 < last_values_2[ii]) max_2 = last_values_2[ii];
     }
 
-    filtre_0 = (max_1 > seuil) ? 1 : 0;
-    filtre_1 = (max_2 > seuil) ? 1 : 0;
-    /*
-    if (max_1 > seuil) sendIntConverted(max_1);
-    if (max_2 > seuil) sendIntConverted(max_2);*/
+    filter_0 = (max_1 > THRESHOLD) ? 1 : 0;
+    filter_1 = (max_2 > THRESHOLD) ? 1 : 0;
+
     
-    if (filtre_0 == 1 || filtre_1 == 1) {
-        if (sample_count == 0) {
+    if (filter_0 == 1 || filter_1 == 1)
+    {
+        if (sample_count == 0)
+        {
             bit_count = 0;
             average_sample = 0;
             is_listening = 1;
@@ -279,13 +240,15 @@ void __attribute__((interrupt, no_auto_psv))_T1Interrupt(void) {
             _LATB12 = 1; _LATB4 = 0;
         }
         
-        average_sample += filtre_1;
-        average_sample -= filtre_0; 
+        average_sample += filter_1;
+        average_sample -= filter_0;
     }
     
-    if (is_listening && bit_count == 0 && sample_count < 75 && filtre_0 == 0 && filtre_1 == 0) {
+    if (is_listening && bit_count == 0 && sample_count < 75 && filter_0 == 0 && filter_1 == 0) // TODO: put in a #define
+    {
         noise_counter ++;
-        if (noise_counter > 10) {
+        if (noise_counter > 15) // TODO: put in a #define ?
+        {
             // probably fluke
             sample_count = 0;
             bit_count = 0;
@@ -294,30 +257,33 @@ void __attribute__((interrupt, no_auto_psv))_T1Interrupt(void) {
             to_send = "Fluke"; sendLine();
             _LATB4 = 1;
             reset_tables();
+            resetFSM();
             noise_counter = 0;
-
-            //resetFSM(); //?
         }
     }
     
-    if (sample_count == 100) {
+    if (sample_count == 99 || (bit_count == 0 && sample_count == 74)) // TODO: put in a #define
+    {
         bit_count ++;
         sample_count = 0;
-        to_send = "Bit received"; sendLine();
+        //to_send = "Bit received"; sendLine();
         // bit has been received
-        _LATB14 = (average_sample < 0);
-        _LATB5 = (average_sample > 0);
-        c = '0' + ((average_sample > 0) ? 1 : 0);
-        sendChar();
-        c = '\n';
-        sendChar();
+        c = '0' + (average_sample > 0); sendChar();
+        sendIntConverted(average_sample);
+        
+        _LATB14 = (average_sample > 0);
+        _LATB5 = (average_sample < 0);
 
-        // send to FrameFSM() //?
-
+        
+        // sends to FSM:
+        FrameFSM(average_sample > 0);
+        reset_tables();
         average_sample = 0;
+        
     }
     
-    if (bit_count == 13) {
+    if (bit_count == FRAME_LENGTH) //defined in parameters.h
+    {
         sample_count = 0;
         bit_count = 0;
         average_sample = 0;
@@ -325,10 +291,12 @@ void __attribute__((interrupt, no_auto_psv))_T1Interrupt(void) {
         sendChar();
         is_listening = 0; _LATB12 = 0; _LATB14 = 0; _LATB5 = 0;
         reset_tables();
-
-        //resetFSM(); //?
+        resetFSM();
+        T1CONbits.TON = 1;
     }
+    
     if (is_listening)
+    {
         sample_count ++;
+    }
 }
-
