@@ -122,14 +122,14 @@ int start(void)
     CLKDIVbits.PLLPOST = 0; // N2 = 2 //TODO: put in a #define in parameters.h ?
     CLKDIVbits.PLLPRE = 0;  // N1 = 2 //TODO: put in a #define in parameters.h ?
 
-    // initalization (from motors.c)
+    // Initalises motor regulation:
     initialise();
     
     // Initiate Clock Switch to Primary Oscillator with PLL (NOSC = 0b011)
     __builtin_write_OSCCONH(0x03); // TODO: put in a #define in parameters.h ?
     __builtin_write_OSCCONL(OSCCON | 0x01); // TODO: put in a #define in parameters.h ?
 
-    //init_uart(); UART already initialised in initialise() from motors.c
+    //init_uart(); // UART already initialised in initialise() from motors.c
     reset_tables();
     init_leds();
     resetFSM();
