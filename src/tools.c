@@ -1,14 +1,14 @@
 // <editor-fold defaultstate="collapsed" desc="Include and imports">
 #ifndef TEST
 #include "xc.h"
-#include "libpic30.h" // Contains __delay_ms definition
+//#include "libpic30.h" // Contains __delay_ms definition
 #endif
-#include <stdint.h>
 #include <math.h>
 #ifndef TEST
 //#include "libpic30.h" // Contains __delay_ms definition
 #endif
 #ifdef TEST
+#include <stdint.h>
 #include <stdio.h>
 #endif
 
@@ -134,11 +134,13 @@ void sendUartInt16(int toSend)
 {
     char data[8];
     itoa(toSend, data, 10);
-    sendUartChars(&data);
+    //sendUartChars(&data);
+    sendUartChars(data); //TODO: check if correct
     breakUartLine();
 }
 
-void uint16_t_to_char_array(uint16_t val, char *arr, size_t arr_size)
+//void uint16_t_to_char_array(uint16_t val, char *arr, size_t arr_size)
+void uint16_t_to_char_array(unsigned int val, char *arr, unsigned int arr_size)
 {
     int i;
     for (i = 0; i < 16 && i < arr_size; i++)

@@ -49,13 +49,30 @@
 
 #include "parameters.h"
 #include "tools.h"
-#include "frameFSM.h"
 #include "motors.h"
-#include <stdint.h>
+#include "frameFSM.h"
 
 #ifdef TEST
+#include <stdint.h>
 #include <stdio.h>
 #endif
+
+// State Machine states:
+typedef enum { /// States:
+    IDLE,
+    START,
+    DATA,
+    PARITY,
+    STOP
+} state;
+
+// Signal types:
+typedef enum { /// Signals:
+    NO_SIGNAL,
+    NOISE,
+    BIT_0,
+    BIT_1
+} signal;
 
 movement order; // TODO:
 state current_state = IDLE;

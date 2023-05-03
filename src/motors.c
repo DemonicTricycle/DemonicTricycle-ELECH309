@@ -1,6 +1,6 @@
 // <editor-fold defaultstate="collapsed" desc="Include and imports">
 #include "xc.h"
-#include "libpic30.h" // Contains __delay_ms definition
+//#include "libpic30.h" // Contains __delay_ms definition
 #include <math.h>
 
 #ifdef TEST
@@ -132,7 +132,7 @@ void CapMotorVoltage(float *value)
 }
 
 void SetMotor1Dir(direction dir)
-//void SetMotor1Dir(movement dir)
+//void SetMotor1Dir(command dir)
 {
     if (dir == forward)
     //if (dir == FORWARD)
@@ -147,7 +147,7 @@ void SetMotor1Dir(direction dir)
 }
 
 void SetMotor2Dir(direction dir)
-//void SetMotor2Dir(movement dir)
+//void SetMotor2Dir(command dir)
 {
     if (dir == forward)
     //if (dir == FORWARD)
@@ -165,9 +165,11 @@ void SetMotor1(float value)
 {
     setPWM1(FloatAbs(value));
     direction dir = forward;
+    //command dir = FORWARD;
     if (value < 0)
     {
         dir = backward;
+        //dir = BACKWARD;
     }
     SetMotor1Dir(dir);
 }
@@ -176,9 +178,11 @@ void SetMotor2(float value)
 {
     setPWM2(FloatAbs(value));
     direction dir = forward;
+    //command dir = FORWARD;
     if (value < 0)
     {
         dir = backward;
+        //dir = BACKWARD;
     }
     SetMotor2Dir(dir);
 }
@@ -351,7 +355,7 @@ void Move(float translation, float angle)
 void initialiseMotors(void)
 {
     direction dir = forward; //TODO: use FSM's enum ?
-    //movement dir = FORWARD;
+    //command dir = FORWARD;
     M1_DIR_PIN_AS_INPUT = 0; // Declares dir pin 1 as output
     M2_DIR_PIN_AS_INPUT = 0; // Declares dir pin 2 as output
     SetMotor1Dir(dir);
@@ -364,7 +368,7 @@ void initialise(void)
     PWMInit();
     initUart();
     StartupMessage();
-    //__delay_ms(1000);
+    __delay_ms(1000);
 }
 
 /*

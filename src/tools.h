@@ -1,6 +1,6 @@
 #ifndef TEST
 #include "xc.h"
-#include "libpic30.h" // Contains __delay_ms definition
+//#include "libpic30.h" // Contains __delay_ms definition
 #endif
 #ifdef TEST
 #include <stdint.h>
@@ -10,9 +10,9 @@
 #define PI 3.1415926535897932
 #endif
 
-//#ifndef UINT16_MAX
+#ifndef UINT16_MAX
 #define UINT16_MAX 65535
-//#endif
+#endif
 
 extern unsigned char c;
 extern char* to_send;
