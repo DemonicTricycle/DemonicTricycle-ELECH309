@@ -1,6 +1,3 @@
-/* 
- TODO
-*/
 
 //#ifndef FRAMEFSM_H_ /* Include guard */
 //#define FRAMEFSM_H_
@@ -9,12 +6,6 @@
 #include <stdint.h>
 #endif
 
-/*
-// TODO: use ?
-#define FRAME_LENGTH 13 // Frame length in bits
-#define FRAME_DATA_LENGTH 10 // Frame data length in bits
-//#define FRAME_PARAMS_LENGTH FRAME_DATA_LENGTH-2 // Frame parameters length in bits
-*/
 typedef enum
 { /// Commands:
     FORWARD,
@@ -23,6 +14,7 @@ typedef enum
     TURN_LEFT
 } command;
 
+/*
 // State Machine states:
 typedef enum
 { /// States:
@@ -40,11 +32,12 @@ typedef enum
     BIT_0,
     BIT_1
 } signal;
+*/
 
 typedef struct
 { /// Movement:
     command cmd;
-    uint8_t params; // ? uint16_t
+    uint8_t params;
 } movement;
 
 // Movement instance
