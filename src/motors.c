@@ -363,12 +363,13 @@ void initialiseMotors(void)
 }
 void initialise(void)
 {
+#include "libpic30.h" // Contains __delay_ms definition
     initialiseMotors();
     InitialiseEncoders();
     PWMInit();
     initUart();
     StartupMessage();
-    __delay_ms(1000);
+    __delay_ms(1000); //! compiler doesn't find its definition with libpic included in top of the file?
 }
 
 /*
