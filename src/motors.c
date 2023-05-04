@@ -106,11 +106,11 @@ void ResetPos(void)
 
 float GetPosMotor1(void) // Get the position in radian
 {
-    return ((float)Uint16ToInt(POS1CNT) * (2 * PI)) / 1423.0; // TODO: use defines for values
+    return ((float)Uint16ToInt(POS1CNT) * (2 * PI)) / 1423.0; // TODO: use defines for values ?
 }
 float GetPosMotor2(void)
 {
-    return ((float)Uint16ToInt(POS2CNT) * (2 * PI)) / 1423.0; // TODO: use defines for values
+    return ((float)Uint16ToInt(POS2CNT) * (2 * PI)) / 1423.0; // TODO: use defines for values ?
 }
 float GetDistMotor1(void) // Get the distance in m
 {

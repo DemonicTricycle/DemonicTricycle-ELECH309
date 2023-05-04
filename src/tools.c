@@ -17,28 +17,6 @@
 unsigned char c;
 char* to_send;
 
-
-int Uint16ToInt(uint16_t x)
-{
-    if (x > UINT16_MAX)
-    {
-#ifdef TEST
-        printf("Uint16ToInt integer overflow");
-#endif
-        // do something else?
-#ifndef TEST
-        sendUartMessage("Uint16ToInt integer overflow");
-#endif
-    }
-    int result = 0;
-    result = (int)(x & 0x7FFF); // clear the MSB (most significant bit)
-    if ((x & 0x8000) != 0)
-    { // if the MSB was set, convert to negative
-        result = -((int)(0x7FFF) + 1 - result); //! susceptible to int overflow !
-    }
-    return result;
-}
-
 float FloatAbs(float value)
 {
     if (value < 0)
@@ -139,6 +117,26 @@ void sendUartInt16(int toSend)
     breakUartLine();
 }
 
+int Uint16ToInt(uint16_t x) {
+    if (x > UINT16_MAX) {
+#ifdef TEST
+        printf("Uint16ToInt integer overflow: %d > UINT16_MAX(", x);
+        printf("%d)\n", UINT16_MAX);
+#endif
+#ifndef TEST
+        sendUartMessage("Uint16ToInt integer overflow:");
+        sendUartInt16(x);
+#endif
+        // do something else?
+    }
+    int result = 0;
+    result = (int) (x & 0x7FFF); // clear the MSB (most significant bit)
+    if ((x & 0x8000) != 0) { // if the MSB was set, convert to negative
+        result = -((int) (0x7FFF) + 1 - result); //! susceptible to int overflow !
+    }
+    return result;
+}
+
 //void uint16_t_to_char_array(uint16_t val, char *arr, size_t arr_size)
 void uint16_t_to_char_array(unsigned int val, char *arr, unsigned int arr_size)
 {
@@ -176,6 +174,7 @@ void initUart(void)
     U1MODEbits.BRGH = 0; // High Baud Rate Select bit
     // U1BRG = 80; // 30864 baudrate
     // U1BRG = 8; // 278 000
+    // FCY = 40,000,000 Hz & baudrate = 1,250,000 bps => U1BRG = 1
     U1BRG = 1; // 1 250 000 //TODO: put in a define in parameters.h ?
 
     U1MODEbits.UARTEN = 1; // enable UART

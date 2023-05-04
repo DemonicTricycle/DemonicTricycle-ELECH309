@@ -2,7 +2,7 @@
 
 //?  correct ?
 #define SYS_FREQ 80000000L
-#define FCY SYS_FREQ/2
+#define FCY (SYS_FREQ/2)
 
 // for filter.c :
 // <editor-fold defaultstate="collapsed" desc="motors.c parameters">

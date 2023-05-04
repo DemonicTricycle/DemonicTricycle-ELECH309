@@ -17,7 +17,7 @@
 int main(void) {
     
     // Starts digital filter:
-    start();
+    start(); // it will then itself start the motor regulation and, when running, call the FSM on each received bit
 
     while (1) {} // won't even get here
     return 0;
