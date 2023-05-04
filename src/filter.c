@@ -1,7 +1,7 @@
 #include "xc.h"
+#include <stdint.h>
 
 #ifdef TEST
-#include <stdint.h>
 //#include <stdio.h>
 #endif
 
@@ -215,6 +215,10 @@ void __attribute__((interrupt, no_auto_psv))_T1Interrupt(void)
 {
     // ISR code does the same things that the main loop did in polling
     _T1IF = 0;
+    
+    // TO CHECK FREQUENCY: TODO: COMMENT THIS
+    //_LATB14 = !_LATB14;
+    //_LATB5 = !_LATB5;
     
     max_1 = 0;
     max_2 = 0;

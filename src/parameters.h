@@ -10,7 +10,7 @@
 #define FLOORS 4
 // const short FLOOR_ORDER = 2;
 
-#define THRESHOLD 300
+#define THRESHOLD 230
 
 // filter constants
 #define M_FILTER 18 // Q18.14
@@ -61,7 +61,7 @@
 #define QE2_CHANNEL_A_PIN 8  // Assigns channel A of QE2 to RP8(=RB8)
 #define QE2_CHANNEL_B_PIN 9  // Assigns channel B of QE2 to RP9(=RB9)
 #define CRUISE_ROTATION_SPEED 4.0   // rad / second
-#define MAX_ACCELERATION_TIME_ROTATION 1.2 // seconds
+#define MAX_ACCELERATION_TIME_ROTATION 2.0 // seconds
 #define MAX_ANGLE (CRUISE_ROTATION_SPEED*0.5*(MAX_ACCELERATION_TIME_ROTATION*2))
 #define ACCELERATION_ROTATION (CRUISE_ROTATION_SPEED/MAX_ACCELERATION_TIME_ROTATION)
 // name these defines in all caps

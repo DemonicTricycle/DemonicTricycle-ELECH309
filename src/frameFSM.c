@@ -379,14 +379,14 @@ int FrameFSM(int received_bit)
                /* sendUartChars("Right:\n");
                 sendUartInt16((int16_t) params);*/
                 #ifndef TEST
-                Move(0.0, (-(float)params) * 3.14 / 180.0); //TODO: use PI define
+                Move(0.0, ((float)params) * 3.14 / 180.0); //TODO: use PI define
                 #endif
                 break;
             case TURN_LEFT: ;
                /* sendUartChars("Left:\n");
                 sendUartInt16((int16_t) params);*/
                 #ifndef TEST
-                Move(0.0, ((float)params) * 3.14 / 180.0);
+                Move(0.0, (-(float)params) * 3.14 / 180.0);
                 #endif
                 break;
         }

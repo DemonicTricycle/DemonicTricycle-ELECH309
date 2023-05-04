@@ -152,7 +152,7 @@ void uint16_t_to_char_array(unsigned int val, char *arr, unsigned int arr_size)
 }
 void StartupMessage()
 {
-#include "libpic30.h" // Contains __delay_ms definition
+//#include "libpic30.h" // Contains __delay_ms definition
     //__delay_ms(10); //! compiler doesn't find its definition even with libpic included ?
     sendUartMessage("Booting : ");
     //__delay_ms(10); //! compiler doesn't find its definition even with libpic included ?
