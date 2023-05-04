@@ -369,6 +369,7 @@ void initialise(void)
     PWMInit();
     initUart();
     StartupMessage();
+    //! delay brakes the program when running on dsPIC
     //__delay_ms(1000); //! compiler doesn't find its definition with libpic included in top of the file?
 }
 
