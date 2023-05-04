@@ -34,7 +34,7 @@
 #endif
 
 #ifndef NUM_TICKS_PER_TURN
-#define NUM_TICKS_PER_TURN 1423
+#define NUM_TICKS_PER_TURN 1430
 // more or less
 #endif
 
@@ -60,8 +60,8 @@
 #define QE1_CHANNEL_B_PIN 11 // Assigns channel B of QE1 to RP11(=RB11)
 #define QE2_CHANNEL_A_PIN 8  // Assigns channel A of QE2 to RP8(=RB8)
 #define QE2_CHANNEL_B_PIN 9  // Assigns channel B of QE2 to RP9(=RB9)
-#define CRUISE_ROTATION_SPEED 4.0   // rad / second
-#define MAX_ACCELERATION_TIME_ROTATION 2.0 // seconds
+#define CRUISE_ROTATION_SPEED 3.5   // rad / second
+#define MAX_ACCELERATION_TIME_ROTATION 1.5 // seconds
 #define MAX_ANGLE (CRUISE_ROTATION_SPEED*0.5*(MAX_ACCELERATION_TIME_ROTATION*2))
 #define ACCELERATION_ROTATION (CRUISE_ROTATION_SPEED/MAX_ACCELERATION_TIME_ROTATION)
 // name these defines in all caps
