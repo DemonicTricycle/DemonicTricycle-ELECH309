@@ -18,27 +18,20 @@ math: mathjax
 
 # Motor Regulation
 
+
 ## Designing the regulator
 The regulation loop is made using a simple proportional regulator. The position of the robot is obtained using the quadrature encoders, the error is calculated, and the motor’s voltage is regulated accordingly using the PWN of the dspic.
 
 
+> ## Speed Curve
+> See the **[Speed Curve](/motorization/speedCurve)** page.
 
 
-## Speed Curve
-See the **[Speed Curve](/motorization/speedCurve)** page.
-
-
-=======
-## Designing the regulator
-The regulation loop is made using a simple proportional regulator. The position of the robot is obtained using the quadrature encoders, the error is calculated, and the motor’s voltage is regulated accordingly using the PWN of the dspic.
-
-## Speed Curve
-See the **[Speed Curve](/motorization/speedCurve)** page.
-
->>>>>>> 07c3aaf942bdb20aa4e8d469bfce22e8ca7071a9
 ## Translation
-For a translation, the speed must follow this trapezoidal curve: 
+For a translation, the speed must follow this trapezoidal curve:
+
 ![image](https://user-images.githubusercontent.com/23436953/228483207-f1e11347-ffc9-4086-a2b3-49d63ada9217.png)
+
 But if the distance is less than or equal to 0.5m, there is not enough time to reach cruising speed and the speed follows a triangular curve (in green on the illustration).
 
 To get the distance, a simple integration of the speed is made.
@@ -46,14 +39,18 @@ To get the distance, a simple integration of the speed is made.
 
 ## Rotation (Pivot)
 The same principle as for translation can be used for the rotation, but the motors turn in opposite directions:
+
 ![image](https://user-images.githubusercontent.com/23436953/228483356-38b98cfd-41e4-4f16-b560-a83ecde1d68a.png)
+
 But if the distance is less than or equal to 0.5m, there is not enough time to reach cruising speed and the speed follows a triangular curve (in green on the illustration).
 The same principle can be used for the rotation, but the motors turn in opposite directions:
 
 But, taking into account that the maximum angle that can be transmitted is 255 degrees (equivalent to 4.451 rad), and that the maximum rotation speed we chose is 4 radians / s (chosen using the same method used to find the maximum translation speed, as explained in the given documents), an that the acceleration chosen is 3.33 rad / s², we can calculate the largest rotation that can be done without reaching the cruising rotation speed : 
-α ̇=t*3.33  m/S^2     represents the time at which the cruising speed is reached.
-α=t^2*3.33/2→α_tmax=t_ma^2*3.33/2=4^2/^2 *  3.33/2=2.4 
-As the same rotation will be made when decelerating, α_max=2*2.4=4.8 rad
+$$α ̇=t*3.33  m/S^2$$ represents the time at which the cruising speed is reached.  
+
+$$α=t^2*3.33/2 \text{→} α_tmax = t_ma^2*3.33/2 = 4^2/^2 *  3.33/2 = 2.4$$
+
+As the same rotation will be made when decelerating, $$α_max=2*2.4=4.8 rad$$
 Therefore, there is no need to implement a trapezoidal-style curve in the code as the cruising rotation speed will never be reached.
 
 ### K Constant
