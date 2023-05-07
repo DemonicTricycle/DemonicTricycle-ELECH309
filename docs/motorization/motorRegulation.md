@@ -108,7 +108,7 @@ The target speed matches the specifications, and the code can be validated.
 
 The same principle can be used for the rotation, but the motors turn in opposite directions:  
 
-_**[insert image]**_
+> _**[insert image]**_
 
 But, taking into account that the maximum angle that can be transmitted is 255 degrees (equivalent to 4.451 rad), and that the maximum rotation speed we chose is 4 radians / s (chosen using the same method used to find the maximum translation speed, as explained in the given documents), and that the chosen acceleration is 3.33 rad / s², we can calculate the largest rotation that can be done without reaching the cruising rotation speed (thus using a triangular speed curve):  
 
