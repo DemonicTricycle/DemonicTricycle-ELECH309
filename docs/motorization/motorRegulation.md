@@ -54,12 +54,11 @@ As the same rotation will be made when decelerating, $$α_{max}=2*2.4=4.8 rad$$
 Therefore, there is no need to implement a trapezoidal-style curve in the code as the cruising rotation speed will never be reached.
 
 ### K Constant
-...
 The transfer function of the open-loop system is:  
 
 $$BO(p) = \frac{L_e(p)}{E(p)} = \frac{k_p k_v e^{-p T_s / 2}}{(1 + p \tau)p}$$
 
-With $$T_s = \frac{1}{100} s$$, $$k_v = 17.5 rad / s$$, $$\tau = 0.159 s$$
+With $$T_s = \frac{1}{100} s$$, $$k_v = 17.5 rad / s$$, and $$\tau = 0.159 s$$
 
 Using the gain margin criteria:  
 
