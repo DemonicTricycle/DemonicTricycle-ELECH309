@@ -48,9 +48,9 @@ The same principle can be used for the rotation, but the motors turn in opposite
 But, taking into account that the maximum angle that can be transmitted is 255 degrees (equivalent to 4.451 rad), and that the maximum rotation speed we chose is 4 radians / s (chosen using the same method used to find the maximum translation speed, as explained in the given documents), an that the acceleration chosen is 3.33 rad / s², we can calculate the largest rotation that can be done without reaching the cruising rotation speed : 
 $$α ̇=t*3.33  m/S^2$$ represents the time at which the cruising speed is reached.  
 
-$$α=t^2*3.33/2 \text{→} α_tmax = t_ma^2*3.33/2 = 4^2/^2 *  3.33/2 = 2.4$$
+$$α=t^2*3.33/2 \text{→} α_{tmax} = t_ma^2*3.33/2 = 4^2/^2 *  3.33/2 = 2.4$$
 
-As the same rotation will be made when decelerating, $$α_max=2*2.4=4.8 rad$$
+As the same rotation will be made when decelerating, $$α_{max}=2*2.4=4.8 rad$$  
 Therefore, there is no need to implement a trapezoidal-style curve in the code as the cruising rotation speed will never be reached.
 
 ### K Constant
@@ -59,7 +59,7 @@ The transfer function of the open-loop system is:
 
 $$BO(p) = \frac{L_e(p)}{E(p)} = \frac{k_p k_v e^{-p T_s / 2}}{(1 + p \tau)p}$$
 
-With $$T_s = \frac{1}{100} s, k_v = 17.5 rad / s, \tau = 0.159 s$$
+With $$T_s = \frac{1}{100} s$$, $$k_v = 17.5 rad / s$$, $$\tau = 0.159 s$$
 
 Using the gain margin criteria:  
 
