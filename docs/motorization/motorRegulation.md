@@ -30,11 +30,10 @@ For a translation, the speed must follow this trapezoidal curve:
 
 ![image](https://user-images.githubusercontent.com/23436953/229224784-ba9a8556-7f18-44ae-a701-5243aa1d0371.png)
 
-But if the distance is less than or equal to 0.5m, there is not enough time to reach cruise translation speed. Therefore, the speed follows a triangular curve (in green on the illustration). These two cases must be implemented in the code.
-To follow this curve, a function returning the target position was written. This function takes as input the final translation wanted and the time since the beginning of the movement. 
- 
-
-Here is a plot of the output of this script (for a final translation of 2m):  
+If the distance is 0.5m or less, it won't be possible to reach the desired cruise translation speed in the available time. 
+In such cases, the speed will follow a triangular curve (shown in green on the illustration), and both of these scenarios need to be accounted for in the code.
+To follow this curve, we wrote a function that calculates the target position based on the desired final translation and the time elapsed since the start of the movement.
+The output of this script gives the following plot (for a final translation of 2m):  
 
 ![graph1](https://user-images.githubusercontent.com/23436953/236680182-96053696-b795-4aa4-b4aa-0a5f529da144.png)
 
@@ -48,9 +47,12 @@ The same principle can be used for the rotation, but the motors turn in opposite
 
 ![image](https://user-images.githubusercontent.com/23436953/229225553-d875a6fc-f2d3-48a0-a3a9-b6f54759b9f9.png)
 
-But, taking into account that the maximum angle that can be transmitted is 255 degrees (equivalent to 4.451 rad), and that the maximum rotation speed we chose is 4 radians / s (chosen using the same method used to find the maximum translation speed, as explained in the given documents), and that the chosen acceleration is 3.33 rad / s², we can calculate the largest rotation that can be done without reaching the cruise rotation speed (thus using a triangular speed curve):  
+In order to calculate the largest rotation that can be done without reaching the cruise rotation speed, we need to consider several factors. Firstly, the maximum angle that can be transmitted is 255 degrees, which is equivalent to 4.451 radians. Secondly, we have chosen a maximum rotation speed of 4 radians per second. This selection was made using the same method that was used to determine the maximum translation speed, as explained in the accompanying documents.
 
-$$\dot{\alpha} = 3.33 t \frac{rad}{ s^2} \rightarrow t_{max} = \frac{\dot{\alpha}_{max }}{3.33} \frac{s^2}{rad} =\frac{4}{3.33}s $$, where $$\alpha$$ represents the angle of the robot, $$t_{max}$$ represents the time at which the cruising speed is reached.
+Additionally, we have chosen an acceleration of 3.33 radians per second squared. With these factors in mind, we can calculate the largest rotation that can be accomplished without reaching the cruise rotation speed :
+
+$$\dot{\alpha} = 3.33 t \frac{rad}{ s^2}$$ $$\rightarrow t_{max} = \frac{\dot{\alpha}_{max }}{3.33} \frac{s^2}{rad} = \frac{4}{3.33}s $$
+where $$\alpha$$ represents the angle of the robot, $$t_{max}$$ represents the time at which the cruising speed is reached.
 Writing $$\alpha_{max}$$ the angle reached at this time,
 
 $$\alpha = \frac{3.33}{2} t^2 rad / s^{2} \rightarrow \alpha_{tmax} = \frac{3.33}{2}  t_{max}^2 rad / s^{2}= \frac{3.33}{2} (\frac{4}{3.33})^2 rad = 2.4 rad$$
