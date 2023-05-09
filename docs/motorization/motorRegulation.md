@@ -51,13 +51,12 @@ In order to calculate the largest rotation that can be done without reaching the
 
 Additionally, we have chosen an acceleration of 3.33 radians per second squared. With these factors in mind, we can calculate the largest rotation that can be accomplished without reaching the cruise rotation speed :
 
-$$\dot{\alpha} = 3.33 t \frac{rad}{ s^2}$$ $$\rightarrow t_{max} = \frac{\dot{\alpha}_{max }}{3.33} \frac{s^2}{rad} = \frac{4}{3.33}s $$
-where $$\alpha$$ represents the angle of the robot, $$t_{max}$$ represents the time at which the cruising speed is reached.
-Writing $$\alpha_{max}$$ the angle reached at this time,
+$$\dot{\alpha} = 3.33 t \frac{rad}{ s^2}$$ $$\rightarrow t_{max} = \frac{\dot{\alpha}_{max }}{3.33} \frac{s^2}{rad} = \frac{4}{3.33}s $$, where $$\alpha$$ represents the angle of the robot, $$t_{max}$$ represents the time at which the cruising speed is reached.
+Writing $$\alpha_{tmax}$$ the angle reached at this time,
 
 $$\alpha = \frac{3.33}{2} t^2 rad / s^{2} \rightarrow \alpha_{tmax} = \frac{3.33}{2}  t_{max}^2 rad / s^{2}= \frac{3.33}{2} (\frac{4}{3.33})^2 rad = 2.4 rad$$
 
-As the same rotation will be made when decelerating, $$\alpha_{max} = 2*2.4 rad = 4.8 rad$$  
+As the same rotation will be made when decelerating, $$\alpha_{max} = 2*2.4 rad = 4.8 rad$$  with $$\alpha_{max}$$ representing the angle made by the robot when accelerating and decelerating.
 Therefore, there is no need to implement a trapezoidal-style curve in the code as the cruising rotation speed will never be reached.  
 For a rotation of 90°, the code gives the following target angle:
 
@@ -112,4 +111,4 @@ $$\frac{k_{p_2} k_v}{w_2 \sqrt{1 + (w_2 \tau)^2}} = 1$$
 
 $$k_{p_2} = \frac{w_2 \sqrt{1 + (w_2 \tau)^2}}{k_v} = 1. 0298 rad^{-1}$$
 
-As we take the lowest value, our gain is $$1. 0298 rad^{-1}$$.  
+As we take the lowest value, our gain for the rotation is $$1. 0298 rad^{-1}$$.  
