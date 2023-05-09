@@ -45,8 +45,9 @@ See the docs about the **[Motorization](/motorization)**:
 - **[Speed Curve](/speedCurve)**
 - ...?
 
-## Sound Filtering
-See the docs about the **[Sound Filtering](/soundFiltering)**:
+## Audio part
+See the docs about the **[Audio](/audio)**:
+- **[Amplification](/amplification)**
 - **[Analog Filter](/analogFilter)**
 - **[Digital Filter](/digitalFilter)**
 

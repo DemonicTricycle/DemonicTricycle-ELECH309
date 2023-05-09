@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Analog Filter
-parent: Sound Filtering
+parent: Audio
 nav_order: 1
 math: mathjax
 ---

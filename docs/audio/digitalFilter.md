@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Digital Filter
-parent: Sound Filtering
+parent: Audio
 nav_order: 2
 ---
 
