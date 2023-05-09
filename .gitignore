@@ -36,3 +36,6 @@
 *.bak
 .vscode/*
 !.vscode/extensions.json
+/.vs/github/FileContentIndex
+/.vs/github/v17
+/.vs
