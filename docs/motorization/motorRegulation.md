@@ -21,8 +21,9 @@ math: mathjax
 ## Regulation loop
 The regulation loop is made using a simple proportional regulator. 
 The position of the robot is obtained using the quadrature encoders, the error is calculated, and the motor’s voltage is regulated accordingly using the PWN of the dspic.
-![image](https://user-images.githubusercontent.com/23436953/236776366-69fdc0b7-26fe-4eb6-9e63-9bd44f4d96c5.png)  
-> Image from ELEC-H309, École Polytechnique de Bruxelles, ULB - [Gitlab(https://gitlab.com/mosee/elech309-2023)
+![image](https://user-images.githubusercontent.com/23436953/236776366-69fdc0b7-26fe-4eb6-9e63-9bd44f4d96c5.png)[^postfix]  
+[^postfix]:
+    Image from ELEC-H309, École Polytechnique de Bruxelles, ULB - [Gitlab](https://gitlab.com/mosee/elech309-2023)
 
 ## Target Generation
 
