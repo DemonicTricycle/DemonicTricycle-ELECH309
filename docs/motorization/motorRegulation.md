@@ -18,42 +18,56 @@ math: mathjax
 
 # Motor Regulation
 
-
-## Designing the regulator
-...
-
-
-> ## Speed Curve
-> See the **[Speed Curve](/motorization/speedCurve)** page.
+## Regulation loop
+The regulation loop is made using a simple proportional regulator. 
+The position of the robot is obtained using the quadrature encoders, the error is calculated, and the motor’s voltage is regulated accordingly using the PWN of the dspic.
+![image](https://user-images.githubusercontent.com/23436953/236776366-69fdc0b7-26fe-4eb6-9e63-9bd44f4d96c5.png)
 
 
-## Translation
-For a translation, the speed must follow this trapezoidal curve:
+## Target Generation
 
-![image](https://user-images.githubusercontent.com/23436953/228483207-f1e11347-ffc9-4086-a2b3-49d63ada9217.png)
+For a translation, the speed must follow this trapezoidal curve:  
 
-But if the distance is less than or equal to 0.5m, there is not enough time to reach cruising speed and the speed follows a triangular curve (in green on the illustration).
+![image](https://user-images.githubusercontent.com/23436953/229224784-ba9a8556-7f18-44ae-a701-5243aa1d0371.png)
 
-To get the distance, a simple integration of the speed is made.
+But if the distance is less than or equal to 0.5m, there is not enough time to reach cruise translation speed. Therefore, the speed follows a triangular curve (in green on the illustration). These two cases must be implemented in the code.
+To follow this curve, a function returning the target position was written. This function takes as input the final translation wanted and the time since the beginning of the movement. 
+ 
 
+Here is a plot of the output of this script (for a final translation of 2m):  
 
-## Rotation (Pivot)
-The same principle as for translation can be used for the rotation, but the motors turn in opposite directions:
+![graph1](https://user-images.githubusercontent.com/23436953/236680182-96053696-b795-4aa4-b4aa-0a5f529da144.png)
 
-![image](https://user-images.githubusercontent.com/23436953/228483356-38b98cfd-41e4-4f16-b560-a83ecde1d68a.png)
+The target speed can be calculated from the target position, giving:  
 
-But if the distance is less than or equal to 0.5m, there is not enough time to reach cruising speed and the speed follows a triangular curve (in green on the illustration).
-The same principle can be used for the rotation, but the motors turn in opposite directions:
+![graph2](https://user-images.githubusercontent.com/23436953/236680264-371f3775-b0c9-49de-9790-0c46fd52e5d2.png)
 
-But, taking into account that the maximum angle that can be transmitted is 255 degrees (equivalent to 4.451 rad), and that the maximum rotation speed we chose is 4 radians / s (chosen using the same method used to find the maximum translation speed, as explained in the given documents), an that the acceleration chosen is 3.33 rad / s², we can calculate the largest rotation that can be done without reaching the cruising rotation speed : 
-$$α ̇=t*3.33  m/S^2$$ represents the time at which the cruising speed is reached.  
+The target speed matches the specifications, and the code can be validated.  
 
-$$α=t^2*3.33/2 \text{→} α_{tmax} = t_ma^2*3.33/2 = 4^2/^2 *  3.33/2 = 2.4$$
+The same principle can be used for the rotation, but the motors turn in opposite directions:  
 
-As the same rotation will be made when decelerating, $$α_{max}=2*2.4=4.8 rad$$  
-Therefore, there is no need to implement a trapezoidal-style curve in the code as the cruising rotation speed will never be reached.
+![image](https://user-images.githubusercontent.com/23436953/229225553-d875a6fc-f2d3-48a0-a3a9-b6f54759b9f9.png)
 
-### K Constant
+But, taking into account that the maximum angle that can be transmitted is 255 degrees (equivalent to 4.451 rad), and that the maximum rotation speed we chose is 4 radians / s (chosen using the same method used to find the maximum translation speed, as explained in the given documents), and that the chosen acceleration is 3.33 rad / s², we can calculate the largest rotation that can be done without reaching the cruise rotation speed (thus using a triangular speed curve):  
+
+$$\dot{\alpha} = 3.33 t \frac{rad}{ s^2} \rightarrow t_{max} = \frac{\dot{\alpha}_{max }}{3.33} \frac{s^2}{rad} =\frac{4}{3.33}s $$, where $$\alpha$$ represents the angle of the robot, $$t_{max}$$ represents the time at which the cruising speed is reached.
+Writing $$\alpha_{max}$$ the angle reached at this time,
+
+$$\alpha = \frac{3.33}{2} t^2 rad / s^{2} \rightarrow \alpha_{tmax} = \frac{3.33}{2}  t_{max}^2 rad / s^{2}= \frac{3.33}{2} (\frac{4}{3.33})^2 rad = 2.4 rad$$
+
+As the same rotation will be made when decelerating, $$\alpha_{max} = 2*2.4 rad = 4.8 rad$$  
+Therefore, there is no need to implement a trapezoidal-style curve in the code as the cruising rotation speed will never be reached.  
+For a rotation of 90°, the code gives the following target angle:
+
+![graph3](https://user-images.githubusercontent.com/23436953/236680434-37b6e3f3-e92a-4576-bf1a-4b89dfd749b3.png)
+
+The target speed can be calculated from the target angle, giving:  
+
+![graph4](https://user-images.githubusercontent.com/23436953/236680441-1c68ecb6-01c3-4837-828b-047a7f71b89b.png)
+
+Which follows the specification, thus validating the code.
+
+### K Constant for the rotation
 The transfer function of the open-loop system is:  
 
 $$BO(p) = \frac{L_e(p)}{E(p)} = \frac{k_p k_v e^{-p T_s / 2}}{(1 + p \tau)p}$$
@@ -97,51 +111,3 @@ $$\frac{k_{p_2} k_v}{w_2 \sqrt{1 + (w_2 \tau)^2}} = 1$$
 $$k_{p_2} = \frac{w_2 \sqrt{1 + (w_2 \tau)^2}}{k_v} = 1. 0298 rad^{-1}$$
 
 As we take the lowest value, our gain is $$1. 0298 rad^{-1}$$.  
-
-## Regulation Loop
-
-The regulation loop is made using a simple proportional regulator. The position of the robot is obtained using the quadrature encoders, the error is calculated, and the motor’s voltage is regulated accordingly using the PWM of the dsPIC.  
-
-![regulation](https://user-images.githubusercontent.com/23436953/236776366-69fdc0b7-26fe-4eb6-9e63-9bd44f4d96c5.png)
-
-## Target Generation
-
-For a translation, the speed must follow this trapezoidal curve:  
-
-![image](https://user-images.githubusercontent.com/23436953/229224784-ba9a8556-7f18-44ae-a701-5243aa1d0371.png)
-
-But if the distance is less than or equal to 0.5m, there is not enough time to reach cruising speed and the speed follows a triangular curve (in green on the illustration). These two cases must be implemented in the code.  
-To follow this curve, a function returning the target position was written. This function takes as input the final translation wanted and the time since the beginning of the movement.  
-
-Here is a plot of the output of this script (for a final translation of 2m):  
-
-![graph1](https://user-images.githubusercontent.com/23436953/236680182-96053696-b795-4aa4-b4aa-0a5f529da144.png)
-
-The target speed can be calculated from the target position, giving:  
-
-![graph2](https://user-images.githubusercontent.com/23436953/236680264-371f3775-b0c9-49de-9790-0c46fd52e5d2.png)
-
-The target speed matches the specifications, and the code can be validated.  
-
-The same principle can be used for the rotation, but the motors turn in opposite directions:  
-
-![image](https://user-images.githubusercontent.com/23436953/229225553-d875a6fc-f2d3-48a0-a3a9-b6f54759b9f9.png)
-
-But, taking into account that the maximum angle that can be transmitted is 255 degrees (equivalent to 4.451 rad), and that the maximum rotation speed we chose is 4 radians / s (chosen using the same method used to find the maximum translation speed, as explained in the given documents), and that the chosen acceleration is 3.33 rad / s², we can calculate the largest rotation that can be done without reaching the cruising rotation speed (thus using a triangular speed curve):  
-
-$$\dot{\alpha} = 3.33 t \frac{rad}{ s^2} \rightarrow t_{max} = \frac{\dot{\alpha}_{max }}{3.33} \frac{s^2}{rad} =\frac{4}{3.33}s $$, where $\alpha$ represents the angle of the robot, $$t_{max}$$ represents the time at which the cruising speed is reached.
-Writing $$\alpha_{max}$$ the angle reached at this time,
-
-$$\alpha = \frac{3.33}{2} t^2 rad / s^{2} \rightarrow \alpha_{tmax} = \frac{3.33}{2}  t_{max}^2 rad / s^{2}= \frac{3.33}{2} (\frac{4}{3.33})^2 rad = 2.4 rad$$
-
-As the same rotation will be made when decelerating, $$\alpha_{max} = 2*2.4 rad = 4.8 rad$$  
-Therefore, there is no need to implement a trapezoidal-style curve in the code as the cruising rotation speed will never be reached.  
-For a rotation of 90°, the code gives the following target angle:
-
-![graph3](https://user-images.githubusercontent.com/23436953/236680434-37b6e3f3-e92a-4576-bf1a-4b89dfd749b3.png)
-
-The target speed can be calculated from the target angle, giving:  
-
-![graph4](https://user-images.githubusercontent.com/23436953/236680441-1c68ecb6-01c3-4837-828b-047a7f71b89b.png)
-
-Which follows the specification, thus validating the code.
