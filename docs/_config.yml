@@ -5,7 +5,11 @@ theme: just-the-docs
 url: https://dev.demonictricycle-dev.pages.dev
 
 aux_links:
-  Github Repository: https://github.com/DemonicTricycle/DemonicTricycle-ELECH309
+  "Project Details":
+    - "//gitlab.com/mosee/elech309-2023"
+  "Github Repository":
+    - "//github.com/DemonicTricycle/DemonicTricycle-ELECH309
+  #Github Repository: https://github.com/DemonicTricycle/DemonicTricycle-ELECH309
   #Project Details on Gitlab: https://gitlab.com/mosee/elech309-2023 # not working?
 
 aux_links_new_tab: true
@@ -14,7 +18,7 @@ logo: "/assets/images/demonic_tricycle.png"
 
 favicon_ico: "/assets/images/favicon.ico"
 
-footer_content: "Copyright &copy; 2023 Martin Fonteyn, Lucas Placentino and Sylvain Powis de Tenbossche - <a href=\"https://polytech.ulb.be/en\">EPB ULB</a>" # working ?
+footer_content: "Copyright &copy; 2023 Martin Fonteyn, Lucas Placentino and Sylvain Powis de Tenbossche - <a target=\"_blank\" href=\"https://polytech.ulb.be/en\">EPB ULB</a>" # working ?
 
 # Back to top link
 back_to_top: true
