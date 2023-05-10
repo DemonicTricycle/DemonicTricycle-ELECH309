@@ -21,7 +21,7 @@ It is required to amplify the signal early in the circuit, for two reasons :
 - it minimises the noise in the rest of the circuit
 
 This microphone is an electret type, and requires to be polarized. 
-However, the datasheet only specifies a drain resistance (2.2k $\ohm$) and a voltage (2.2V), but no polarizing current. 
+However, the datasheet only specifies a drain resistance (2.2k $$ \ohm $$) and a voltage (2.2V), but no polarizing current. 
 It was chosen that the voltage will be the one before the resistance, but both cases seemed to work.
 This polarization induces a voltage offset of about 1.65V, present in the ouput of the microphone. 
 This offset can't be amplified, which would saturate the amplifier.
