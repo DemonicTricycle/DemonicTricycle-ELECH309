@@ -21,7 +21,7 @@ It is required to amplify the signal early in the circuit, for two reasons :
 - it minimises the noise in the rest of the circuit
 
 This microphone is an electret type, and requires to be polarized. 
-However, the datasheet only specifies a drain resistance (2.2k $$ \ohm $$) and a voltage (2.2V), but no polarizing current. 
+However, the datasheet only specifies a drain resistance (2.2k $$ \Omega $$) and a voltage (2.2V), but no polarizing current. 
 It was chosen that the voltage will be the one before the resistance, but both cases seemed to work.
 This polarization induces a voltage offset of about 1.65V, present in the ouput of the microphone. 
 This offset can't be amplified, which would saturate the amplifier.
@@ -29,7 +29,7 @@ Furthermore, filter the DC signal by a capacitor wouldn't be enough, as our ampl
 
 For those reasons, an inverting amplifier with an offset was used (adding the same offset as the input).
 
-// insert image  
+_**// insert image**_  
 The potentiometer R3 allows the ajustment of the gain, if one wants to place the emitter close or far from the microphone, without saturation.
 A high gain also amplifies the ambiant noise, as the microphone isn't directional, which tends to lower the fidelity of the communication chain.
 C2 and C3 are filtering capacitors, while C1 removes the DC offset.  
