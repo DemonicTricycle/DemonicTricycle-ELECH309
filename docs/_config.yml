@@ -14,7 +14,7 @@ logo: "/assets/images/demonic_tricycle.png"
 
 favicon_ico: "/assets/images/favicon.ico"
 
-footer_content: "Copyright &copy; 2023 Martin Fonteyn, Lucas Placentino and Sylvain Powis de Tenbossche - <a href="https://polytech.ulb.be/en">EPB ULB</a>" # working ?
+footer_content: "Copyright &copy; 2023 Martin Fonteyn, Lucas Placentino and Sylvain Powis de Tenbossche - <a href=\"https://polytech.ulb.be/en\">EPB ULB</a>" # working ?
 
 # Back to top link
 back_to_top: true
