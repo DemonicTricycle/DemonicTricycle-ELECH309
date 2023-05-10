@@ -49,7 +49,7 @@ $$ \begin{align}Y(z) = & \frac{\sum a_k \times z^{-k}}{\sum b_k \times z^{-k}} \
 The filter around 1100 Hz was first simulated on MATLAB in order to take advantage of the graphical tools and the workspace system to debug the code.
 The first stage was first implemented separately (in blue, the theoretical filter and in orange, the numerically simulated stage) :  
 // insert image  
-The method of simulation is to simply generate Q sines at the input, with frequencies equidistant between $$ ]0, fs/2\[ $$
+The method of simulation is to simply generate Q sines at the input, with frequencies equidistant between $$ ]0, fs/2[ $$
 The output of the system is then observed in regime to determine the gain.
 It was then necessary to determine whether the 4 stages of the filter were in parallel (sum of the responses of each filter), or in series (the output of one stage becomes the input of another). By simulation, it was determined that the filters were in series.  
 Here is a simulation of the 4 stages of the filter centered around 1100 Hz for an input frequency of a sin of 1100 Hz :  
