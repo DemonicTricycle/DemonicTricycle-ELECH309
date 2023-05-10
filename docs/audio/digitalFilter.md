@@ -15,35 +15,29 @@ nav_order: 2
 </details>
 
 # Digital filter
-...
 
-The digital filter uses the dsPIC's built-in ADC as the input, samples the signal and then processes it to get each bit of the received message.
+## Design of the filter
 
-## Input
-...  
+The specifications require a filter such that :
 
-The digital filter gets its input from the analog filter after the microphone, into the ADC.
+- Useful frequencies are within +/-1.5% of the centre frequency
+- Frequencies above +/-3.5% of the centre frequency should be cut off
+- Maximum attenuation of useful frequencies: H1 = 0.9
+- Minimum attenuation of cut-off frequencies: H2 = 0.1  
 
-Here is the input signal from the microphone over the whole message period.
-![image](https://user-images.githubusercontent.com/23436953/233019096-c1f4d04f-3b2f-4e69-ac11-e4eb34973196.png)
-- Blue: 
-- Red: 
+A sampling frequency of 15 kHz was chosen for the theoretical design of the analog filter.
+The filter coefficients were determined with the provided python script. This script uses the signal module of the scipy library to design the filter. It starts by determining the order of the filter required (here a 4th order). The butter function is then called, which generates a numerical filter by default.  
 
-## Sampling
-...
-In order to get the amplitude of each signal (900Hz and 1100Hz), we need to use an ADC to get samples from these signals. This sampling will then be able to be processed to get the translated bit over a 100ms period. The sampling rate is _**TODO**_ Hz.
+For the filter centered around 1100 Hz :  
+// insert image  
+Which corresponds to this transfer function :  
+// insert image
 
-The dsPIC's ADC samples the received signal:
-![sampling](https://user-images.githubusercontent.com/23436953/233017968-64243f65-caa4-478c-afec-c728ba670f11.png)
-- Red: Sampling
-- Blue: 
+## Base principle
 
-## Processing
-...
-
-Compares the average sample, being more at 900Hz or 1100Hz, .....
-
-## Output
-...
-
-The digital filter sends each processed bit to the [Frame State Machine](/frameFSM) in order to compute the parameters of the binary word and check its potential errors.
+It is possible to turn any analog filter to a digital one, using the Tustin approximation : $$ p = \frac{2}{T_s} \times \frac{z-1}{z+1} $$.
+A recurring equation is then deducted from the transfer function, which was determined in the previous part. 
+In terms of maths, we have :  
+$$ Y(z) = \frac{\sum a_k \times z^{-k}}{\sum b_k \times z^{-k}} \times X(z) \\ 
+<=> \sum a_k \times z^{-k}  Y(z) = \sum b_k \times z^{-k}  X(z) \\
+<=> \sum a_k \times z^{-k} y(n-k) = \sum b_k \times z^{-k} x(n-k)$$
