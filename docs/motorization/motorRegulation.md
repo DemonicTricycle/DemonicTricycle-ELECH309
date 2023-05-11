@@ -27,7 +27,7 @@ The position of the robot is obtained using the quadrature encoders, the error i
 
 For a translation, the speed must follow this trapezoidal curve:  
 
-![image](https://user-images.githubusercontent.com/23436953/229224784-ba9a8556-7f18-44ae-a701-5243aa1d0371.png)
+![speedCurve](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/assets/23436953/04bff3dd-3a88-4f4e-a682-f9190d479690)
 
 If the distance is 0.5m or less, it won't be possible to reach the desired cruise translation speed in the available time. 
 In such cases, the speed will follow a triangular curve (shown in green on the illustration), and both of these scenarios need to be accounted for in the code.
@@ -44,7 +44,7 @@ The target speed matches the specifications, and the code can be validated.
 
 The same principle can be used for the rotation, but the motors turn in opposite directions:  
 
-![image](https://user-images.githubusercontent.com/23436953/229225553-d875a6fc-f2d3-48a0-a3a9-b6f54759b9f9.png)
+![speedCurveRot](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/assets/23436953/3e3009e9-d884-41af-bcf3-c6fa0e7084b7)
 
 In order to calculate the largest rotation that can be done without reaching the cruise rotation speed, we need to consider several factors. Firstly, the maximum angle that can be transmitted is 255 degrees, which is equivalent to 4.451 radians. Secondly, we have chosen a maximum rotation speed of 4 radians per second. This selection was made using the same method that was used to determine the maximum translation speed, as explained in the accompanying documents.
 
@@ -56,7 +56,10 @@ Writing $$\alpha_{tmax}$$ the angle reached at this time,
 $$\alpha = \frac{3.33}{2} t^2 rad / s^{2} \rightarrow \alpha_{tmax} = \frac{3.33}{2}  t_{max}^2 rad / s^{2}= \frac{3.33}{2} (\frac{4}{3.33})^2 rad = 2.4 rad$$
 
 As the same rotation will be made when decelerating, $$\alpha_{max} = 2*2.4 rad = 4.8 rad$$  with $$\alpha_{max}$$ representing the angle made by the robot when accelerating and decelerating.
-Therefore, there is no need to implement a trapezoidal-style curve in the code as the cruising rotation speed will never be reached.  
+Therefore, there is no need to implement a trapezoidal-style curve in the code as the cruising rotation speed will never be reached, making the rotation speed curve simply triangular.  
+
+![speedCurveRot-triang](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/assets/23436953/a1143cfb-43d1-449a-ba32-2d784769e9b7)
+
 For a rotation of 90°, the code gives the following target angle:
 
 ![graph3](https://user-images.githubusercontent.com/23436953/236680434-37b6e3f3-e92a-4576-bf1a-4b89dfd749b3.png)
