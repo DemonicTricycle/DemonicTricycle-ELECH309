@@ -14,9 +14,19 @@ nav_order: 2
 </details>
 
 # Microcontroller Configuration
-...
+The µController used is a [Microchip dsPIC33FJ128MC802](https://www.microchip.com/en-us/product/dsPIC33FJ128MC802).
 
-## In `configuration.c`
+## Pins Usage
+Here is the used pins on the dsPIC µController, and their purpose:  
+
+![used_pins](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/assets/23436953/71cfab7b-94f6-4ff8-904a-afc6a0065568)
+
+For reference, here are the pins of the dsPIC from the datasheet:  
+
+![dsPICpins](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/assets/23436953/f8dc54c8-48d7-4b72-81a6-da438ad468d0)[^1]
+
+## Configuration Bits
+In `configuration_bits.c`
 
 ```c
 // DSPIC33FJ128MC802 Configuration Bit Settings
@@ -36,8 +46,8 @@ nav_order: 2
 #pragma config GSS = OFF  // General Segment Code Protection (User program memory is not code-protected)
 
 // FOSCSEL
-#pragma config FNOSC = FRC // Oscillator Mode (Internal Fast RC (FRC))
-#pragma config IESO = ON   // Internal External Switch Over Mode (Start-up device with FRC, then automatically switch to user-selected oscillator source when ready)
+#pragma config FNOSC = FRCPLL // Oscillator Mode (Internal Fast RC (FRC))
+#pragma config IESO = OFF   // Internal External Switch Over Mode (Start-up device with FRC, then automatically switch to user-selected oscillator source when ready)
 
 // FOSC
 #pragma config POSCMD = NONE  // Primary Oscillator Source (Primary Oscillator Disabled)
@@ -49,7 +59,7 @@ nav_order: 2
 #pragma config WDTPOST = PS32768 // Watchdog Timer Postscaler (1:32,768)
 #pragma config WDTPRE = PR128    // WDT Prescaler (1:128)
 #pragma config WINDIS = OFF      // Watchdog Timer Window (Watchdog Timer in Non-Window mode)
-#pragma config FWDTEN = OFF      // Watchdog Timer Enable (Watchdog timer enabled/disabled by user software)
+#pragma config FWDTEN = ON      // Watchdog Timer Enable (Watchdog timer enabled/disabled by user software)
 
 // FPOR
 #pragma config FPWRT = PWR128 // POR Timer Value (128ms)
@@ -62,14 +72,8 @@ nav_order: 2
 #pragma config ICS = PGD1   // Comm Channel Select (Communicate on PGC1/EMUC1 and PGD1/EMUD1)
 #pragma config JTAGEN = OFF // JTAG Port Enable (JTAG is Disabled)
 
-// #pragma config statements should precede project file includes.
-// Use project enums instead of #define for ON and OFF.
-
-#include <xc.h>
 ```
 
-## In other files
+----
 
-```c
-#define FCY 3685000   // cycle frequency. Needed for __delay_ms
-```
+[^1]: Image from [Microchip](https://www.microchip.com/en-us/product/dsPIC33FJ128MC802)'s [dsPIC33FJ128MC802 datasheet](https://ww1.microchip.com/downloads/aemDocuments/documents/OTH/ProductDocuments/DataSheets/70291G.pdf)
