@@ -19,11 +19,11 @@ The µController used is a [Microchip dsPIC33FJ128MC802](https://www.microchip.c
 ## Pins Usage
 Here is the used pins on the dsPIC µController, and their purpose:  
 
-![used_pins](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/assets/23436953/71cfab7b-94f6-4ff8-904a-afc6a0065568)
+<img src="assets/images/used_pins.png" height="500" />
 
 For reference, here are the pins of the dsPIC from the datasheet:  
 
-![dsPICpins](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/assets/23436953/f8dc54c8-48d7-4b72-81a6-da438ad468d0)[^1]
+![dsPICpins](assets/images/dsPICpins.png)[^1]
 
 ## Configuration Bits
 In `configuration_bits.c`
