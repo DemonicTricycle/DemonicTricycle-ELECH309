@@ -43,6 +43,5 @@ When the **StopHandler** has succeeded, it sends the movement order to the Motor
 
 The diagram below explains it.
 
-![frameFSM](https://user-images.githubusercontent.com/23436953/228499998-c585aa1c-0b6d-4191-b98c-7868d508650c.svg)
-
+![frameFSM](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/assets/23436953/d4161194-2fe5-4c22-b29b-025439e4c1c2)
 
