@@ -16,6 +16,7 @@ math: mathjax
 </details>
 
 # Microphone amplification
+aZDHZAODAZIDAZDJAZ
 It is required to amplify the signal early in the circuit, for two reasons :
 - the amplitude of the signal output by the integrated transistor of the microphone is < 10 mV
 - it minimises the noise in the rest of the circuit
