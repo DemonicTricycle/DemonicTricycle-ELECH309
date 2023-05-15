@@ -29,7 +29,7 @@ Furthermore, filter the DC signal by a capacitor wouldn't be enough, as our ampl
 
 For those reasons, an inverting amplifier with an offset was used (adding the same offset as the input).
 
-_**// insert image**_  
+![image](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/assets/61374482/adb5a9c3-0089-4ca4-b000-e3fd0dd4265d)
 The potentiometer R3 allows the ajustment of the gain, if one wants to place the emitter close or far from the microphone, without saturation.
 A high gain also amplifies the ambiant noise, as the microphone isn't directional, which tends to lower the fidelity of the communication chain.
 C2 and C3 are filtering capacitors, while C1 removes the DC offset.  
