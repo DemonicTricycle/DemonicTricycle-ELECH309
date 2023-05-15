@@ -29,9 +29,9 @@ A sampling frequency of 15 kHz was chosen for the theoretical design of the anal
 The filter coefficients were determined with the provided python script. This script uses the signal module of the scipy library to design the filter. It starts by determining the order of the filter required (here a 4th order). The butter function is then called, which generates a numerical filter by default.  
 
 For the filter centered around 1100 Hz :  
-// insert image  
+![image](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/assets/61374482/d7985c9f-e25f-43bc-942a-44a247b4ed08) 
 Which corresponds to this transfer function :  
-// insert image
+![image](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/assets/61374482/a7e130f8-825f-4e0f-9d56-8f9ca0c901ad)
 
 ## Base principle
 
@@ -48,40 +48,82 @@ $$ \begin{align} & Y(z) = \frac{\sum a_k \times z^{-k}}{\sum b_k \times z^{-k}} 
 
 The filter around 1100 Hz was first simulated on MATLAB in order to take advantage of the graphical tools and the workspace system to debug the code.
 The first stage was first implemented separately (in blue, the theoretical filter and in orange, the numerically simulated stage) :  
-// insert image  
-The method of simulation is to simply generate Q sines at the input, with frequencies equidistant between $$ ]0, fs/2[ $$
+![image](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/assets/61374482/ba299eed-59ae-4a83-ac7b-4d054e038ab4)
+The method of simulation is to simply generate Q sines at the input, with frequencies equidistant between $$ ]0, fs/2\[$$
 The output of the system is then observed in regime to determine the gain.
 It was then necessary to determine whether the 4 stages of the filter were in parallel (sum of the responses of each filter), or in series (the output of one stage becomes the input of another). By simulation, it was determined that the filters were in series.  
 Here is a simulation of the 4 stages of the filter centered around 1100 Hz for an input frequency of a sin of 1100 Hz :  
-// insert image
+![image](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/assets/61374482/9a6c88ff-fb7b-4e10-b397-97dc92a0d7c1)
 And for an input frequency of 1150 Hz :  
-// insert image  
+![image](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/assets/61374482/6d87c627-0b5b-4bbe-9ead-ca7c95984b85) 
 This was done to check if the filter attenuates correctly the frequencies.
 
 ## Optimizing memory
 
 As there are 4 stages + the output, and the stages are in series, a 5x12 table was used to optimize memory :  
-// insert image  
+![image](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/assets/61374482/b671757a-9718-42e2-aeab-0003f7d6c8dd) 
 
-## Optimizing compute ressources
+## Optimizing computational ressources
 
 As floats aren't native to the microprocessor architecture, fixed point compute was used. The data type that will be used are therefore integers, stored on 32 bits. To determine how many bits to use for the integer and the fractional part, numerical simulation in C of the filters was used. The notation used is QX:Y, X being the number of bits used for the integer part, and Y for the fractional part ($$ X + Y = 32 $$).  
 Between Q12:20 and Q17:15, for all values :  
-// insert image  
+![image](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/assets/61374482/bc6a6bf1-70f6-4468-a0e0-017aff391a19)
 For the most important values :  
-// insert image  
+![image](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/assets/61374482/01760c09-bb66-45be-a0f1-a9b54a328cea)
 For Q18:14, the maximal values of int32_t's was reached, which causes overflow :  
-// insert image  
+![image](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/assets/61374482/44b10ad9-1782-42a0-b1f7-c8c3ac1d6f2d)
 Q17:15 was chosen, but any repartition that doesn't ovoerflow would have been fine, as the performance doesn't seem too much affected.
 
 # Implementation on the microcontroller
 // je dois peut être trouver une meilleure terminologie que sampling timer psq c'est pas précis
 The chip is overclocked to 39.5 MHz, to allow sufficiently fast sampling.
 The code starts by resetting the values in the array to 0 :  
-// insert code
+```C
+void reset_tables()
+{
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 12; j++) {
+            ys_1[i][j] = 0;
+            ys_2[i][j] = 0;
+        }
+    }
+    for (int i = 0; i < 17; i++) {
+        last_values_1[i] = 0;
+        last_values_2[i] = 0;
+    }
+}
+```
 
 An infinite loop waits for the conversion of the adc (15 kHz), then calculates the output of the stages. The pointers to the array are updated :  
-// insert code
+```C
+while(1) 
+    {
+        if (adcConversionDone()) 
+        {
+            voltage = adcRead();
+            if (voltage >= 4096 || voltage < 0)
+            {
+                continue; // should never happen
+            }
+            
+            ys_1[0][pointer_current] = voltage; // updates current value
+            ys_2[0][pointer_current] = voltage;
+
+            for (int k = 0; k < FLOORS; k++) // filter id
+            {
+                ys_1[k + 1][pointer_current] = ((gs_1[k] * ((bs_1[k][0] * ys_1[k][pointer_current] + bs_1[k][1] * ys_1[k][pointer_before] + bs_1[k][2] * ys_1[k][pointer_last]) >> M_FILTER)) - as_1[k][1] * ys_1[k + 1][pointer_before] - as_1[k][2] * ys_1[k + 1][pointer_last]) >> (M_FILTER);
+                ys_2[k + 1][pointer_current] = ((gs_2[k] * ((bs_2[k][0] * ys_2[k][pointer_current] + bs_2[k][1] * ys_2[k][pointer_before] + bs_2[k][2] * ys_2[k][pointer_last]) >> M_FILTER)) - as_2[k][1] * ys_2[k + 1][pointer_before] - as_2[k][2] * ys_2[k + 1][pointer_last]) >> (M_FILTER);
+            } 
+            
+            last_values_1[pointer_last_values] = ys_1[4][pointer_current];
+            last_values_2[pointer_last_values] = ys_2[4][pointer_current];
+
+            // updating pointers
+            pointer_last = (pointer_last + 1) % 12; pointer_before = (pointer_before + 1) % 12; pointer_current = (pointer_current + 1) % 12;
+            pointer_last_values = (pointer_last_values + 1) % 18;
+        }
+	}
+```
 
 In parallel, at 1000 Hz, an interrupt timer is used to analyse the array values. While this code is running, sampling does not take place. The maximum value of the two arrays (900 and 1100Hz) is recovered from the previous 18 samples (which gives at least one period of the signal). If one of the two values exceeds an experimentally determined threshold (around 300), one of the filters has detected a signal.
 
@@ -90,4 +132,99 @@ When a signal is detected, the chip goes into listening mode. Each time the time
 Small details: due to a delay in the detection of the signal at the first bit, caused by the digital filter transient, the first bit is detected after 74 samples and not 99. Also, as can be seen in the figure (insert figure with filter stages), again due to the filter transient, some short sounds (composed of many frequencies, such as a clap) are not attenuated fast enough. During sampling, the filters then detect a signal. In order to overcome this problem, a "fluke" detection system has been implemented. A noise_counter variable counts the number of times that none of the filters detected a signal during the first bit. If this variable reaches 15/75, it is probably a fluke and the system resets.
 
 Full code of the sampling timer : 
-// insert code
+```C
+void __attribute__((interrupt, no_auto_psv))_T1Interrupt(void)
+{
+    // ISR code does the same things that the main loop did in polling
+    _T1IF = 0;
+    
+    // TO CHECK FREQUENCY: TODO: COMMENT THIS
+    //_LATB14 = !_LATB14;
+    //_LATB5 = !_LATB5;
+    
+    max_1 = 0;
+    max_2 = 0;
+    for (int ii = 0; ii < 18; ii++)
+    {
+        if (max_1 < last_values_1[ii]) max_1 = last_values_1[ii];
+        if (max_2 < last_values_2[ii]) max_2 = last_values_2[ii];
+    }
+
+    filter_0 = (max_1 > THRESHOLD) ? 1 : 0;
+    filter_1 = (max_2 > THRESHOLD) ? 1 : 0;
+
+    
+    if (filter_0 == 1 || filter_1 == 1)
+    {
+        if (sample_count == 0)
+        {
+            bit_count = 0;
+            average_sample = 0;
+            is_listening = 1;
+            noise_counter = 0;
+            to_send = "Listening"; sendLine();
+            _LATB12 = 1; _LATB4 = 0;
+        }
+        
+        average_sample += filter_1;
+        average_sample -= filter_0;
+    }
+    
+    if (is_listening && bit_count == 0 && sample_count < 75 && filter_0 == 0 && filter_1 == 0) // TODO: put in a #define
+    {
+        noise_counter ++;
+        if (noise_counter > 15) // TODO: put in a #define ?
+        {
+            // probably fluke
+            sample_count = 0;
+            bit_count = 0;
+            average_sample = 0;
+            is_listening = 0; _LATB12 = 0;
+            to_send = "Fluke"; sendLine();
+            _LATB4 = 1;
+            reset_tables();
+            resetFSM();
+            noise_counter = 0;
+        }
+    }
+    
+    if (sample_count == 99 || (bit_count == 0 && sample_count == 74)) // TODO: put in a #define
+    {
+        bit_count ++;
+        sample_count = 0;
+        //to_send = "Bit received"; sendLine();
+        // bit has been received
+        c = '0' + (average_sample > 0); sendChar();
+        sendIntConverted(average_sample);
+        
+        _LATB14 = (average_sample > 0);
+        _LATB5 = (average_sample < 0);
+
+        
+        // sends to FSM:
+        FrameFSM(average_sample > 0);
+        reset_tables();
+        average_sample = 0;
+        
+    }
+    
+    if (bit_count == FRAME_LENGTH) //defined in parameters.h
+    {
+        sample_count = 0;
+        bit_count = 0;
+        average_sample = 0;
+        c = '\n';
+        sendChar();
+        is_listening = 0; _LATB12 = 0; _LATB14 = 0; _LATB5 = 0;
+        reset_tables();
+        resetFSM();
+        T1CONbits.TON = 1;
+    }
+    
+    if (is_listening)
+    {
+        sample_count ++;
+    }
+}
+```
+
