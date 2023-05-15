@@ -35,3 +35,6 @@ A high gain also amplifies the ambiant noise, as the microphone isn't directiona
 C2 and C3 are filtering capacitors, while C1 removes the DC offset.  
 
 More performant circuits do exist, but the implementation of this one was deemed enough for this project, as it worked well enough.
+
+# Filtering
+// TODO
