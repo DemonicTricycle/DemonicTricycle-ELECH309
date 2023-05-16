@@ -84,7 +84,7 @@ Q17:15 was chosen, but any repartition that doesn't ovoerflow would have been fi
 # Implementation on the microcontroller
 _**// je dois peut être trouver une meilleure terminologie que sampling timer psq c'est pas précis**_  
 
-The code is available [here](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/blob/main/src/filter.c).
+The code is available in [filter.c](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/blob/main/src/filter.c).
 
 The chip is overclocked to 39.5 MHz, to allow sufficiently fast sampling.
 The code starts by resetting the values in the array to 0 :  
