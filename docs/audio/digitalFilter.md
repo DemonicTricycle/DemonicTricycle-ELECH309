@@ -113,7 +113,7 @@ while(1)
             voltage = adcRead();
             if (voltage >= 4096 || voltage < 0)
             {
-                continue; // should never happen
+                continue; // starts new loop
             }
             
             ys_1[0][pointer_current] = voltage; // updates current value
@@ -148,11 +148,7 @@ Full code of the sampling timer :
 void __attribute__((interrupt, no_auto_psv))_T1Interrupt(void)
 {
     // ISR code does the same things that the main loop did in polling
-    _T1IF = 0;
-    
-    // TO CHECK FREQUENCY: TODO: COMMENT THIS
-    //_LATB14 = !_LATB14;
-    //_LATB5 = !_LATB5;
+    _T1IF = 0; // down the interrupt flag
     
     max_1 = 0;
     max_2 = 0;
@@ -174,39 +170,39 @@ void __attribute__((interrupt, no_auto_psv))_T1Interrupt(void)
             average_sample = 0;
             is_listening = 1;
             noise_counter = 0;
-            _LATB12 = 1; _LATB4 = 0;
+            _LATB12 = 1; _LATB4 = 0; // LEDs
         }
         
         average_sample += filter_1;
         average_sample -= filter_0;
     }
     
-    if (is_listening && bit_count == 0 && sample_count < 75 && filter_0 == 0 && filter_1 == 0) // TODO: put in a #define
+    if (is_listening && bit_count == 0 && sample_count < 75 && filter_0 == 0 && filter_1 == 0)
     {
         noise_counter ++;
-        if (noise_counter > 15) // TODO: put in a #define ?
+        if (noise_counter > 15)
         {
             // probably fluke
             sample_count = 0;
             bit_count = 0;
             average_sample = 0;
             is_listening = 0; _LATB12 = 0;
-            _LATB4 = 1;
+            _LATB4 = 1; // LEDs
             reset_tables();
             resetFSM();
             noise_counter = 0;
         }
     }
     
-    if (sample_count == 99 || (bit_count == 0 && sample_count == 74)) // TODO: put in a #define
+    if (sample_count == 99 || (bit_count == 0 && sample_count == 74))
     {
         bit_count ++;
         sample_count = 0;
 
         // bit has been received
         
-        _LATB14 = (average_sample > 0);
-        _LATB5 = (average_sample < 0);
+        _LATB14 = (average_sample > 0); // LED
+        _LATB5 = (average_sample < 0); // LED
 
         
         // sends to FSM:
