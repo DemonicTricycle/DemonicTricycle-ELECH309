@@ -26,7 +26,7 @@ The specifications require a filter such that :
 - Minimum attenuation of cut-off frequencies: H2 = 0.1  
 
 A sampling frequency of 15 kHz was chosen for the theoretical design of the analog filter.
-The filter coefficients were determined with the provided python script. This script uses the signal module of the scipy library to design the filter. It starts by determining the order of the filter required (here a 4th order). The butter function is then called, which generates a numerical filter by default.  
+The filter coefficients were determined with [the provided python script](https://gitlab.com/mosee/elech309-2023/-/blob/main/tools/digitalFilterDesign.py). This script uses the signal module of the scipy library to design the filter. It starts by determining the order of the filter required (here a 4th order). The butter function is then called, which generates a numerical filter by default.  
 
 For the filter centered around 1100 Hz :  
 ![image](../assets/images/audio/filter_params.png) 
