@@ -37,4 +37,8 @@ C2 and C3 are filtering capacitors, while C1 removes the DC offset.
 More performant circuits do exist, but the implementation of this one was deemed enough for this project, as it worked well enough.
 
 # Filtering
-// TODO
+
+Three capacitors have been used to filter DC voltages : C2, C3 and C6.
+The cutoff frequency of the filtered voltage dividor consisting of R1, R2 and C2 is $$ f_p = frac{1}{2\pi \times (R_1//R_2) \times C_1} = 230k Hz$$ => faut changer le condensateur pour un 100 nF.
+For the dividor consisting of RV1 and C3, $$f_p = 64k Hz$$ => On peut mettre une capacité beaucoup plus grosse.
+Finally, a $$ 2200 \mu F$$ was placed between the 3.3V and the GND to ensure that brief power disconnection wouldn't reboot the chip, as well as to ensure that during power spike usage from the motors, the voltage would stay constant.
