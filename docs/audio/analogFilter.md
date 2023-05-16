@@ -24,18 +24,18 @@ Digital processing means sampling, which means spectral aliasing. In order to co
 - Butterworth filter (for its flat response)  
 
 The implementation of this filter in the circuit is as shown :  
-![image](../assets/images/audio/filter_circuit.png)
+![image](../assets/images/audio/filter_circuit.png)  
 
 Despite theoretical performances matching the specifications :  
-![image](../assets/images/audio/analog_theoretical.png)
+![image](../assets/images/audio/analog_theoretical.png)  
 
 in practice, the -20 dB/decade wasn't reached :  
-![image](../assets/images/audio/analog_real.png)
+![image](../assets/images/audio/analog_real.png)  
 
 ## Sampling frequency
 
 A sampling frequency of 15 kHz had been chosen in the theoretical design (which was a mistake because folded frequencies starting at 7.5 kHz were not sufficiently attenuated). However, this frequency was retained because despite overclocking the microcontroller, the program was approaching the chip's computational limit :  
-![image](../assets/images/audio/sampling.png)
+![image](../assets/images/audio/sampling.png)  
 When the signal is at 3.3V, the microcontroller is performing the calculations related to the sampling. At 0V, the microcontroller is waiting. To achieve a gain of -26 dB in practice, a sampling rate > 100kHz would be required, which is not feasible.
 
 # Criticisms

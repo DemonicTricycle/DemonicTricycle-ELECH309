@@ -38,7 +38,9 @@ More performant circuits do exist, but the implementation of this one was deemed
 
 # Filtering
 
-Three capacitors have been used to filter DC voltages : C2, C3 and C6.
-The cutoff frequency of the filtered voltage dividor consisting of R1, R2 and C2 is $$ f_p = frac{1}{2\pi \times (R_1//R_2) \times C_1} = 230k Hz$$ => faut changer le condensateur pour un 100 nF.
-For the dividor consisting of RV1 and C3, $$f_p = 64k Hz$$ => On peut mettre une capacité beaucoup plus grosse.
+Four capacitors have been used to filter DC voltages : C1, C2, C3 and C6.
+The cutoff frequency of the filtered voltage dividor consisting of R1, R2 and C2 is $$ f_p = fract{1}{2\pi \times (R_1//R_2) \times C_1} = 230k Hz$$ => faut changer le condensateur pour un 150 nF.  
+For the dividor consisting of RV1 and C3, $$f_p = 64k Hz$$ => On peut mettre une capacité beaucoup plus grosse.  
+C1 removes the DC polarization offset output by the microphone circuit. Its cutoff frequency is $$ f_p = fract{1}{2\pi \times C_1 \times Z_L} where $$ Z_l $$ is the load/input impedance of the circuit after the capacitor.
+In our case, this impedence is $$ > 2M \Omega$$, resulting in a $$f_p < 15.6 Hz$$. However, because R3 is variable, it's not possible to compute an exact value for C1 to act as a precise high pass filter.   
 Finally, a $$ 2200 \mu F$$ was placed between the 3.3V and the GND to ensure that brief power disconnection wouldn't reboot the chip, as well as to ensure that during power spike usage from the motors, the voltage would stay constant.
