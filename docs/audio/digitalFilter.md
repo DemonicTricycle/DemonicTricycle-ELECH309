@@ -82,11 +82,11 @@ For Q18:14, the maximal values of int32_t's was reached, which causes overflow :
 Q17:15 was chosen, but any repartition that doesn't ovoerflow would have been fine, as the performance doesn't seem too much affected.
 
 # Implementation on the microcontroller
-// je dois peut être trouver une meilleure terminologie que sampling timer psq c'est pas précis
+_**// je dois peut être trouver une meilleure terminologie que sampling timer psq c'est pas précis**_  
 The chip is overclocked to 39.5 MHz, to allow sufficiently fast sampling.
 The code starts by resetting the values in the array to 0 :  
 
-```C
+```c
 void reset_tables()
 {
     for (int i = 0; i < 5; i++) {
@@ -105,7 +105,7 @@ void reset_tables()
 
 An infinite loop waits for the conversion of the adc (15 kHz), then calculates the output of the stages. The pointers to the array are updated :  
 
-```C
+```c
 while(1) 
     {
         if (adcConversionDone()) 
@@ -144,7 +144,7 @@ Small details: due to a delay in the detection of the signal at the first bit, c
 
 Full code of the sampling timer : 
 
-```C
+```c
 void __attribute__((interrupt, no_auto_psv))_T1Interrupt(void)
 {
     // ISR code does the same things that the main loop did in polling
