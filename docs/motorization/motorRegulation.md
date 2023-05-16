@@ -115,6 +115,9 @@ $$k_{p_2} = \frac{w_2 \sqrt{1 + (w_2 \tau)^2}}{k_v} = 1. 0298 rad^{-1}$$
 
 As we take the lowest value, our gain for the rotation is $$1. 0298 rad^{-1}$$.  
 
+# Implementation on the Microcontroller
+The code is available [here](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/blob/main/src/motors.c).
+
 ----
 
 [^1]: Image from ELEC-H309, École Polytechnique de Bruxelles, ULB - [Gitlab](https://gitlab.com/mosee/elech309-2023)
