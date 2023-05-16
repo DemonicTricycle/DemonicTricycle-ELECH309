@@ -16,6 +16,12 @@ nav_order: 2
 # Project Goal
 This project was carried out in the context of the ELEC-H309 Projet Intégré course at the [École Polytechnique de Bruxelles (ULB)](https://polytech.ulb.be/en).  
 Its purpose is to implement a sound operated robot control system. An acquisition chain had to be designed, as well as a motor regulation from encoders.  
+This project is a way for electronics engineering students to:
+
+- use concepts taught throughout the curriculum,
+- successfully carry out a large-scale multidisciplinary project,
+- learn about the methodology used to approach an engineering project,
+- analyze and comply with a set of given specifications.
 
 # Methodology
 
@@ -35,8 +41,6 @@ This project is defined around a set of given specifications, these are:
 - Reasonable speed (maximum 1.5 to 2m/s) and acceleration (maximum 0.5m/s²).
 - Easy to be carried.
 - Regulate motors using the dsPIC's PWM signal genertor.
-
-...
 
 ## Breakdown into Modules
 We want to divide the project into multiple modules, each responsible for a part of the robot operation. The project consists of three main components:
@@ -79,3 +83,5 @@ In the end, we have a fully functionning robot can that be controlled over sound
 ----
 
 [^1]: See the project's details on its [Gitlab repository](https://gitlab.com/mosee/elech309-2023)
+
+Most of the details on this page come from the [project's description on Gitlab](https://gitlab.com/mosee/elech309-2023/-/tree/main/Description%20du%20projet).

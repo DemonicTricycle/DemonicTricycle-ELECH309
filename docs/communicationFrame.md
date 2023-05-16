@@ -42,7 +42,7 @@ This allows for error checking of the received frame.
 ## Stop bit
 A correct frame always ends with a **1** as the last (13th) bit.
 
-## Examples
+# Examples
 
 Here are some examples of frames:
 

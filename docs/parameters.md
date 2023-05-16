@@ -4,15 +4,6 @@ title: Parameters
 nav_order: 9
 ---
 
-<details open markdown="block">
-  <summary>
-    Table of contents
-  </summary>
-  {: .text-delta }
-1. TOC
-{:toc}
-</details>
-
 # Robot Parameters
 In order to easily change some parameters of the robot's code, we placed them in a common file: [parameters.h](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/blob/main/src/parameters.h).  
 This allows us to test different values for certain functions quickly between compilations.

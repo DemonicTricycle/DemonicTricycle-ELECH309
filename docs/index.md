@@ -15,10 +15,7 @@ ELEC-H309 Integrated Project **Docs**. Project by **Martin Fonteyn**, **Lucas Pl
 [See Project on Github](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
 [Project Details on Gitlab](https://gitlab.com/mosee/elech309-2023){: .btn .fs-5 .mb-4 .mb-md-0 }
 
----
-
-{: .note }
-Work In Progress
+----
 
 <details open markdown="block">
   <summary>
@@ -29,6 +26,8 @@ Work In Progress
 {:toc}
 </details>
 
+## The Project
+See details about the **[Project](/project)**: its outline, explaination and goals.
 
 ## Data Transmission
 See the docs about the **[Data Transmission](/dataTransmission)**.
@@ -36,16 +35,12 @@ See the docs about the **[Data Transmission](/dataTransmission)**.
 ## Transmission Frame
 See the docs about the **[Communication Frame](/communicationFrame)**.
 
-## Microcontroller Configuration
-See the docs about the **[Microcontroller Configuration](/microcontrollerConfiguration)**.
-
 ## Motorization
 See the docs about the **[Motorization](/motorization)**:
 - **[Motor Regulation](/motorRegulation)**
-- **[Speed Curve](/speedCurve)**
-- ...?
+- **[Accuracy and Precision](/accuracyAndPrecision)**
 
-## Audio part
+## Audio Processing
 See the docs about the **[Audio](/audio)**:
 - **[Amplification](/amplification)**
 - **[Analog Filter](/analogFilter)**
@@ -54,13 +49,26 @@ See the docs about the **[Audio](/audio)**:
 ## Frame State Machine
 See the docs about the **[Frame State Machine](/frameFSM)**.
 
+## Code Parameters
+See the docs about the **[Code Parameters](/parameters)**.
+
+## Microcontroller Configuration
+See the docs about the **[Microcontroller Configuration](/microcontrollerConfiguration)**.
+
+## Code Tools
+See the docs about the **[Code Tools](/tools)**.
+
 ## Testing
 See the docs about **[Testing](/testing)**:
 - **[Unit Tests](/unitTests)**
+- **[Implementation Tests](/implementationTests)**
 - **[Kinematics Tests](/kinematicsTests)**
-- ...?
+- **[Real World Tests](/realWorldTests)**
 
+----
 
+{: .note }
+Work In Progress
 
 {: .important }
 example
