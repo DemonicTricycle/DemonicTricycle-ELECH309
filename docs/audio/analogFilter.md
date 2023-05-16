@@ -24,18 +24,18 @@ Digital processing means sampling, which means spectral aliasing. In order to co
 - Butterworth filter (for its flat response)  
 
 The implementation of this filter in the circuit is as shown :  
-![image](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/assets/61374482/ff2497cf-3fcf-4117-a054-e2a3d2770fb8)
+![image](../assets/images/audio/filter_circuit.png)
 
 Despite theoretical performances matching the specifications :  
-![image](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/assets/61374482/c45a245d-8879-4690-8f94-4394760fd643)
+![image](../assets/images/audio/analog_theoretical.png)
 
 in practice, the -20 dB/decade wasn't reached :  
-![image](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/assets/61374482/f44b8439-1c92-444f-95e6-8fb50b0ec9d8)
+![image](../assets/images/audio/analog_real.png)
 
 ## Sampling frequency
 
 A sampling frequency of 15 kHz had been chosen in the theoretical design (which was a mistake because folded frequencies starting at 7.5 kHz were not sufficiently attenuated). However, this frequency was retained because despite overclocking the microcontroller, the program was approaching the chip's computational limit :  
-![image](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/assets/61374482/95225717-7e60-47a7-84ce-6224a0bf3c25)
+![image](../assets/images/audio/sampling.png)
 When the signal is at 3.3V, the microcontroller is performing the calculations related to the sampling. At 0V, the microcontroller is waiting. To achieve a gain of -26 dB in practice, a sampling rate > 100kHz would be required, which is not feasible.
 
 # Criticisms
