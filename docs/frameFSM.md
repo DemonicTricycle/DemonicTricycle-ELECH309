@@ -15,7 +15,7 @@ nav_order: 3
 
 # Frame State Machine
 
-The frame analysis goes through a finite state machine, at [frameFSM.c](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/blob/main/src/frameFSM.c).
+The frame analysis goes through a finite state machine, at [frameFSM.c](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/blob/main/src/frameFSM.c), ingesting each bit of this frame.
 
 ## States
 
@@ -37,11 +37,11 @@ Each state has its handler.
 
 If any of the handlers fails, reset back to **IDLE** state.
 
-When the **StopHandler** has succeeded, it sends the movement order to the Motors, as the data is correct.
+When the **StopHandler** has succeeded, the FSM sends the movement order to the Motors, as the data is validated.
 
 ## Diagram
 
 The diagram below explains it.
 
-![frameFSM](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/assets/23436953/d4161194-2fe5-4c22-b29b-025439e4c1c2)
+![frameFSM](assets/images/frameFSM_2.svg)
 
