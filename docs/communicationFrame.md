@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Communication Frame
-toc: true
+nav_order: 4
 ---
 
 <details open markdown="block">

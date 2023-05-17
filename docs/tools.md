@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Tools
-nav_order: 7
+nav_order: 10
 ---
 
 # [`tools.c`](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/blob/main/src/tools.c)

@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Parameters
-nav_order: 9
+nav_order: 8
 ---
 
 # Robot Parameters

@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Microcontroller Configuration
-nav_order: 2
+nav_order: 9
 ---
 
 <details open markdown="block">

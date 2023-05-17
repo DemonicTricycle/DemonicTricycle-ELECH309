@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Frame State Machine
-nav_order: 3
+nav_order: 7
 ---
 
 <details open markdown="block">
