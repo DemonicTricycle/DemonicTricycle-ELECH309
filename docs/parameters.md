@@ -10,6 +10,11 @@ This allows us to test different values for certain functions quickly between co
 
 ## [`parameters.h`](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/blob/main/src/parameters.h)
 
+<details open markdown="block">
+  <summary>
+    `parameters.h`
+  </summary>
+
 ```c
 // parameters defines
 
@@ -108,3 +113,5 @@ This allows us to test different values for certain functions quickly between co
 // </editor-fold>
 
 ```
+
+</details>
