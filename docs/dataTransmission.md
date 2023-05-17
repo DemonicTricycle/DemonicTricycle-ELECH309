@@ -20,7 +20,7 @@ See [Communication Frame](/communicationFrame) for details about the data frame.
 
 ## Sender
 Any sound emitting device can be used to send the data.  
-We used either a smartphone, or a laptop to play premade .wav files[^1] containing the command that the robot must execute. These commands can be "Go forward 50cm", "Turn left 180°", etc.
+Either a smartphone, or a laptop was used to play premade .wav files[^1] containing the command that the robot must execute. These commands can be "Go forward 50cm", "Turn left 180°", etc.
 
 ## Receiver
 The robot receives these audio commands using its onboard microphone. This sound is then amplified, filtered and translated by the robot.  
