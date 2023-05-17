@@ -15,7 +15,7 @@ nav_order: 2
 
 # Project Goal
 This project was carried out in the context of the ELEC-H309 Projet Intégré course at the [École Polytechnique de Bruxelles (ULB)](https://polytech.ulb.be/en).  
-Its purpose is to implement a sound operated robot control system. An acquisition chain had to be designed, as well as a motor regulation from encoders.  
+Its purpose is to implement a sound operated robot control system. An acquisition chain had to be designed, as well as a motor regulation system.  
 This project is a way for electronics engineering students to:
 
 - use concepts taught throughout the curriculum,
@@ -32,15 +32,16 @@ This project is defined around a set of given specifications, these are:
 - Use a provided rolling base (with motors, encoders and battery) with fixed geometry.
 - Develop in the C programming language.
 - Use a provided [Microchip dsPIC33FJ128MC802](https://www.microchip.com/en-us/product/dsPIC33FJ128MC802) microcontroller.
-- Precisely move a certain amount (straight line or pivot).
-- Receive and understand audio command signals using a microphone (of 900 and 1100 Hz sound).
+- Precisely move a certain amount (in a straight line or pivot).
+- Receive and translate audio command signals using a microphone.
+- Audio must be a sequence of 900 (representing a binary 0) and 1100 (representing a binary 1) Hz frequencies.
 - Execute received commands.
 - Use a [predefined data frame protocol](/communicationFrame).
 - Robot must be capable of moving on solid, flat and horizontal terrrain.
 - Robot must function in a calm environment (indoors, without background noise).
 - Reasonable speed (maximum 1.5 to 2m/s) and acceleration (maximum 0.5m/s²).
 - Easy to be carried.
-- Regulate motors using the dsPIC's PWM signal genertor.
+- Regulate motors using the dsPIC's PWM signal generator.
 
 ## Breakdown into Modules
 We want to divide the project into multiple modules, each responsible for a part of the robot operation. The project consists of three main components:
