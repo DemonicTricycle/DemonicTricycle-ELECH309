@@ -38,7 +38,7 @@ Which corresponds to this transfer function :
 
 It is possible to turn any analog filter to a digital one, using the Tustin approximation : $$ p = \frac{2}{T_s} \times \frac{z-1}{z+1} $$.
 A recurring equation is then deducted from the transfer function, which was determined in the previous part. 
-In terms of maths, we have :  
+In terms of maths :  
 $$ \begin{align} & Y(z) = \frac{\sum a_k \times z^{-k}}{\sum b_k \times z^{-k}} \times X(z) \\ 
 & \Leftrightarrow \sum a_k \times z^{-k}  Y(z) = \sum b_k \times z^{-k}  X(z) \\
 & \Leftrightarrow \sum a_k \times z^{-k} y(n-k) = \sum b_k \times z^{-k} x(n-k)\end{align}$$
