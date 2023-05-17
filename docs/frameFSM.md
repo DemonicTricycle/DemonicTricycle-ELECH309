@@ -15,7 +15,7 @@ nav_order: 7
 
 # Frame State Machine
 
-The frame analysis goes through a finite state machine, ingesting each bit of this frame.
+The frame analysis goes through a finite state machine, processing each bit of this frame.
 
 ## States
 
@@ -29,19 +29,17 @@ Each state has its handler.
 
 ## Handlers
 
-- **IdleHandler** : gets called when a frame has come, then goes to **START** state.
-- **StartHandler** : checks if start bit is correct, starts the translation of the rest of the frame. Goes to **DATA** state if successful.
-- **DataHandler** : gets the command and parameterss from the frame by getting each data bit and stores it, then goes to **PARITY** state.
-- **ParityHandler** : checks if the parity of the previous processed bits against its parity bit. Goes to **STOP** state if successful.
+- **IdleHandler** : gets called when a frame starts being received by the digital filter, then goes to **START** state.
+- **StartHandler** : checks if start bit is correct, and starts the translation of the rest of the frame. Goes to **DATA** state if successful.
+- **DataHandler** : gets the command and parameters from the frame by getting each data bit and storing it, then goes to **PARITY** state.
+- **ParityHandler** : checks the parity of the previous processed bits against its parity bit. Goes to **STOP** state if successful.
 - **StopHandler** : checks if stop bit is correct. Goes back to **IDLE** state.
 
-If any of the handlers fails, reset back to **IDLE** state.
+If any of the handlers fails, resets back to **IDLE** state.
 
-When the **StopHandler** has succeeded, the FSM sends the movement order to the Motors, as the data is validated.
+When the **StopHandler** succeeds, the FSM sends the validated data as a movement order to the Motors.
 
 # FSM Diagram
-
-The diagram below explains it.
 
 ![frameFSM](assets/images/frameFSM_2.svg)
 
