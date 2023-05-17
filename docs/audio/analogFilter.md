@@ -34,7 +34,7 @@ in practice, the -20 dB/decade wasn't reached :
 
 ## Sampling frequency
 
-A sampling frequency of 15 kHz had been chosen in the theoretical design (which was a mistake because folded frequencies starting at 7.5 kHz were not sufficiently attenuated). However, this frequency was retained because despite overclocking the microcontroller, the program was approaching the chip's computational limit :  
+A sampling frequency of 15 kHz had been chosen in the theoretical design (which was a mistake because folded frequencies starting at 7.5 kHz were not sufficiently attenuated). However, this frequency was retained because despite overclocking the microcontroller, the program was already approaching the chip's computational limit :  
 ![image](../assets/images/audio/sampling.png)  
 When the signal is at 3.3V, the microcontroller is performing the calculations related to the sampling. At 0V, the microcontroller is waiting. To achieve a gain of -26 dB in practice, a sampling rate > 100kHz would be required, which is not feasible.
 
