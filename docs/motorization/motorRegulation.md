@@ -32,7 +32,7 @@ For a translation, the speed must follow this trapezoidal curve:
 If the distance is 0.5m or less, it won't be possible to reach the desired cruise translation speed in the available time. 
 In such cases, the speed will follow a triangular curve (shown in green on the illustration), and both of these scenarios need to be accounted for in the code.
 To follow this curve, the code uses the following function that calculates the target position based on the desired final translation and the time elapsed since the start of the movement :
-<details {open} markdown="block">
+<details markdown="block">
 <summary>
 Translation target function
 </summary>
@@ -121,7 +121,7 @@ Therefore, there is no need to implement a trapezoidal-style curve in the code a
 This is implemetented using the following function :
 
 
-<details {open} markdown="block">
+<details markdown="block">
 <summary>
 Translation target function
 </summary>
