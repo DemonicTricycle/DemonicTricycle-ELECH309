@@ -31,7 +31,65 @@ For a translation, the speed must follow this trapezoidal curve:
 
 If the distance is 0.5m or less, it won't be possible to reach the desired cruise translation speed in the available time. 
 In such cases, the speed will follow a triangular curve (shown in green on the illustration), and both of these scenarios need to be accounted for in the code.
-To follow this curve, the code includes a function that calculates the target position based on the desired final translation and the time elapsed since the start of the movement.
+To follow this curve, the code uses the following function that calculates the target position based on the desired final translation and the time elapsed since the start of the movement :
+<details {open} markdown="block">
+<summary>
+Translation target function
+</summary>
+
+```c
+float GetTarget(float time, float final_target) // time in s, end in m = final distance
+{
+    int sign = FloatSign(final_target);
+    float end = FloatAbs(final_target);
+
+    if (end < 0.5) 
+    {
+        float half_time = sqrt(end / 0.5);
+        if (time > half_time * 2)
+        {
+            return end * sign;
+        }
+        if (time < half_time)
+        {
+            return (time * time * ACCELERATION / 2) * sign;
+        }
+        else
+        {
+            float distAldreadyMade = half_time * half_time * ACCELERATION / 2;
+            float time_since_slowing = time - half_time;
+            // TODO: set as #defines ?
+            return (distAldreadyMade + 0.5 * half_time * time_since_slowing - time_since_slowing * time_since_slowing * 0.25) * sign;
+        }
+    }
+    if (time < 1)
+    {
+        return (time * time * 0.25) * sign;
+    }
+
+    float time_at_cruise = (end - 0.5) / 0.5;
+
+    if (time >= time_at_cruise + 1) // Slowing down
+    {
+        float time_remaining = time_at_cruise + 2 - time;
+        float time_since_slowing = time - time_at_cruise - 1;
+
+        if (time_remaining < 0)
+        {
+            // TODO: set as #defines ?
+            return (0.5 * time_at_cruise + 0.5) * sign;
+        }
+
+        // TODO: set as #defines ?
+        return (0.5 * time_at_cruise + 0.25 + 0.5 * time_since_slowing - time_since_slowing * time_since_slowing * 0.25) * sign;
+    }
+    // TODO: set as #defines ?
+    return ((time - 1) * 0.5 + 0.25) * sign;
+}
+```
+
+</details>
+
 The output of this script gives the following plot (for a final translation of 2m):  
 
 ![graph1](https://user-images.githubusercontent.com/23436953/236680182-96053696-b795-4aa4-b4aa-0a5f529da144.png)
@@ -59,6 +117,59 @@ As the same rotation will be made when decelerating, $$\alpha_{max} = 2*2.4 rad 
 Therefore, there is no need to implement a trapezoidal-style curve in the code as the cruising rotation speed will never be reached, making the rotation speed curve simply triangular.  
 
 ![speedCurveRot-triang](../assets/images/speedCurveRot-triang.png)
+
+This is implemetented using the following function :
+
+
+<details {open} markdown="block">
+<summary>
+Translation target function
+</summary>
+
+```c
+
+float getTargetAngle(float given_angle, float time_since_start)
+{
+
+    int sign = FloatSign(given_angle);
+    float target_angle = FloatAbs(given_angle);
+    // Calculate the maximum angle that can be reached before reaching the cruise speed
+
+    float angle_to_return = 0;
+
+    if (target_angle > MAX_ANGLE)
+    {
+    //Unreachable
+        return 0; // Such an angle is not sendable in 8 bits
+    }
+
+    float half_time = sqrt(target_angle / ACCELERATION_ROTATION); // The time at wich we start decelerating
+
+    if (time_since_start < half_time)
+    {
+        // Simple acceleration
+        angle_to_return = time_since_start * time_since_start * ACCELERATION_ROTATION / 2;
+    }
+    else
+    {
+        float time_since_slowing = time_since_start - half_time;
+        // Distance aldready made when accelerating
+        angle_to_return = half_time * half_time * ACCELERATION_ROTATION / 2;
+        // Distance since deceleration
+        angle_to_return += ACCELERATION_ROTATION * (half_time * time_since_slowing - time_since_slowing * time_since_slowing / 2);
+    }
+    if (time_since_start >= half_time * 2)
+    {
+        angle_to_return = target_angle;
+    }
+
+    return angle_to_return * sign;
+}
+
+```
+
+</details>
+
 
 For a rotation of 90°, the code gives the following target angle:
 
