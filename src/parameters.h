@@ -5,7 +5,7 @@
 #define FCY (SYS_FREQ/2)
 
 // for filter.c :
-// <editor-fold defaultstate="collapsed" desc="motors.c parameters">
+// <editor-fold defaultstate="collapsed" desc="filter.c parameters">
 
 #define FLOORS 4
 // const short FLOOR_ORDER = 2;
