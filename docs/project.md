@@ -52,7 +52,7 @@ We want to divide the project into multiple modules, each responsible for a part
 
 This breakdown will ease the writing of each module's code, and improve its readability and access for developpers and integrators. It will also facilitate the processing optimization that can be done in order to stay within the limits of our microcontroller.
 
-The data transmission over audio can also ne broken down into two submodules: Analog acquisition chain & Digital demodulation.
+The data transmission over audio can also be broken down into two submodules: Analog acquisition chain & Digital demodulation.
 
 ## Technical Solutions
 In order to build each module, we need to decide how everything will work. We start from already given information from the project's details[^1], as well as ideas we have about the functionning of each part. We then either test or simulate these ideas to confirm our chosen path. If successful, or sufficient enough, we can then continue with it and advance developement.
@@ -85,4 +85,4 @@ In the end, we have a fully functionning robot can that be controlled over sound
 
 [^1]: See the project's details on its [Gitlab repository](https://gitlab.com/mosee/elech309-2023)
 
-Most of the details on this page come from the [project's description on Gitlab](https://gitlab.com/mosee/elech309-2023/-/tree/main/Description%20du%20projet).
+Most of the details on this page come from the [ELEC-H309 project description on Gitlab](https://gitlab.com/mosee/elech309-2023/-/tree/main/Description%20du%20projet).
