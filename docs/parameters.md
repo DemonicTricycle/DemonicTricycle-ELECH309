@@ -12,7 +12,7 @@ This allows us to test different values for certain functions quickly between co
 
 <details open markdown="block">
   <summary>
-    parameters.h
+  parameters.h [Click to open]
   </summary>
 
 ```c
