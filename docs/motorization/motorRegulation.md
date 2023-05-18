@@ -123,7 +123,7 @@ This is implemetented using the following function :
 
 <details markdown="block">
 <summary>
-Translation target function [Click to open]
+Rotation target function [Click to open]
 </summary>
 
 ```c
