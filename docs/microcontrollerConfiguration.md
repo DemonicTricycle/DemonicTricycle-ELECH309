@@ -26,7 +26,14 @@ For reference, here are the pins of the dsPIC from the datasheet:
 ![dsPICpins](assets/images/dsPICpins.png)[^1]
 
 ## Configuration Bits
-In `configuration_bits.c`
+These configuration bits were chosen to allow for the microcontroller's overclock.
+
+The file in full is available [here](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/blob/main/src/configuration.c).
+
+<details open markdown="block">
+  <summary>
+    configuration.c
+  </summary>
 
 ```c
 // DSPIC33FJ128MC802 Configuration Bit Settings
@@ -74,6 +81,8 @@ In `configuration_bits.c`
 
 ```
 
+</details>
+  
 ----
 
 [^1]: Image from [Microchip](https://www.microchip.com/en-us/product/dsPIC33FJ128MC802)'s [dsPIC33FJ128MC802 datasheet](https://ww1.microchip.com/downloads/aemDocuments/documents/OTH/ProductDocuments/DataSheets/70291G.pdf)

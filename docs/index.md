@@ -55,8 +55,8 @@ See the docs about the **[Code Parameters](/parameters)**.
 ## Microcontroller Configuration
 See the docs about the **[Microcontroller Configuration](/microcontrollerConfiguration)**.
 
-## Code Tools
-See the docs about the **[Code Tools](/tools)**.
+## Tools
+See the docs about the **[Tools](/tools)**.
 
 ## Testing
 See the docs about **[Testing](/testing)**:
