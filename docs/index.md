@@ -6,7 +6,7 @@ description: "Demonic Tricycle - ELECH309 Project 2023 - Docs"
 permalink: /
 ---
 
-# Docs - Demonic Tricycle
+# Documentation - Demonic Tricycle
 {: .fs-9 }
 
 ELEC-H309 Integrated Project **Docs**. Project by **Martin Fonteyn**, **Lucas Placentino** and **Sylvain Powis de Tenbossche**.
@@ -37,14 +37,15 @@ See the docs about the **[Communication Frame](/communicationFrame)**.
 
 ## Motorization
 See the docs about the **[Motorization](/motorization)**:
-- **[Motor Regulation](/motorRegulation)**
-- **[Accuracy and Precision](/accuracyAndPrecision)**
+- **[Motor Regulation](/motorization/motorRegulation)**
+- **[Rotation Constant](/motorization/rotationConstant)**
+- **[Accuracy and Precision](/motorization/accuracyAndPrecision)**
 
 ## Audio Processing
 See the docs about the **[Audio](/audio)**:
-- **[Amplification](/amplification)**
-- **[Analog Filter](/analogFilter)**
-- **[Digital Filter](/digitalFilter)**
+- **[Amplification](/audio/amplification)**
+- **[Analog Filter](/audio/analogFilter)**
+- **[Digital Filter](/audio/digitalFilter)**
 
 ## Frame State Machine
 See the docs about the **[Frame State Machine](/frameFSM)**.
@@ -60,10 +61,10 @@ See the docs about the **[Tools](/tools)**.
 
 ## Testing
 See the docs about **[Testing](/testing)**:
-- **[Unit Tests](/unitTests)**
-- **[Implementation Tests](/implementationTests)**
-- **[Kinematics Tests](/kinematicsTests)**
-- **[Real World Tests](/realWorldTests)**
+- **[Unit Tests](/testing/unitTests)**
+- **[Implementation Tests](/testing/implementationTests)**
+- **[Kinematics Tests](/testing/kinematicsTests)**
+- **[Real World Tests](/testing/realWorldTests)**
 
 ----
 
@@ -71,4 +72,4 @@ See the docs about **[Testing](/testing)**:
 Work In Progress
 
 {: .important }
-example
+example important point
