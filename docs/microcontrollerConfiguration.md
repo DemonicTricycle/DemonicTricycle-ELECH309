@@ -32,7 +32,7 @@ The file in full is available [here](https://github.com/DemonicTricycle/DemonicT
 
 <details open markdown="block">
   <summary>
-    configuration.c
+  configuration.c [Click to open]
   </summary>
 
 ```c
