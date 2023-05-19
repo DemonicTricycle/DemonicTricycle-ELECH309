@@ -43,4 +43,4 @@ A 4th order bandpass filter (with offset) centred around 1000 Hz could have been
 
 It is possible to combine amplification and filter into one amplifier, but this would have required a bandwidth gain product of several MHz.  
 
-It is possible to improve our guard filter, probably by changing the amplifier to improve the performance (the cut-off frequency is correct, but the slope is not steep enough).
+It is possible to improve the guard filter, probably by changing the amplifier to improve the performance (the cut-off frequency is correct, but the slope is not steep enough).
