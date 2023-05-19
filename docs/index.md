@@ -9,7 +9,7 @@ permalink: /
 # Documentation - Demonic Tricycle
 {: .fs-9 }
 
-ELEC-H309 Integrated Project **Docs**. Project by **Martin Fonteyn**, **Lucas Placentino** and **Sylvain Powis de Tenbossche**.
+ELEC-H309 Integrated Project (_Projet Intégré_), by **Martin Fonteyn**, **Lucas Placentino** and **Sylvain Powis de Tenbossche**.
 {: .fs-6 .fw-300 }
 
 [See Project on Github](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
