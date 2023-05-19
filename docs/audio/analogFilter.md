@@ -38,7 +38,7 @@ A sampling frequency of 15 kHz had been chosen in the theoretical design (which 
 ![image](../assets/images/audio/sampling.png)  
 When the signal is at 3.3V, the microcontroller is performing the calculations related to the sampling. At 0V, the microcontroller is waiting. To achieve a gain of -26 dB in practice, a sampling rate > 100kHz would be required, which is not feasible.
 
-# Criticisms
+# Criticism
 A 4th order bandpass filter (with offset) centred around 1000 Hz could have been used instead of the anti-aliasing filter, to improve the performance of the prototype. This filter could have been implemented using a symmetrical dual supply amplifier. As the real world performance was acceptable, it was decided not to over-engineer the project.  
 
 It is possible to combine amplification and filter into one amplifier, but this would have required a bandwidth gain product of several MHz.  
