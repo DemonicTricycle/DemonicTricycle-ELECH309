@@ -9,5 +9,3 @@ nav_order: 5
 
 Motorization: motor regulation and feedback.
 {: .fs-6 .fw-300 }
-
-# Motorization
