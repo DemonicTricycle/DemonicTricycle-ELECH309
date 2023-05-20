@@ -68,18 +68,10 @@ After testing, we saw that we were able to use only one microcontroller because 
 When every module has been thoroughly tested and fine tuned, as well as confirmed working, we can proceed with assembling all of them into a single program which will be written onto the microcontroller. Each module should be able to communicate with the other ones seamlessly.
 
 ## Final Testing and Results
+Final tests were conclusive. The robot worked as it should: easy, reproduceable and accurate. Some real-world test videos can be seen [here](/testing#real-world-tests).
 
 # Conclusion
 In the end, we have a fully functionning robot can that be controlled over sound from a user's device. This robot should be accurate and precise wihtin our defined margins, and be easily reproduced by others (with the same hardware).
-
-# Acknowlegments and Discussions
-...
-
-## Criticism
-...
-
-## Upgrades
-...
 
 ----
 
