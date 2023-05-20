@@ -2,7 +2,8 @@ title: Demonic Tricycle - ELECH309
 description: ELECH309 Project - Fonteyn, Placentino, Powis
 theme: just-the-docs
 
-url: https://dev.demonictricycle-dev.pages.dev
+baseurl: "" # the subpath of your site, e.g. /blog
+url: https://demonictricycle-dev.pages.dev
 
 aux_links:
   "Project Details":
