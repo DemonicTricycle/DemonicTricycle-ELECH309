@@ -34,3 +34,10 @@ Every 18 samples, the compute time goes up, as the analysing timer is triggered.
 
 The code could probably be optimised slightly, to reduce the analysing timer compute time. In order to greatly reduce that compute time, another algorithm should be used.  
 Another solution could be to use a second microcontroller just for that.
+
+## Performance in practice
+
+The performance greatly varies depending on the distance between the sender and the microphone.  
+Between 10 and 30 cm, the transmitted frame is 90% of the time correct.  
+For distances longer than that, the gain has to be increased, which requires a very calm environment.  
+At about 1m20, the frame is 60% of the time correct.
