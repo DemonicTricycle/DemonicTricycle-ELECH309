@@ -71,7 +71,7 @@ When every module has been thoroughly tested and fine tuned, as well as confirme
 Final tests were conclusive. The robot worked as it should: easy, reproduceable and accurate. Some real-world test videos can be seen [here](/testing#real-world-tests).
 
 # Conclusion
-In the end, we have a fully functionning robot can that be controlled over sound from a user's device. This robot should be accurate and precise wihtin our defined margins, and be easily reproduced by others (with the same hardware).
+In the end, we have a fully functionning robot can that be controlled over sound from a user's device. This robot should be accurate and precise within our defined margins, and be easily reproduced by others (with similar hardware).
 
 ----
 
