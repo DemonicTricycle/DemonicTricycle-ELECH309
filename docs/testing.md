@@ -28,7 +28,7 @@ During the development of the motor regulation part of the codebase, kinematics 
 Testing showed that the robot's speed was corresponding to the programmed speed (complying with the characteristics, which can be found in the [Project page](/project)).
 
 ## Target Distance
-From the first test, target distance was observed to be accurate (wihtin margins of ~1cm).
+From the first test, target distance was observed to be accurate within defined margins.
 
 ## Pivot Accuracy
 Testing found out that the pivot movement were usually overshot by 1 to 3 degrees. It allowed for fine-tuning the motor regulation regarding pivot, in order to acheive accurate turning.
