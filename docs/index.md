@@ -59,12 +59,8 @@ See the docs about the **[Microcontroller Configuration](/microcontrollerConfigu
 ## Tools
 See the docs about the **[Tools](/tools)**.
 
-## Testing
-See the docs about **[Testing](/testing)**:
-- **[Unit Tests](/testing/unitTests)**
-- **[Implementation Tests](/testing/implementationTests)**
-- **[Kinematics Tests](/testing/kinematicsTests)**
-- **[Real World Tests](/testing/realWorldTests)**
+## Tests
+See the docs about **[Testing](/testing)**
 
 ----
 
