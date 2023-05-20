@@ -16,12 +16,14 @@ nav_order: 2
 
 # Digital filter
 
+Two digital filters are needed in order to detect if a signal has been received, and whether this signal is a high or low bit. Both of those filters are bandpass filters, centered around 900 Hz and 1100 Hz.
+
 ## Design of the filter
 
 The specifications require a filter such that :
 
-- Useful frequencies are within +/-1.5% of the centre frequency
-- Frequencies above +/-3.5% of the centre frequency should be cut off
+- Useful frequencies are within +/-1.5% of the center frequency
+- Frequencies above +/-3.5% of the center frequency should be cut off
 - Maximum attenuation of useful frequencies: H1 = 0.9
 - Minimum attenuation of cut-off frequencies: H2 = 0.1  
 
@@ -51,7 +53,7 @@ The filter around 1100 Hz was first simulated on MATLAB in order to take advanta
 The first stage was first implemented separately (in blue, the theoretical filter and in orange, the numerically simulated stage) :  
 ![image](../assets/images/audio/numerical_vs_theoretical.png)
 
-The method of simulation is to simply generate Q sines at the input, with frequencies equidistant between $$ ]0, fs/2[ $$
+The method of simulation is to simply generate Q sines at the input, with frequencies equidistant between $$ ]0, fs/2[ $$.
 The output of the system is then observed in regime to determine the gain.
 It was then necessary to determine whether the 4 stages of the filter were in parallel (sum of the responses of each filter), or in series (the output of one stage becomes the input of another). By simulation, it was determined that the filters were in series.  
 Here is a simulation of the 4 stages of the filter centered around 1100 Hz for an input frequency of a sin of 1100 Hz :  
@@ -76,13 +78,12 @@ Between Q12:20 and Q17:15, for all values :
 For the most important values :  
 ![image](../assets/images/audio/fixed_point_2.png)
 
-For Q18:14, the maximal values of int32_t's was reached, which causes overflow :  
+For Q18:14, the maximal values of int32_t was reached, which causes overflow :  
 ![image](../assets/images/audio/fixed_point_3.png)
 
 Q17:15 was chosen, but any repartition that doesn't ovoerflow would have been fine, as the performance doesn't seem too much affected.
 
 # Implementation on the microcontroller
-_**// je dois peut être trouver une meilleure terminologie que sampling timer psq c'est pas précis**_  
 
 The code is available in [filter.c](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/blob/main/src/filter.c).
 
@@ -116,14 +117,14 @@ while(1)
             voltage = adcRead();
             if (voltage >= 4096 || voltage < 0)
             {
-                continue; // starts new loop
+                continue; // waits for the next sample
             }
             
             ys_1[0][pointer_current] = voltage; // updates current value
             ys_2[0][pointer_current] = voltage;
 
             for (int k = 0; k < FLOORS; k++) // filter id
-            {
+            {   // recursive equation for all of the stages in series
                 ys_1[k + 1][pointer_current] = ((gs_1[k] * ((bs_1[k][0] * ys_1[k][pointer_current] + bs_1[k][1] * ys_1[k][pointer_before] + bs_1[k][2] * ys_1[k][pointer_last]) >> M_FILTER)) - as_1[k][1] * ys_1[k + 1][pointer_before] - as_1[k][2] * ys_1[k + 1][pointer_last]) >> (M_FILTER);
                 ys_2[k + 1][pointer_current] = ((gs_2[k] * ((bs_2[k][0] * ys_2[k][pointer_current] + bs_2[k][1] * ys_2[k][pointer_before] + bs_2[k][2] * ys_2[k][pointer_last]) >> M_FILTER)) - as_2[k][1] * ys_2[k + 1][pointer_before] - as_2[k][2] * ys_2[k + 1][pointer_last]) >> (M_FILTER);
             } 
@@ -139,13 +140,19 @@ while(1)
 	
 ```
 
-In parallel, at 1000 Hz, an interrupt timer is used to analyse the array values. While this code is running, sampling does not take place. The maximum value of the two arrays (900 and 1100Hz) is recovered from the previous 18 samples (which gives at least one period of the signal). If one of the two values exceeds an experimentally determined threshold (around 300), one of the filters has detected a signal.
+In parallel, at 1000 Hz, an interrupt timer, called *analysing* timer is used to analyse the array values. While this code is running, sampling does not take place. The maximum value of the ouput of the filters is obtained from the previous 18 samples (which ensures that at least one period of the signal is contained in the samples). If one of the two values exceeds an experimentally determined threshold (around 300), one of the filters has detected a signal.
 
-When a signal is detected, the chip goes into listening mode. Each time the timer is interrupted at 1000 Hz, the average_sample variable will be incremented if the 1100 Hz filter has detected a signal, and decremented if it is the 900 Hz filter. Once 99 samples have been received (normally 100 but the frequency is not exactly 1000 Hz), a bit has been received. This bit is deducted from the value of average_sample, and is sent to the FSM. If this bit is the last one of the frame, everything is reset.
+When a signal is detected, the chip goes into listening mode. Each time the analysing timer is trigered, the average_sample variable will be incremented if the 1100 Hz filter has detected a signal, and decremented if it is the 900 Hz filter. Once 99 samples have been received (theoretically 100 but the frequency is not exactly 1000 Hz), a bit has been received. This bit is deducted from the value of average_sample, and is sent to the Frame State Machine. If this bit is the last one of the frame, everything is reset.
 
-Small details: due to a delay in the detection of the signal at the first bit, caused by the digital filter transient, the first bit is detected after 74 samples and not 99. Also, as can be seen in the figure (insert figure with filter stages), again due to the filter transient, some short sounds (composed of many frequencies, such as a clap) are not attenuated fast enough. During sampling, the filters then detect a signal. In order to overcome this problem, a "fluke" detection system has been implemented. A noise_counter variable counts the number of times that none of the filters detected a signal during the first bit. If this variable reaches 15/75, it is probably a fluke and the system resets.
+## Ways around the transient of the digital filter
 
-Full code of the sampling timer : 
+Due to a delay in the detection of the signal at the first bit, caused by the digital filter transient, the first bit is detected after 74 samples and not 99. 
+
+![image](../assets/images/audio/4stages1150.png)
+
+Also, as can be seen in the figure above, again due to the filter transient, some short sounds (composed of many frequencies, such as a clap) are not attenuated fast enough. During sampling, the filters then detect a signal. In order to overcome this problem, a "fluke" detection system has been implemented. A noise_counter variable counts the number of times that none of the filters detected a signal during the first bit. If this variable reaches 15/75, it is probably a fluke and the system resets.
+
+Full code of the analysing timer : 
 
 ```c
 void __attribute__((interrupt, no_auto_psv))_T1Interrupt(void)
