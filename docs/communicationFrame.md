@@ -15,7 +15,7 @@ nav_order: 4
 
 # Communication frame
 
-Data is transmitted via sound, from the sender (computer) to the receiver (robot). This data is contained in a custom 13bit frame.
+Data is transmitted via sound, from the sender (computer or smartphone) to the receiver (robot). This data is contained in a custom 13bit frame.
 
 ![frame](https://user-images.githubusercontent.com/23436953/227920720-20620f49-efc8-4dc7-a9f1-b80beb2395eb.svg)
 
@@ -46,6 +46,7 @@ A correct frame always ends with a **1** as the last (13th) bit.
 
 Here are some examples of frames:
 
-- 0000100101101 - Start bit correct, _Forward_ command, 75cm to travel, even parity, stop bit correct.  
-  Here are the different parts of the frame: 0.00.01001011.0.1
-- ...
+- **0000100101101** - Start bit correct, _Forward_ command, 75cm to travel, even parity, stop bit correct.  
+  Here are the different parts of the frame: `0_00_01001011_0_1`
+- **0100010110001** - Start bit correct, _Turn Right_ command, 44° to turn, even parity, stop bit correct.  
+  Here are the different parts of the frame: `0_10_00101100_0_1`
