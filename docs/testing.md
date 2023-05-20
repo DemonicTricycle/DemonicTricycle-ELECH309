@@ -49,8 +49,9 @@ Near the end of the project, real-world, full tests were conducted. These were a
 
 Here are some videos showing these tests:
 
-_**[insert video of robot moving after audio command]**_
+## Real-World Pivot Test Video
 ![real-world-test-pivot-video-1](assets/videos/test-real-world-pivot-1.mp4)
 
-![real-world-test-straight-video-2](assets/videos/video2.mp4)
+## Real-World Straight-Line Test Video
+![real-world-test-straight-video-2](assets/videos/real-world-test-straight-video-1.mp4)
 
