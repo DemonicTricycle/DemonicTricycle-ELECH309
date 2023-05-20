@@ -20,7 +20,6 @@ Testing for the project.
 # Kinematics Tests
 During the development of the motor regulation part of the codebase, kinematics tests were conducted. This video shows the results of a looping sequence consisting of a simple straight line followed by a 180° turn to the left:
 
-![movement-test-video]({{site.baseurl}}/assets/videos/video-test-mouvement.mp4)
 <video src="/assets/videos/video-test-mouvement.mp4" controls="controls">
 </video>
 
@@ -52,8 +51,9 @@ Near the end of the project, real-world, full tests were conducted. These were a
 Here are some videos showing these tests:
 
 ## Real-World Pivot Test Video
-![real-world-test-pivot-video-1]({{site.url}}/assets/videos/test-real-world-pivot-1.mp4)
+<video src="/assets/videos/test-real-world-pivot-1.mp4" controls="controls">
+</video>
 
 ## Real-World Straight-Line Test Video
-![real-world-test-straight-video-2](./assets/videos/real-world-test-straight-video-1.mp4)
-
+<video src="/assets/videos/real-world-test-straight-video-1.mp4" controls="controls">
+</video>
