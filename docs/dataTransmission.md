@@ -33,6 +33,12 @@ Data is transmitted via frequency modulated sound. A 13bit word is sent, each bi
 
 See [Communication Frame](/communicationFrame) for details about the data frame.
 
+### Example
+Here is an audio file of an example frame (_Turn Left_ 90°):
+
+<audio controls src="/assets/audio/left90.mp3">
+</audio>
+
 ## Diagram
 
 This diagram explains it.

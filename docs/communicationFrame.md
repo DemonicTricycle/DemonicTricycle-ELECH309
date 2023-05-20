@@ -47,6 +47,11 @@ A correct frame always ends with a **1** as the last (13th) bit.
 Here are some examples of frames:
 
 - **0000100101101** - Start bit correct, _Forward_ command, 75cm to travel, even parity, stop bit correct.  
-  Here are the different parts of the frame: `0_00_01001011_0_1`
+  Here are the different parts of the frame: `0_00_01001011_0_1`  
 - **0100010110001** - Start bit correct, _Turn Right_ command, 44° to turn, even parity, stop bit correct.  
-  Here are the different parts of the frame: `0_10_00101100_0_1`
+  Here are the different parts of the frame: `0_10_00101100_0_1`  
+
+And here is an audio file of an example frame (_Turn Left_ 90°):
+
+<audio controls src="/assets/audio/left90.mp3">
+</audio>
