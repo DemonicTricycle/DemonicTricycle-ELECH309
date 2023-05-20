@@ -39,13 +39,13 @@ See the docs about the **[Communication Frame](/communicationFrame)**.
 See the docs about the **[Motorization](/motorization)**:
 - **[Motor Regulation](/motorization/motorRegulation)**
 - **[Rotation Constant](/motorization/rotationConstant)**
-- **[Accuracy and Precision](/motorization/accuracyAndPrecision)**
 
 ## Audio Processing
 See the docs about the **[Audio](/audio)**:
-- **[Amplification](/audio/amplification)**
 - **[Analog Filter](/audio/analogFilter)**
 - **[Digital Filter](/audio/digitalFilter)**
+- **[Amplification](/audio/amplification)**
+- **[Results](/audio/audio_results)**
 
 ## Frame State Machine
 See the docs about the **[Frame State Machine](/frameFSM)**.
@@ -65,7 +65,4 @@ See the docs about **[Testing](/testing)**
 ----
 
 {: .note }
-Work In Progress
-
-{: .important }
-example important point
+ELEC-H309 - Projet Intégré
