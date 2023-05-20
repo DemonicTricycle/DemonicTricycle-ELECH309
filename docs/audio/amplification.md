@@ -27,7 +27,7 @@ This polarization induces a voltage offset of about 1.65V, present in the ouput 
 This offset can't be amplified, which would saturate the amplifier.
 Furthermore, filter the DC signal by a capacitor wouldn't be enough, as our amplifier is single supply, which wouldn't amplify any signal under 0V. 
 
-For those reasons, an inverting amplifier with an offset was used (adding the same offset as the input).
+For those reasons, an inverting amplifier with an offset was used (adding to the output the voltage of its positive input).
 ![image](../assets/images/audio/full_circuit.png)
 
 The potentiometer R3 allows the ajustment of the gain, if one wants to place the emitter close or far from the microphone, without saturation.
