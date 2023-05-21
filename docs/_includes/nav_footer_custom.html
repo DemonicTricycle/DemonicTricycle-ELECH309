@@ -1,13 +1,46 @@
-<p style="
-    padding-top: 4px;
-    padding-bottom: 4px;
+<footer class="site-footer">
+    This site uses <a target="_blank" href="https://just-the-docs.github.io/just-the-docs/">Just the Docs</a>, a documentation theme for Jekyll.
+    <br>
+    <button style="margin: 4px;" onClick="
+        btn = document.getElementById('themeButton');
+        if (btn.innerText === 'Switch to dark mode') {
+            jtd.setTheme('dark');
+            btn.innerText = 'Switch to light mode';
+            console.log('Switched to dark mode');
+        } else {
+            jtd.setTheme('light');
+            btn.innerText = 'Switch to dark mode';
+            console.log('Switched to light mode');
+        }
+    ">Switch to dark mode
+    </button>
+</footer>
+
+<!--
+<style>
+    @media (min-width: 800px) {
+      #my-nav-footer {
+        width: 248px;
+      }
+    }
+
+    @media (max-width: 799px) {
+      #my-nav-footer, #themeButton {
+        display: none;
+      }
+    }
+</style>
+<p id="my-nav-footer" style="
+    padding: 4px;
     color: #959396;
 
     position: static;
     justify-self: end;
 
 ">
-    This site uses <a target="_blank" href="https://just-the-docs.github.io/just-the-docs/">Just the Docs</a>, a documentation theme for Jekyll.
+    This site uses <a target="_blank" href="https://just-the-docs.github.io/just-the-docs/">Just the Docs</a>,
+    <br>
+    a documentation theme for Jekyll.
     <br>
     <button style="margin-bottom: 4px; margin-top: 4px; border-radius: 4px;" id="themeButton" onclick="switchThemeButton()">Switch to dark mode</button>
 
@@ -27,3 +60,4 @@
     </script>
 
 </p>
+-->
