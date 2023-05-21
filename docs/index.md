@@ -13,7 +13,7 @@ ELEC-H309 Integrated Project (_Projet Intégré_), by **Martin Fonteyn**, **Luca
 {: .fs-6 .fw-300 }
 
 [See Project on Github](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
-[Project Details on Gitlab](https://gitlab.com/mosee/elech309-2023){: .btn .fs-5 .mb-4 .mb-md-0 }
+[See Guidelines on Gitlab](https://gitlab.com/mosee/elech309-2023){: .btn .fs-5 .mb-4 .mb-md-0 }
 
 ----
 
@@ -27,7 +27,7 @@ ELEC-H309 Integrated Project (_Projet Intégré_), by **Martin Fonteyn**, **Luca
 </details>
 
 ## The Project
-See details about the **[Project](/project)**: its outline, explanation and goals.
+See details about the **[Project](/project)**.
 
 ## Data Transmission
 See the docs about the **[Data Transmission](/dataTransmission)**.
