@@ -5,8 +5,8 @@ nav_order: 8
 ---
 
 # Robot Parameters
-In order to easily change some parameters of the robot's code, we placed them in a common file: [parameters.h](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/blob/main/src/parameters.h).  
-This allows us to test different values for certain functions quickly between compilations.
+In order to easily change some parameters of the robot's code, they were placed in a common file: [parameters.h](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/blob/main/src/parameters.h).  
+This allowed for testing different values for certain functions quickly between compilations.
 
 ## [Code](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/blob/main/src/parameters.h)
 
