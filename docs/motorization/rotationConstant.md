@@ -61,7 +61,8 @@ $$k_{p_2} = \frac{w_2 \sqrt{1 + (w_2 \tau)^2}}{k_v} = 1. 0298 rad^{-1}$$
 
 The gain is equal to the lowest value, giving a gain for the rotation of $$1. 0298 rad^{-1}$$.  
 
+## Criticism
 
-Test results showed that the robot performed better when using a higher rotation gain, as the friction forces stopped the robot slightly before the end of the movement. A gain equal to 3 times the calculated gain gave the best performance. 
-The most likely reason is that the motors' properties changed over time (the data used for the calculation comes from tests made a few years ago).
-\
+The practical results showed with this rotation gain, the robot didn't always finish the rotation. Near the end of the rotation, the error was so small that the voltage applied to the motors wasn't enough to overcome the friction forces.
+3 solutions were considered : adding a minimal value to the voltage that would ensure it is always high enough to overcome the friction, adding a small constant to the voltage to compensate the friction's effect or to increase the gain. 
+In the end, the gain was multiplied by factor of 3 (found by trial and error) and the results were sufficiently adequate to retain this solution.
