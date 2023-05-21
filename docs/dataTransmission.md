@@ -27,21 +27,21 @@ The robot receives these audio commands using its onboard microphone. This sound
 See [Audio](/audio) for details about the audio processing.
 
 ## Acoustic transmission
-Data is transmitted via frequency modulated sound. A 13bit word is sent, each bit is represented by a 100ms long sound note:
+Data is transmitted via frequency modulated sound. A 13bit frame is sent, each bit is represented by a 100ms long sound note:
 - **900** Hz - Represents a **0** bit
 - **1100** Hz - Represents a **1** bit
 
 See [Communication Frame](/communicationFrame) for details about the data frame.
 
 ### Example
-Here is an audio file of an example frame (_Turn Left_ 90°):
+Here is an audio file of a frame (_Turn Left_ 90°):
 
 <audio controls src="/assets/audio/left90.mp3">
 </audio>
 
 ## Diagram
 
-This diagram explains it.
+This diagram explains the data transmission pipeline.
 
 ![dataTransmission](https://user-images.githubusercontent.com/23436953/225017515-a9b6e247-f674-4453-ae4a-4dbe4b0e50b5.svg)
 
