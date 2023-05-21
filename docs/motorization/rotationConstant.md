@@ -63,10 +63,11 @@ The gain is equal to the lowest value, giving a gain for the rotation of $$1. 02
 
 
 Test results showed that the robot performed better when using a higher rotation gain. A gain equal to 3 times the calculated gain gave the best performance. 
-It could simply be that the motors' properties changed over time (the data used for the calculation comes from tests made a few years ago), but there is another possible explenation.
-\
+It could simply be that the motors' properties changed over time (the data used for the calculation comes from tests made a few years ago), but there is another possible explaination.  
+
 The rotation and translation regulators are used together, to keep the right direction in a translation or to avoid a translation in a rotation. 
-But for the translation, the kp used in the calculations comes from a graph made with dc = 1. For the rotation, the kp was found from a graph made at dc = 0.4. 
+But for the translation, the kp used in the calculations comes from a graph made with dc = 1. For the rotation, the kp was found from a graph made at dc = 0.4.  
+
 This means that the translation gain is not valid when in a rotation, as the average dc is closer to 0.5, and that the rotation gain is not valid for the translation as the average dc is superior.
 In conclusion, to get better results, when in a rotation, the robot should use a different transalation gain to reach better performances, but as the restults were aldready satisfying, it was not necessary.
 

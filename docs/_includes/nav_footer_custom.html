@@ -1,31 +1,29 @@
-<span style="
-    position: absolute;
-    bottom: 0;
-    left: 0;
+<p style="
     padding-top: 4px;
     padding-bottom: 4px;
     color: #959396;
-    @include fs-2;
 
     position: static;
     justify-self: end;
 
 ">
-    This site uses <a href="https://just-the-docs.github.io/just-the-docs/">Just the Docs</a>, a documentation theme for Jekyll.
+    This site uses <a target="_blank" href="https://just-the-docs.github.io/just-the-docs/">Just the Docs</a>, a documentation theme for Jekyll.
     <br>
-    <button style="margin-bottom: 4px; margin-top: 4px; border-radius: 4px;" id="themeButton" onclick="switchTheme()">Switch to dark mode</button>
-</span>
+    <button style="margin-bottom: 4px; margin-top: 4px; border-radius: 4px;" id="themeButton" onclick="switchThemeButton()">Switch to dark mode</button>
 
-<script>
-    function switchTheme() {
-        btn = document.getElementById("themeButton");
-        if (btn.innerText === "Switch to dark mode") {
-        //if (jtd.getTheme() === "light") {
-            jtd.setTheme("dark");
-            btn.innerText = "Switch to light mode";
-        } else {
-            jtd.setTheme("light");
-            btn.innerText = "Switch to dark mode";
+    <script>
+        function switchThemeButton() {
+            btn = document.getElementById("themeButton");
+            if (btn.innerText === "Switch to dark mode") {
+                jtd.setTheme("dark");
+                btn.innerText = "Switch to light mode";
+                console.log("Switched to dark mode");
+            } else {
+                jtd.setTheme("light");
+                btn.innerText = "Switch to dark mode";
+                console.log("Switched to light mode");
+            }
         }
-    }
-</script>
+    </script>
+
+</p>
