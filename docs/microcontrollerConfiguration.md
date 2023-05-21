@@ -28,7 +28,7 @@ For reference, here are the pins of the dsPIC from the datasheet:
 ## Configuration Bits
 These configuration bits were chosen to allow for the microcontroller's overclock.
 
-The file in full is available [here](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/blob/main/src/configuration.c).
+The file is available [here](https://github.com/DemonicTricycle/DemonicTricycle-ELECH309/blob/main/src/configuration.c).
 
 <details open markdown="block">
   <summary>
