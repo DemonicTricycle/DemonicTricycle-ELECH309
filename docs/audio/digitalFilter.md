@@ -151,7 +151,7 @@ Due to a delay in the detection of the signal at the first bit, caused by the di
 
 ![image](../assets/images/audio/4stages1150.png)
 
-Also, as can be seen in the figure above, again due to the filter transient, some short sounds (composed of many frequencies, such as a clap) are not attenuated fast enough. During sampling, the filters then detect a signal. In order to overcome this problem, a "fluke" detection system has been implemented. A noise_counter variable counts the number of times that none of the filters detected a signal during the first bit. If this variable reaches 15/75, it is probably a fluke and the system resets.
+Also, as can be seen in the figure above, again due to the filter transient, some short sounds (composed of many frequencies, such as a clap) are not attenuated fast enough. During sampling, the filters then detect a signal. In order to overcome this problem, a "fluke" detection system has been implemented. A noise_counter variable counts the number of times that none of the filters detected a signal during the first bit. If this variable reaches 15/74, it is probably a fluke and the system resets.
 
 Full code of the analysing timer : 
 
