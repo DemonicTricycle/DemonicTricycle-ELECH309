@@ -43,7 +43,8 @@ A recurring equation is then deducted from the transfer function, which was dete
 In terms of maths :  
 $$ \begin{align} & Y(z) = \frac{\sum a_k \times z^{-k}}{\sum b_k \times z^{-k}} \times X(z) \\ 
 & \Leftrightarrow \sum a_k \times z^{-k}  Y(z) = \sum b_k \times z^{-k}  X(z) \\
-& \Leftrightarrow \sum a_k \times z^{-k} y(n-k) = \sum b_k \times z^{-k} x(n-k)\end{align}$$
+& \Leftrightarrow \sum a_k y(n-k) = \sum b_k \times x(n-k) \\
+& \Leftrightarrow y(n) = \frac{1}{a_0} \times \left [ \sum b_k \times x(n-k) - \sum_{k \neq 0} a_k y(n-k) \right ] \end{align}$$
 
 # Numerical simulation
 
