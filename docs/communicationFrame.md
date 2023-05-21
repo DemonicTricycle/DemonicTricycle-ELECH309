@@ -35,8 +35,10 @@ The next eight bits desribe the parameters for the command sent, as an 8bit unsi
 
 ## Parity bit
 The next bit describes the parity of the previous bits sent:
+
 - **0** - even parity
 - **1** - odd parity
+
 This allows for error checking of the received frame.
 
 ## Stop bit
