@@ -24,7 +24,7 @@ During the development of the motor regulation part of the codebase, kinematics 
 </video>
 
 ## Speed
-Testing showed that the robot's speed was corresponding to the programmed speed (complying with the characteristics, which can be found in the [Project page](/project)).
+Testing showed that the robot's speed was corresponding to the programmed speed (complying with the characteristics, which can be found on the [Project page](/project)).
 
 ## Target Distance
 From the first test, target distance was observed to be accurate within defined margins.
