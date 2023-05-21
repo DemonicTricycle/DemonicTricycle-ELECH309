@@ -27,7 +27,7 @@ ELEC-H309 Integrated Project (_Projet Intégré_), by **Martin Fonteyn**, **Luca
 </details>
 
 ## The Project
-See details about the **[Project](/project)**: its outline, explaination and goals.
+See details about the **[Project](/project)**: its outline, explanation and goals.
 
 ## Data Transmission
 See the docs about the **[Data Transmission](/dataTransmission)**.
