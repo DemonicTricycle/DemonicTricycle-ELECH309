@@ -23,7 +23,6 @@ During the development of the motor regulation part of the codebase, kinematics 
 <video src="/assets/videos/video-test-mouvement.mp4" controls="controls">
 </video>
 
-## Movement
 ## Speed
 Testing showed that the robot's speed was corresponding to the programmed speed (complying with the characteristics, which can be found in the [Project page](/project)).
 
