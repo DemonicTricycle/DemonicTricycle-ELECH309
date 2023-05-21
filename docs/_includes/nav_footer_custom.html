@@ -1,11 +1,14 @@
+<footer class="site-footer">
 This site uses <a href="https://just-the-docs.github.io/just-the-docs/">Just the Docs</a>, a documentation theme for Jekyll.
 <br>
-<button id="themeButton" onclick="changeTheme()">Switch to dark mode</button>
+<button style="margin: 8px;" id="themeButton" onclick="switchTheme()">Switch to dark mode</button>
+</footer>
 
 <script>
-    function changeTheme() {
+    function switchTheme() {
         btn = document.getElementById("themeButton");
-        if (btn.innerText === "Switch to dark mode") {
+        //if (btn.innerText === "Switch to dark mode") {
+        if (jtd.getTheme() === "light") {
             jtd.setTheme("dark");
             btn.innerText = "Switch to light mode";
         } else {
