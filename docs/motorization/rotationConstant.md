@@ -65,8 +65,8 @@ The gain is equal to the lowest value, giving a gain for the rotation of $$1. 02
 
 The practical results showed that with this rotation gain, the robot didn't always finish the rotation. Near the end of the rotation, the error was so small that the voltage applied to the motors wasn't enough to overcome the friction forces.
 3 solutions were considered :
-* adding a minimal value to the voltage that would ensure it is always high enough to overcome the friction
-* adding a small constant to the voltage to compensate the friction's effect or to increase the gain. 
+* Adding a minimal value to the voltage that would ensure it is always high enough to overcome the friction
+* Adding a small constant to the voltage to compensate the friction's effect or to increase the gain. 
 * Multiplying the gain
 
 In the end, the gain was multiplied by a factor of 3 (found by trial and error) and the results were sufficiently adequate to retain this solution.
