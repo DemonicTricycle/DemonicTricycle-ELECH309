@@ -1,7 +1,27 @@
-<footer class="site-footer">
+<span style="
+    width: 100%;
+    @include mq(lg) {
+    width: $nav-width;
+    }
+    @include container;
+
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    color: #959396;
+    @include fs-2;
+
+    @include mq(md) {
+        position: static;
+        justify-self: end;
+    }
+
+">
     This site uses <a href="https://just-the-docs.github.io/just-the-docs/">Just the Docs</a>, a documentation theme for Jekyll.
     <br>
-    <button style="margin-bottom: 8px;" id="themeButton" onclick="switchTheme()">Switch to dark mode</button>
+    <button style="margin-bottom: 4px; margin-top: 4px; border-radius: 2px;" id="themeButton" onclick="switchTheme()">Switch to dark mode</button>
 
     <script>
         function switchTheme() {
@@ -16,4 +36,4 @@
             }
         }
     </script>
-</footer>
+</span>
